@@ -1,10 +1,15 @@
-from fastapi import FastAPI
+import logging
+
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from auth import require_admin_key, require_api_key
 from config import settings
 from database import Base, engine
 from routes import personas, asignaciones, proyectos, oportunidades, skill_matrix, skills
 import models  # noqa: F401  -- needed by /api/admin/* endpoints
+
+logger = logging.getLogger("uvicorn.error")
 
 
 @asynccontextmanager
@@ -29,13 +34,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
-app.include_router(personas.router, prefix="/api")
-app.include_router(asignaciones.router, prefix="/api")
-app.include_router(proyectos.router, prefix="/api")
-app.include_router(oportunidades.router, prefix="/api")
-app.include_router(skill_matrix.router, prefix="/api")
-app.include_router(skills.router, prefix="/api")
+# Routers — todos los endpoints de datos exigen `X-API-Key`
+_protegido = [Depends(require_api_key)]
+app.include_router(personas.router, prefix="/api", dependencies=_protegido)
+app.include_router(asignaciones.router, prefix="/api", dependencies=_protegido)
+app.include_router(proyectos.router, prefix="/api", dependencies=_protegido)
+app.include_router(oportunidades.router, prefix="/api", dependencies=_protegido)
+app.include_router(skill_matrix.router, prefix="/api", dependencies=_protegido)
+app.include_router(skills.router, prefix="/api", dependencies=_protegido)
 
 
 @app.get("/")
@@ -48,7 +54,23 @@ def health():
     return {"status": "healthy"}
 
 
-@app.post("/api/admin/init-db")
+@app.get("/api/health/db")
+def health_db():
+    """Health check que toca la BD sin exponer datos. Sin auth a propósito:
+    lo usa el workflow de keep-alive para registrar actividad en Supabase."""
+    from fastapi import HTTPException
+    from sqlalchemy import text
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {"status": "healthy", "db": "reachable"}
+    except Exception:
+        logger.exception("Health check de BD falló")
+        raise HTTPException(status_code=503, detail="Base de datos no disponible")
+
+
+@app.post("/api/admin/init-db", dependencies=[Depends(require_admin_key)])
 def init_db():
     """Initialize database tables. Call this endpoint once after deployment."""
     import os
@@ -57,7 +79,6 @@ def init_db():
     try:
         # Read DATABASE_URL from environment (not from config which may have stale value)
         db_url = os.environ.get("DATABASE_URL", "postgresql://localhost/exd_control")
-        print(f"[DEBUG] Using DATABASE_URL: {db_url[:50]}...")
 
         # Create a fresh engine (normalizes scheme + pool settings for Supabase)
         temp_engine = make_engine(db_url)
@@ -65,11 +86,12 @@ def init_db():
         temp_engine.dispose()
 
         return {"status": "success", "message": "Database tables created successfully!"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    except Exception:
+        logger.exception("init-db falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
 
 
-@app.post("/api/admin/migrate-skills-catalog")
+@app.post("/api/admin/migrate-skills-catalog", dependencies=[Depends(require_admin_key)])
 def migrate_skills_catalog():
     """
     Idempotent migration:
@@ -87,7 +109,6 @@ def migrate_skills_catalog():
     """
     import os
     import re
-    import traceback
     import unicodedata
     from typing import Optional
     from sqlalchemy import inspect
@@ -176,15 +197,11 @@ def migrate_skills_catalog():
             "message": f"Skills catalog migrated. Added {len(nuevas)} new entries. Total in catalog: {total}.",
             "nuevas": nuevas,
         }
-    except Exception as e:
+    except Exception:
         if db is not None:
             db.rollback()
-        return {
-            "status": "error",
-            "message": str(e),
-            "type": type(e).__name__,
-            "traceback": traceback.format_exc(),
-        }
+        logger.exception("migrate-skills-catalog falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
     finally:
         if db is not None:
             db.close()
@@ -192,7 +209,7 @@ def migrate_skills_catalog():
             temp_engine.dispose()
 
 
-@app.post("/api/admin/migrate-proyecto-types")
+@app.post("/api/admin/migrate-proyecto-types", dependencies=[Depends(require_admin_key)])
 def migrate_proyecto_types():
     """Idempotent migration: add `tipo` and `estado` columns to `proyectos`.
 
@@ -235,12 +252,13 @@ def migrate_proyecto_types():
                 conn.execute(text(stmt))
         temp_engine.dispose()
         return {"status": "success", "message": "Proyecto type/estado columns migrated"}
-    except Exception as e:
+    except Exception:
         temp_engine.dispose()
-        return {"status": "error", "message": str(e)}
+        logger.exception("migrate-proyecto-types falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
 
 
-@app.post("/api/admin/migrate-niveles-categoria")
+@app.post("/api/admin/migrate-niveles-categoria", dependencies=[Depends(require_admin_key)])
 def migrate_niveles_categoria():
     """Idempotente: renombra los valores de los enums de nivel a las nuevas
     'Categorías' de diseñador (mapeo por rango). Conserva los datos: ALTER TYPE
@@ -278,13 +296,14 @@ def migrate_niveles_categoria():
                         conn.execute(text(f"ALTER TYPE {enum} RENAME VALUE '{old}' TO '{new}'"))
                         cambios.append(f"{enum}: '{old}' → '{new}'")
         return {"status": "success", "cambios": cambios, "total": len(cambios)}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    except Exception:
+        logger.exception("migrate-niveles-categoria falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
     finally:
         temp_engine.dispose()
 
 
-@app.post("/api/admin/migrate-hitos-log")
+@app.post("/api/admin/migrate-hitos-log", dependencies=[Depends(require_admin_key)])
 def migrate_hitos_log():
     """Idempotente: crea la tabla `hitos_log` (y sus enums) si no existe.
 
@@ -299,13 +318,14 @@ def migrate_hitos_log():
     try:
         Base.metadata.create_all(bind=temp_engine, tables=[models.HitoLog.__table__])
         return {"status": "success", "message": "Tabla hitos_log creada/verificada"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    except Exception:
+        logger.exception("migrate-hitos-log falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
     finally:
         temp_engine.dispose()
 
 
-@app.get("/api/dashboard/summary")
+@app.get("/api/dashboard/summary", dependencies=[Depends(require_api_key)])
 def dashboard_summary(db=None):
     """Quick stats para el dashboard principal."""
     from database import SessionLocal

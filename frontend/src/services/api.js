@@ -5,7 +5,14 @@ const baseURL = 'https://exd-dashboard.onrender.com/api'
 
 const api = axios.create({
   baseURL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    // La API exige esta key (auth.py del backend). Se define como VITE_API_KEY
+    // en Vercel (y en .env.local para desarrollo). Nota: cualquier key en un
+    // bundle de frontend es visible para quien abra la app; frena el acceso
+    // anónimo por URL, no sustituye a un login real.
+    'X-API-Key': import.meta.env.VITE_API_KEY || '',
+  },
 })
 
 // ── Personas ────────────────────────────────────────────────────────────────

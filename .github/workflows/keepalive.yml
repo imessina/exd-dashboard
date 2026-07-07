@@ -18,7 +18,9 @@ jobs:
     steps:
       - name: Ping endpoint que toca la BD
         run: |
-          URL="https://exd-dashboard.onrender.com/api/dashboard/summary"
+          # /api/health/db hace SELECT 1 contra Supabase sin exponer datos ni
+          # requerir API key (el resto de la API ahora exige X-API-Key).
+          URL="https://exd-dashboard.onrender.com/api/health/db"
           # Render duerme y arranca en frío (~50s), así que reintentamos con
           # timeout generoso antes de dar el ping por fallido.
           for i in 1 2 3; do
