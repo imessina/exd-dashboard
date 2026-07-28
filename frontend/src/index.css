@@ -6,28 +6,53 @@
    BASE
    ═══════════════════════════════════════════════════════════════ */
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
 
   body {
     color: #111827;
-    background: linear-gradient(145deg, #edeafc 0%, #f2f0f8 35%, #f5f3fa 100%);
-    min-height: 100vh;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(160deg, #f4f6f9 0%, #eef1f6 45%, #f4f6f9 100%);
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  ::-webkit-scrollbar        { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: #d1d5db; border-radius: 9999px; }
-  ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
    COMPONENTS
    ═══════════════════════════════════════════════════════════════ */
 @layer components {
-
   /* ── Card ──────────────────────────────────────────────────── */
   .card {
     background: rgba(255, 255, 255, 0.82);
@@ -37,14 +62,16 @@
     padding: 1.25rem;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow:
-      0 1px 2px rgba(0,0,0,0.03),
-      0 4px 16px rgba(112,72,232,0.06);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+      0 1px 2px rgba(16, 24, 40, 0.04),
+      0 4px 16px rgba(16, 24, 40, 0.06);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
   }
   .card:hover {
     box-shadow:
-      0 4px 16px rgba(0,0,0,0.06),
-      0 12px 32px rgba(112,72,232,0.10);
+      0 4px 16px rgba(16, 24, 40, 0.07),
+      0 12px 32px rgba(28, 159, 228, 0.12);
   }
 
   /* ── Btn primary ───────────────────────────────────────────── */
@@ -53,7 +80,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
-    background: linear-gradient(135deg, #7048e8 0%, #9065f0 100%);
+    background: linear-gradient(135deg, #127cba 0%, #1c9fe4 100%);
     color: #ffffff;
     padding: 0.5rem 1.25rem;
     border-radius: 9999px;
@@ -64,16 +91,16 @@
     cursor: pointer;
     user-select: none;
     transition: all 150ms ease;
-    box-shadow: 0 2px 12px rgba(112,72,232,0.35);
+    box-shadow: 0 2px 12px rgba(28, 159, 228, 0.35);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #5c36d5 0%, #7048e8 100%);
-    box-shadow: 0 6px 24px rgba(112,72,232,0.45);
+    background: linear-gradient(135deg, #0f6690 0%, #127cba 100%);
+    box-shadow: 0 6px 24px rgba(28, 159, 228, 0.45);
     transform: translateY(-1px);
   }
   .btn-primary:active {
     transform: translateY(0);
-    box-shadow: 0 1px 4px rgba(112,72,232,0.20);
+    box-shadow: 0 1px 4px rgba(28, 159, 228, 0.2);
   }
   .btn-primary:disabled {
     opacity: 0.6;
@@ -100,12 +127,12 @@
     cursor: pointer;
     user-select: none;
     transition: all 150ms ease;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   }
   .btn-secondary:hover {
     background: #ffffff;
     border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
   .btn-secondary:active {
     background-color: #f3f4f6;
@@ -135,13 +162,17 @@
     color: #111827;
     transition: all 150ms ease;
   }
-  .input::placeholder { color: #9ca3af; }
-  .input:hover:not(:focus) { border-color: rgba(0, 0, 0, 0.15); }
+  .input::placeholder {
+    color: #9ca3af;
+  }
+  .input:hover:not(:focus) {
+    border-color: rgba(0, 0, 0, 0.15);
+  }
   .input:focus {
     outline: none;
     background: #ffffff;
-    border-color: #a688fc;
-    box-shadow: 0 0 0 3px rgba(220, 211, 255, 0.45);
+    border-color: #3db3ea;
+    box-shadow: 0 0 0 3px rgba(161, 219, 247, 0.55);
   }
 
   /* ── Form label ────────────────────────────────────────────── */

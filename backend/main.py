@@ -303,6 +303,31 @@ def migrate_niveles_categoria():
         temp_engine.dispose()
 
 
+@app.post("/api/admin/migrate-add-manager-nivel", dependencies=[Depends(require_admin_key)])
+def migrate_add_manager_nivel():
+    """Idempotente: agrega el valor 'Manager' al enum `nivel_seniority_enum`
+    en Postgres. SQLAlchemy no altera enums existentes automáticamente, por lo
+    que este paso es necesario tras agregar 'Manager' a models.py/schemas.py.
+    """
+    import os
+    from sqlalchemy import text
+    from database import make_engine
+
+    db_url = os.environ.get("DATABASE_URL", "postgresql://localhost/exd_control")
+    temp_engine = make_engine(db_url)
+    try:
+        with temp_engine.begin() as conn:
+            conn.execute(text(
+                "ALTER TYPE nivel_seniority_enum ADD VALUE IF NOT EXISTS 'Manager'"
+            ))
+        return {"status": "success", "message": "'Manager' agregado a nivel_seniority_enum"}
+    except Exception:
+        logger.exception("migrate-add-manager-nivel falló")
+        return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
+    finally:
+        temp_engine.dispose()
+
+
 @app.post("/api/admin/migrate-hitos-log", dependencies=[Depends(require_admin_key)])
 def migrate_hitos_log():
     """Idempotente: crea la tabla `hitos_log` (y sus enums) si no existe.

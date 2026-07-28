@@ -25,10 +25,12 @@ class Persona(Base):
     id = Column(String, primary_key=True)
     nombre = Column(String, nullable=False)
     rol = Column(String, nullable=False)
+    numero_empleado = Column(String, unique=True, nullable=True)
+    responsable = Column(String, nullable=True)
     empresa_actual = Column(String)
     area = Column(String)
     nivel_seniority = Column(
-        Enum("Junior Designer", "Designer", "Lead Designer", "Expert Designer", "Chief Designer", name="nivel_seniority_enum"),
+        Enum("Junior Designer", "Designer", "Lead Designer", "Expert Designer", "Chief Designer", "Manager", name="nivel_seniority_enum"),
         default="Designer"
     )
     anos_experiencia = Column(Integer)
@@ -41,6 +43,7 @@ class Persona(Base):
     evaluacion_historico = Column(JSON, default=list)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    
 
 
 class Asignacion(Base):

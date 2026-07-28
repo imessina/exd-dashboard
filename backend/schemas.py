@@ -13,6 +13,7 @@ class NivelSeniority(str, Enum):
     lead_designer = "Lead Designer"
     expert_designer = "Expert Designer"
     chief_designer = "Chief Designer"
+    manager = "Manager"
 
 class AsignacionEstado(str, Enum):
     active = "active"
@@ -55,6 +56,8 @@ class OportunidadStatus(str, Enum):
 class PersonaBase(BaseModel):
     nombre: str
     rol: str
+    numero_empleado: Optional[str] = None
+    responsable: Optional[str] = None
     empresa_actual: Optional[str] = None
     area: Optional[str] = None
     nivel_seniority: Optional[NivelSeniority] = NivelSeniority.designer
@@ -73,7 +76,10 @@ class PersonaCreate(PersonaBase):
 class PersonaUpdate(BaseModel):
     nombre: Optional[str] = None
     rol: Optional[str] = None
+    numero_empleado: Optional[str] = None
+    responsable: Optional[str] = None
     empresa_actual: Optional[str] = None
+    area: Optional[str] = None
     nivel_seniority: Optional[NivelSeniority] = None
     anos_experiencia: Optional[int] = None
     habilidades: Optional[List[str]] = None

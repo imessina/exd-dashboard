@@ -1,52 +1,60 @@
-import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { oportunidadesApi } from '../services/api'
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { oportunidadesApi } from "../services/api";
 import {
-  OPORTUNIDAD_STATUS, OPORTUNIDAD_STATUS_LABEL, NIVEL_COLOR, NIVELES
-} from '../utils/constants'
-import clsx from 'clsx'
-import Panel from '../components/Panel'
-import TagInput from '../components/TagInput'
+  OPORTUNIDAD_STATUS,
+  OPORTUNIDAD_STATUS_LABEL,
+  NIVEL_COLOR,
+  NIVELES,
+} from "../utils/constants";
+import clsx from "clsx";
+import Panel from "../components/Panel";
+import TagInput from "../components/TagInput";
 
 const STATUS_COLORS = {
-  opportunity: 'bg-gray-100 text-gray-600',
-  approved:    'bg-blue-100 text-blue-700',
-  bidding:     'bg-amber-100 text-amber-700',
-  signed:      'bg-emerald-100 text-emerald-700',
-  executing:   'bg-brand-100 text-brand-700',
-}
+  opportunity: "bg-gray-100 text-gray-600",
+  approved: "bg-blue-100 text-blue-700",
+  bidding: "bg-amber-100 text-amber-700",
+  signed: "bg-emerald-100 text-emerald-700",
+  executing: "bg-brand-100 text-brand-700",
+};
 
 const STATUS_GRADIENT = {
-  opportunity: 'from-gray-400 to-gray-500',
-  approved:    'from-blue-500 to-indigo-600',
-  bidding:     'from-amber-500 to-orange-600',
-  signed:      'from-emerald-500 to-teal-600',
-  executing:   'from-violet-500 to-purple-600',
-}
+  opportunity: "from-gray-400 to-gray-500",
+  approved: "from-blue-500 to-indigo-600",
+  bidding: "from-amber-500 to-orange-600",
+  signed: "from-emerald-500 to-teal-600",
+  executing: "from-violet-500 to-purple-600",
+};
 
 // ── Match panel ───────────────────────────────────────────────────────────────
 function MatchPanel({ oportunidad, onClose }) {
   const { data: matches, isLoading } = useQuery({
-    queryKey: ['match', oportunidad.id],
+    queryKey: ["match", oportunidad.id],
     queryFn: () => oportunidadesApi.match(oportunidad.id),
     enabled: !!oportunidad,
-  })
+  });
 
   return (
     <Panel title={`Sugerencias · ${oportunidad.nombre}`} onClose={onClose}>
       {isLoading ? (
         <p className="text-sm text-gray-400">Calculando...</p>
       ) : matches?.length === 0 ? (
-        <p className="text-sm text-gray-400">No hay personas disponibles con el perfil requerido.</p>
+        <p className="text-sm text-gray-400">
+          No hay personas disponibles con el perfil requerido.
+        </p>
       ) : (
         <div className="space-y-3">
-          {matches.map(m => (
-            <div key={m.persona_id}
+          {matches.map((m) => (
+            <div
+              key={m.persona_id}
               className="flex items-center justify-between p-4 rounded-xl"
-              style={{ background: 'rgba(112,72,232,0.04)' }}
+              style={{ background: "rgba(28,159,228,0.05)" }}
             >
               <div>
-                <p className="font-semibold text-sm text-gray-900">{m.nombre}</p>
+                <p className="font-semibold text-sm text-gray-900">
+                  {m.nombre}
+                </p>
                 <p className="text-xs text-gray-500">{m.nivel}</p>
               </div>
               <div className="text-right">
@@ -54,8 +62,10 @@ function MatchPanel({ oportunidad, onClose }) {
                   {m.match_score}/{m.max_score} skills
                 </p>
                 <div className="flex gap-1 mt-1 justify-end flex-wrap">
-                  {m.habilidades?.slice(0, 2).map(h => (
-                    <span key={h} className="badge bg-brand-50 text-brand-600">{h}</span>
+                  {m.habilidades?.slice(0, 2).map((h) => (
+                    <span key={h} className="badge bg-brand-50 text-brand-600">
+                      {h}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -64,143 +74,212 @@ function MatchPanel({ oportunidad, onClose }) {
         </div>
       )}
     </Panel>
-  )
+  );
 }
 
 // ── Formulario ────────────────────────────────────────────────────────────────
 const EMPTY = {
-  nombre: '', cliente: '', alcance: '', vacantes: 1,
-  nivel_requerido: '', competencias_requeridas: [],
-  status: 'opportunity', timeline_start: '', timeline_end: '', owner: '',
-}
+  nombre: "",
+  cliente: "",
+  alcance: "",
+  vacantes: 1,
+  nivel_requerido: "",
+  competencias_requeridas: [],
+  status: "opportunity",
+  timeline_start: "",
+  timeline_end: "",
+  owner: "",
+};
 
 function OportunidadForm({ initial, onClose }) {
-  const qc = useQueryClient()
-  const [form, setForm] = useState(initial ? {
-    nombre:                  initial.nombre ?? '',
-    cliente:                 initial.cliente ?? '',
-    alcance:                 initial.alcance ?? '',
-    vacantes:                initial.vacantes ?? 1,
-    nivel_requerido:         initial.nivel_requerido ?? '',
-    competencias_requeridas: initial.competencias_requeridas ?? [],
-    status:                  initial.status ?? 'opportunity',
-    timeline_start:          initial.timeline_start ?? '',
-    timeline_end:            initial.timeline_end ?? '',
-    owner:                   initial.owner ?? '',
-  } : { ...EMPTY })
+  const qc = useQueryClient();
+  const [form, setForm] = useState(
+    initial
+      ? {
+          nombre: initial.nombre ?? "",
+          cliente: initial.cliente ?? "",
+          alcance: initial.alcance ?? "",
+          vacantes: initial.vacantes ?? 1,
+          nivel_requerido: initial.nivel_requerido ?? "",
+          competencias_requeridas: initial.competencias_requeridas ?? [],
+          status: initial.status ?? "opportunity",
+          timeline_start: initial.timeline_start ?? "",
+          timeline_end: initial.timeline_end ?? "",
+          owner: initial.owner ?? "",
+        }
+      : { ...EMPTY },
+  );
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const done = () => {
-    qc.invalidateQueries({ queryKey: ['oportunidades'] })
-    qc.invalidateQueries({ queryKey: ['dashboard'] })
-    onClose()
-  }
+    qc.invalidateQueries({ queryKey: ["oportunidades"] });
+    qc.invalidateQueries({ queryKey: ["dashboard"] });
+    onClose();
+  };
 
-  const create = useMutation({ mutationFn: oportunidadesApi.create, onSuccess: done })
-  const update = useMutation({ mutationFn: d => oportunidadesApi.update(initial.id, d), onSuccess: done })
-  const busy = create.isPending || update.isPending
-  const err  = create.error || update.error
+  const create = useMutation({
+    mutationFn: oportunidadesApi.create,
+    onSuccess: done,
+  });
+  const update = useMutation({
+    mutationFn: (d) => oportunidadesApi.update(initial.id, d),
+    onSuccess: done,
+  });
+  const busy = create.isPending || update.isPending;
+  const err = create.error || update.error;
 
-  const submit = e => {
-    e.preventDefault()
+  const submit = (e) => {
+    e.preventDefault();
     const data = {
       ...form,
       vacantes: Number(form.vacantes),
       nivel_requerido: form.nivel_requerido || null,
-      timeline_start:  form.timeline_start || null,
-      timeline_end:    form.timeline_end || null,
-    }
-    if (initial) update.mutate(data)
-    else create.mutate(data)
-  }
+      timeline_start: form.timeline_start || null,
+      timeline_end: form.timeline_end || null,
+    };
+    if (initial) update.mutate(data);
+    else create.mutate(data);
+  };
 
   return (
     <form onSubmit={submit} className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="form-label">Nombre *</label>
-          <input required className="input" value={form.nombre} onChange={e => set('nombre', e.target.value)} />
+          <input
+            required
+            className="input"
+            value={form.nombre}
+            onChange={(e) => set("nombre", e.target.value)}
+          />
         </div>
         <div>
           <label className="form-label">Cliente *</label>
-          <input required className="input" value={form.cliente} onChange={e => set('cliente', e.target.value)} />
+          <input
+            required
+            className="input"
+            value={form.cliente}
+            onChange={(e) => set("cliente", e.target.value)}
+          />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3">
         <div>
           <label className="form-label">Vacantes</label>
-          <input type="number" min="1" className="input" value={form.vacantes}
-            onChange={e => set('vacantes', e.target.value)} />
+          <input
+            type="number"
+            min="1"
+            className="input"
+            value={form.vacantes}
+            onChange={(e) => set("vacantes", e.target.value)}
+          />
         </div>
         <div>
           <label className="form-label">Nivel requerido</label>
-          <select className="input" value={form.nivel_requerido} onChange={e => set('nivel_requerido', e.target.value)}>
+          <select
+            className="input"
+            value={form.nivel_requerido}
+            onChange={(e) => set("nivel_requerido", e.target.value)}
+          >
             <option value="">Cualquier nivel</option>
-            {NIVELES.map(n => <option key={n}>{n}</option>)}
+            {NIVELES.map((n) => (
+              <option key={n}>{n}</option>
+            ))}
           </select>
         </div>
         <div>
           <label className="form-label">Estado</label>
-          <select className="input" value={form.status} onChange={e => set('status', e.target.value)}>
-            {OPORTUNIDAD_STATUS.map(s => (
-              <option key={s} value={s}>{OPORTUNIDAD_STATUS_LABEL[s]}</option>
+          <select
+            className="input"
+            value={form.status}
+            onChange={(e) => set("status", e.target.value)}
+          >
+            {OPORTUNIDAD_STATUS.map((s) => (
+              <option key={s} value={s}>
+                {OPORTUNIDAD_STATUS_LABEL[s]}
+              </option>
             ))}
           </select>
         </div>
       </div>
       <div>
         <label className="form-label">Competencias requeridas</label>
-        <TagInput value={form.competencias_requeridas} onChange={v => set('competencias_requeridas', v)}
-          placeholder="ej: UX Research" />
+        <TagInput
+          value={form.competencias_requeridas}
+          onChange={(v) => set("competencias_requeridas", v)}
+          placeholder="ej: UX Research"
+        />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="form-label">Inicio estimado</label>
-          <input type="date" className="input" value={form.timeline_start}
-            onChange={e => set('timeline_start', e.target.value)} />
+          <input
+            type="date"
+            className="input"
+            value={form.timeline_start}
+            onChange={(e) => set("timeline_start", e.target.value)}
+          />
         </div>
         <div>
           <label className="form-label">Fin estimado</label>
-          <input type="date" className="input" value={form.timeline_end}
-            onChange={e => set('timeline_end', e.target.value)} />
+          <input
+            type="date"
+            className="input"
+            value={form.timeline_end}
+            onChange={(e) => set("timeline_end", e.target.value)}
+          />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="form-label">Owner</label>
-          <input className="input" value={form.owner} onChange={e => set('owner', e.target.value)}
-            placeholder="ej: Crescente" />
+          <input
+            className="input"
+            value={form.owner}
+            onChange={(e) => set("owner", e.target.value)}
+            placeholder="ej: Crescente"
+          />
         </div>
         <div>
           <label className="form-label">Alcance</label>
-          <input className="input" value={form.alcance} onChange={e => set('alcance', e.target.value)}
-            placeholder="ej: Discovery + Design" />
+          <input
+            className="input"
+            value={form.alcance}
+            onChange={(e) => set("alcance", e.target.value)}
+            placeholder="ej: Discovery + Design"
+          />
         </div>
       </div>
       {err && <p className="text-xs text-red-500">Error: {err.message}</p>}
       <div className="flex justify-end gap-2 pt-3 border-t border-gray-100">
-        <button type="button" onClick={onClose} className="btn-secondary">Cancelar</button>
+        <button type="button" onClick={onClose} className="btn-secondary">
+          Cancelar
+        </button>
         <button type="submit" disabled={busy} className="btn-primary">
-          {busy ? 'Guardando...' : (initial ? 'Guardar cambios' : 'Crear oportunidad')}
+          {busy
+            ? "Guardando..."
+            : initial
+              ? "Guardar cambios"
+              : "Crear oportunidad"}
         </button>
       </div>
     </form>
-  )
+  );
 }
 
 // ── Card ──────────────────────────────────────────────────────────────────────
 function OportunidadCard({ op, onMatch, onEdit }) {
-  const qc = useQueryClient()
-  const [confirming, setConfirming] = useState(false)
+  const qc = useQueryClient();
+  const [confirming, setConfirming] = useState(false);
 
   const del = useMutation({
     mutationFn: () => oportunidadesApi.delete(op.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['oportunidades'] })
-      qc.invalidateQueries({ queryKey: ['dashboard'] })
+      qc.invalidateQueries({ queryKey: ["oportunidades"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
-  })
+  });
 
   return (
     <div className="card hover:-translate-y-0.5 hover:shadow-lg">
@@ -209,17 +288,17 @@ function OportunidadCard({ op, onMatch, onEdit }) {
           <p className="font-bold text-gray-900 text-sm">{op.nombre}</p>
           <p className="text-xs text-gray-400">{op.cliente}</p>
         </div>
-        <span className={clsx('badge', STATUS_COLORS[op.status])}>
+        <span className={clsx("badge", STATUS_COLORS[op.status])}>
           {OPORTUNIDAD_STATUS_LABEL[op.status]}
         </span>
       </div>
 
       <div className="flex items-center gap-2 mt-2 flex-wrap">
         <span className="text-xs text-gray-500 font-medium">
-          👥 {op.vacantes} vacante{op.vacantes !== 1 ? 's' : ''}
+          👥 {op.vacantes} vacante{op.vacantes !== 1 ? "s" : ""}
         </span>
         {op.nivel_requerido && (
-          <span className={clsx('badge', NIVEL_COLOR[op.nivel_requerido])}>
+          <span className={clsx("badge", NIVEL_COLOR[op.nivel_requerido])}>
             {op.nivel_requerido}
           </span>
         )}
@@ -227,8 +306,10 @@ function OportunidadCard({ op, onMatch, onEdit }) {
 
       {op.competencias_requeridas?.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-2.5">
-          {op.competencias_requeridas.map(c => (
-            <span key={c} className="badge bg-brand-50 text-brand-600">{c}</span>
+          {op.competencias_requeridas.map((c) => (
+            <span key={c} className="badge bg-brand-50 text-brand-600">
+              {c}
+            </span>
           ))}
         </div>
       )}
@@ -240,65 +321,94 @@ function OportunidadCard({ op, onMatch, onEdit }) {
       )}
 
       <div className="mt-3 pt-2.5 border-t border-gray-100/50 flex items-center justify-between">
-        <button onClick={() => onMatch(op)}
-          className="text-xs text-brand-600 hover:text-brand-800 font-semibold">
+        <button
+          onClick={() => onMatch(op)}
+          className="text-xs text-brand-600 hover:text-brand-800 font-semibold"
+        >
           ✦ Sugerencias
         </button>
         <div className="flex gap-2">
-          <button onClick={onEdit} className="text-xs text-gray-500 hover:text-gray-800">✏️</button>
+          <button
+            onClick={onEdit}
+            className="text-xs text-gray-500 hover:text-gray-800"
+          >
+            ✏️
+          </button>
           {confirming ? (
             <>
-              <button onClick={() => del.mutate()} className="text-xs text-red-600 font-semibold">Sí</button>
-              <button onClick={() => setConfirming(false)} className="text-xs text-gray-400">No</button>
+              <button
+                onClick={() => del.mutate()}
+                className="text-xs text-red-600 font-semibold"
+              >
+                Sí
+              </button>
+              <button
+                onClick={() => setConfirming(false)}
+                className="text-xs text-gray-400"
+              >
+                No
+              </button>
             </>
           ) : (
-            <button onClick={() => setConfirming(true)} className="text-xs text-red-400 hover:text-red-600">✕</button>
+            <button
+              onClick={() => setConfirming(true)}
+              className="text-xs text-red-400 hover:text-red-600"
+            >
+              ✕
+            </button>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ── Página ────────────────────────────────────────────────────────────────────
 export default function Oportunidades() {
-  const [matchFor, setMatchFor]   = useState(null)
-  const [creating, setCreating]   = useState(false)
-  const [editing, setEditing]     = useState(null)
+  const [matchFor, setMatchFor] = useState(null);
+  const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState(null);
 
   const { data: opps = [], isLoading } = useQuery({
-    queryKey: ['oportunidades'],
+    queryKey: ["oportunidades"],
     queryFn: () => oportunidadesApi.list(),
-  })
+  });
 
   const byStatus = OPORTUNIDAD_STATUS.reduce((acc, s) => {
-    acc[s] = opps.filter(o => o.status === s)
-    return acc
-  }, {})
+    acc[s] = opps.filter((o) => o.status === s);
+    return acc;
+  }, {});
 
   return (
     <div className="p-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Pipeline de Oportunidades</h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">{opps.length} oportunidades</p>
+          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+            Pipeline de Oportunidades
+          </h2>
+          <p className="text-sm text-gray-400 mt-1 font-medium">
+            {opps.length} oportunidades
+          </p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-primary">+ Nueva oportunidad</button>
+        <button onClick={() => setCreating(true)} className="btn-primary">
+          + Nueva oportunidad
+        </button>
       </div>
 
       {isLoading ? (
         <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
       ) : (
         <div className="grid grid-cols-5 gap-3 min-w-max">
-          {OPORTUNIDAD_STATUS.map(status => (
+          {OPORTUNIDAD_STATUS.map((status) => (
             <div key={status} className="w-72">
               {/* Gradient status header */}
-              <div className={clsx(
-                'mb-4 rounded-xl px-4 py-2.5 flex items-center justify-between',
-                'bg-gradient-to-r text-white',
-                STATUS_GRADIENT[status],
-              )}
-                style={{ boxShadow: '0 3px 12px rgba(0,0,0,0.12)' }}
+              <div
+                className={clsx(
+                  "mb-4 rounded-xl px-4 py-2.5 flex items-center justify-between",
+                  "bg-gradient-to-r text-white",
+                  STATUS_GRADIENT[status],
+                )}
+                style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.12)" }}
               >
                 <h3 className="text-xs font-bold uppercase tracking-wider">
                   {OPORTUNIDAD_STATUS_LABEL[status]}
@@ -308,10 +418,13 @@ export default function Oportunidades() {
                 </span>
               </div>
               <div className="space-y-4">
-                {byStatus[status].map(o => (
-                  <OportunidadCard key={o.id} op={o}
+                {byStatus[status].map((o) => (
+                  <OportunidadCard
+                    key={o.id}
+                    op={o}
                     onMatch={setMatchFor}
-                    onEdit={() => setEditing(o)} />
+                    onEdit={() => setEditing(o)}
+                  />
                 ))}
                 {byStatus[status].length === 0 && (
                   <div className="border-2 border-dashed border-gray-200 rounded-2xl h-24 flex items-center justify-center">
@@ -324,7 +437,9 @@ export default function Oportunidades() {
         </div>
       )}
 
-      {matchFor && <MatchPanel oportunidad={matchFor} onClose={() => setMatchFor(null)} />}
+      {matchFor && (
+        <MatchPanel oportunidad={matchFor} onClose={() => setMatchFor(null)} />
+      )}
 
       {creating && (
         <Panel title="Nueva oportunidad" onClose={() => setCreating(false)}>
@@ -332,10 +447,13 @@ export default function Oportunidades() {
         </Panel>
       )}
       {editing && (
-        <Panel title={`Editar · ${editing.nombre}`} onClose={() => setEditing(null)}>
+        <Panel
+          title={`Editar · ${editing.nombre}`}
+          onClose={() => setEditing(null)}
+        >
           <OportunidadForm initial={editing} onClose={() => setEditing(null)} />
         </Panel>
       )}
     </div>
-  )
+  );
 }
