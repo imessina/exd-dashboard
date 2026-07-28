@@ -13,6 +13,18 @@ class NivelSeniority(str, Enum):
     lead_designer = "Lead Designer"
     expert_designer = "Expert Designer"
     chief_designer = "Chief Designer"
+    
+    junior_analyst = "Junior Analyst"
+    analyst = "Analyst"
+    lead_analyst = "Lead Analyst"
+    expert_analyst = "Expert Analyst"
+    chief_analyst = "Chief Analyst"
+
+    junior_engineer = "Junior Engineer"
+    engineer = "Engineer"
+    lead_engineer = "Lead Engineer"
+    expert_engineer = "Expert Engineer"
+
     manager = "Manager"
 
 class AsignacionEstado(str, Enum):

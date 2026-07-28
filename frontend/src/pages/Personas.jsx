@@ -7,6 +7,31 @@ import Panel from "../components/Panel";
 import TagInput from "../components/TagInput";
 import SkillCheckboxes from "../components/SkillCheckboxes";
 
+function obtenerCategoriaNivel(nivel = "") {
+  const valor = String(nivel).trim().toLowerCase();
+
+  if (valor.includes("manager")) return "Manager";
+  if (valor.includes("chief")) return "Chief";
+  if (valor.includes("expert")) return "Expert";
+  if (valor.includes("lead")) return "Lead";
+  if (valor.includes("junior")) return "Junior";
+
+  if (valor === "designer" || valor === "engineer" || valor === "analyst") {
+    return "Engineer";
+  }
+
+  return "Sin clasificar";
+}
+
+const CATEGORIAS_NIVEL = [
+  "Junior",
+  "Engineer",
+  "Lead",
+  "Expert",
+  "Chief",
+  "Manager",
+];
+
 const slugify = (s) =>
   s
     .toLowerCase()
@@ -528,13 +553,18 @@ export default function Personas() {
   });
 
   const filtered = personas.filter((p) => {
-    const q = search.toLowerCase();
-    return (
-      (!search ||
-        p.nombre.toLowerCase().includes(q) ||
-        p.rol.toLowerCase().includes(q)) &&
-      (!nivelFilter || p.nivel_seniority === nivelFilter)
-    );
+    const q = search.trim().toLowerCase();
+
+    const coincideBusqueda =
+      !q ||
+      p.nombre?.toLowerCase().includes(q) ||
+      p.rol?.toLowerCase().includes(q) ||
+      p.nivel_seniority?.toLowerCase().includes(q);
+
+    const coincideCategoria =
+      !nivelFilter || obtenerCategoriaNivel(p.nivel_seniority) === nivelFilter;
+
+    return coincideBusqueda && coincideCategoria;
   });
 
   return (
@@ -543,7 +573,7 @@ export default function Personas() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Equipo ExD
+            Equipo DX
           </h2>
           <p className="text-sm text-gray-400 mt-1 font-medium">
             {personas.length} personas
@@ -568,8 +598,10 @@ export default function Personas() {
           className="input w-44"
         >
           <option value="">Todas las categorías</option>
-          {NIVELES.map((n) => (
-            <option key={n}>{n}</option>
+          {CATEGORIAS_NIVEL.map((categoria) => (
+            <option key={categoria} value={categoria}>
+              {categoria}
+            </option>
           ))}
         </select>
       </div>

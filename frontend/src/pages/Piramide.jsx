@@ -1,41 +1,68 @@
 import { useQuery } from "@tanstack/react-query";
 import { personasApi } from "../services/api";
-import { NIVEL_COLOR } from "../utils/constants";
 import clsx from "clsx";
 
+function obtenerNivelPiramide(nivel = "") {
+  const valor = nivel.toLowerCase();
+
+  if (valor.includes("manager")) return "Manager";
+  if (valor.includes("chief")) return "Chief";
+  if (valor.includes("expert")) return "Expert";
+  if (valor.includes("lead")) return "Lead";
+  if (valor.includes("junior")) return "Junior";
+
+  if (valor === "designer" || valor === "engineer" || valor === "analyst") {
+    return "Engineer";
+  }
+
+  return "Sin clasificar";
+}
+
 const NIVELES_ORDER = [
-  "Chief Designer",
-  "Expert Designer",
-  "Lead Designer",
-  "Designer",
-  "Junior Designer",
+  "Manager",
+  "Chief",
+  "Expert",
+  "Lead",
+  "Engineer",
+  "Junior",
 ];
 
 const NIVEL_STYLES = {
-  "Chief Designer": {
+  Manager: {
+    bar: "from-slate-700 to-slate-900",
+    dot: "bg-slate-700",
+    text: "text-slate-800",
+    badge: "bg-slate-100 text-slate-800",
+  },
+  Chief: {
     bar: "from-pink-400 to-rose-500",
     dot: "bg-pink-400",
     text: "text-pink-700",
+    badge: "bg-pink-100 text-pink-700",
   },
-  "Expert Designer": {
+  Expert: {
     bar: "from-purple-400 to-violet-500",
     dot: "bg-purple-400",
     text: "text-purple-700",
+    badge: "bg-purple-100 text-purple-700",
   },
-  "Lead Designer": {
+  Lead: {
     bar: "from-indigo-400 to-blue-500",
     dot: "bg-indigo-400",
     text: "text-indigo-700",
+    badge: "bg-indigo-100 text-indigo-700",
   },
-  Designer: {
+  Engineer: {
     bar: "from-blue-400 to-cyan-500",
     dot: "bg-blue-400",
     text: "text-blue-700",
+    badge: "bg-blue-100 text-blue-700",
   },
-  "Junior Designer": {
+  Junior: {
     bar: "from-gray-300 to-gray-400",
     dot: "bg-gray-400",
     text: "text-gray-600",
+    badge: "bg-gray-100 text-gray-600",
   },
 };
 
@@ -45,16 +72,19 @@ export default function Piramide() {
     queryFn: () => personasApi.list(),
   });
 
-  const groups = NIVELES_ORDER.reduce((acc, n) => {
-    acc[n] = personas.filter((p) => p.nivel_seniority === n);
+  const groups = NIVELES_ORDER.reduce((acc, nivel) => {
+    acc[nivel] = personas.filter(
+      (persona) => obtenerNivelPiramide(persona.nivel_seniority) === nivel,
+    );
+
     return acc;
   }, {});
 
   const maxCount = Math.max(...NIVELES_ORDER.map((n) => groups[n].length), 1);
 
-  const seniorPlus = personas.filter((p) =>
-    ["Lead Designer", "Expert Designer", "Chief Designer"].includes(
-      p.nivel_seniority,
+  const seniorPlus = personas.filter((persona) =>
+    ["Lead", "Expert", "Chief", "Manager"].includes(
+      obtenerNivelPiramide(persona.nivel_seniority),
     ),
   ).length;
 
@@ -97,7 +127,9 @@ export default function Piramide() {
                 return (
                   <div key={nivel} className="w-full flex items-center gap-4">
                     <div className="w-16 text-right shrink-0">
-                      <span className={clsx("text-xs font-bold", styles.text)}>
+                      <span
+                        className={clsx("badge", NIVEL_STYLES[nivel].badge)}
+                      >
                         {nivel}
                       </span>
                     </div>
@@ -145,8 +177,8 @@ export default function Piramide() {
             {/* Ratio bar */}
             <div className="mt-8 pt-5 border-t border-gray-100">
               <div className="flex justify-between text-xs text-gray-400 mb-2 font-semibold">
-                <span>Junior / Designer</span>
-                <span>Lead / Expert / Chief</span>
+                <span>Junior / Engineer</span>
+                <span>Lead / Expert / Chief / Manager</span>
               </div>
               <div
                 className="h-3 rounded-full overflow-hidden flex"
@@ -207,7 +239,7 @@ export default function Piramide() {
                   className={clsx("card", count === 0 && "opacity-40")}
                 >
                   <div className="flex items-center justify-between mb-2.5">
-                    <span className={clsx("badge", NIVEL_COLOR[nivel])}>
+                    <span className={clsx("badge", NIVEL_STYLES[nivel].badge)}>
                       {nivel}
                     </span>
                     <span className="text-2xl font-extrabold text-gray-900 tabular-nums">
@@ -248,7 +280,7 @@ export default function Piramide() {
                 {Math.round((seniorPlus / Math.max(personas.length, 1)) * 100)}%
               </p>
               <p className="text-xs text-white/60 mt-1 font-medium">
-                {seniorPlus} personas · Lead, Expert o Chief Designer
+                {seniorPlus} personas · Lead, Expert, Chief o Manager
               </p>
             </div>
 

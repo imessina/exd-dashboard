@@ -139,7 +139,7 @@ export default function Dashboard() {
       >
         <div className="relative">
           <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-            ExD Control Center
+            DX Control Center
           </p>
           <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
           <p className="text-white/60 mt-1 font-medium text-sm">

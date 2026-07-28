@@ -161,11 +161,11 @@ function Sidebar() {
         <img
           src="/logo.png"
           alt="NTT DATA"
-          className="h-6 w-auto max-w-[140px] object-contain object-left mb-3"
+          className="h-10 w-auto max-w-[220px] object-contain object-left mb-4"
         />
         <div className="min-w-0">
           <p className="text-[10px] font-semibold text-brand-300 uppercase tracking-widest leading-none mb-1">
-            ExD
+            DX
           </p>
           <h1 className="text-sm font-semibold text-white leading-none truncate">
             Control Center
@@ -198,7 +198,7 @@ function Sidebar() {
 
       {/* Footer */}
       <div className="px-5 py-4">
-        <p className="text-[11px] text-slate-400 font-medium">NTT DATA · ExD</p>
+        <p className="text-[11px] text-slate-400 font-medium">NTT DATA · DX</p>
         <p className="text-[10px] text-slate-500 mt-0.5">2026</p>
       </div>
     </aside>
