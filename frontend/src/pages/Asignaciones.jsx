@@ -895,14 +895,20 @@ export default function Asignaciones() {
   ];
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* ── Header ── */}
-      <div className="flex items-start justify-between gap-4">
+      <div
+        className="p-8 text-white flex items-start justify-between gap-4"
+        style={{
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Asignaciones
-          </h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+            Somos DX
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight">Asignaciones</h2>
+          <p className="text-sm text-white/60 mt-1 font-medium">
             {personas.length} personas · {proyectos.length} proyectos ·{" "}
             {libresCount} disponibles
           </p>
@@ -914,6 +920,8 @@ export default function Asignaciones() {
           + Nueva asignación
         </button>
       </div>
+
+      <div className="px-8 space-y-6">
 
       {/* ── Alertas de próximas liberaciones ── */}
       {!isLoading && (
@@ -1005,6 +1013,7 @@ export default function Asignaciones() {
           />
         </Panel>
       )}
+      </div>
     </div>
   );
 }

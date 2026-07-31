@@ -25,6 +25,9 @@ export const personasApi = {
   create: (data) => api.post("/personas", data).then((r) => r.data),
   update: (id, data) => api.put(`/personas/${id}`, data).then((r) => r.data),
   delete: (id) => api.delete(`/personas/${id}`),
+  skills: (id) => api.get(`/personas/${id}/skills`).then((r) => r.data),
+  replaceSkills: (id, skills) =>
+    api.put(`/personas/${id}/skills`, { skills }).then((r) => r.data),
 };
 
 // ── Asignaciones ─────────────────────────────────────────────────────────────

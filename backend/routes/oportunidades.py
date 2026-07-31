@@ -80,17 +80,35 @@ def match_personas(oportunidad_id: str, db: Session = Depends(get_db)):
         models.Persona.id.not_in(ids_asignadas)
     ).all()
 
-    # Filtrar por nivel si se especificó
+    # Filtrar por nivel de pirámide mínimo si se especificó.
+    # El orden va desde el nivel inicial al nivel más alto.
     if o.nivel_requerido:
-        niveles = ["Junior Designer", "Designer", "Lead Designer", "Expert Designer", "Chief Designer"]
-        nivel_min = niveles.index(o.nivel_requerido)
+        niveles = [
+            "Junior",
+            "Professional",
+            "Leader",
+            "Expert",
+            "Evangelist",
+            "Chief",
+            "Manager",
+            "Director",
+        ]
+        nivel_requerido = (
+            o.nivel_requerido.value
+            if hasattr(o.nivel_requerido, "value")
+            else str(o.nivel_requerido)
+        )
+        nivel_min = niveles.index(nivel_requerido)
         candidatos = [
-            p for p in candidatos
-            if p.nivel_seniority and niveles.index(p.nivel_seniority) >= nivel_min
+            p
+            for p in candidatos
+            if p.nivel_piramide in niveles
+            and niveles.index(p.nivel_piramide) >= nivel_min
         ]
 
-    # Score: cuántas competencias requeridas tiene
+    # Score: cuántas competencias requeridas tiene.
     competencias = o.competencias_requeridas or []
+
     def score(p):
         habilidades = p.habilidades or []
         return sum(1 for c in competencias if c in habilidades)
@@ -101,10 +119,10 @@ def match_personas(oportunidad_id: str, db: Session = Depends(get_db)):
         {
             "persona_id": p.id,
             "nombre": p.nombre,
-            "nivel": p.nivel_seniority,
+            "nivel": p.nivel_piramide,
             "habilidades": p.habilidades,
             "match_score": score(p),
-            "max_score": len(competencias)
+            "max_score": len(competencias),
         }
         for p in candidatos_sorted
     ]

@@ -1,36 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { personasApi } from "../services/api";
-import { NIVELES, NIVEL_COLOR } from "../utils/constants";
+import { personasApi, asignacionesApi } from "../services/api";
+import { NIVELES_PIRAMIDE, NIVEL_COLOR } from "../utils/constants";
 import clsx from "clsx";
 import Panel from "../components/Panel";
 import TagInput from "../components/TagInput";
-import SkillCheckboxes from "../components/SkillCheckboxes";
+import SkillLevelSelector from "../components/SkillLevelSelector";
 
-function obtenerCategoriaNivel(nivel = "") {
-  const valor = String(nivel).trim().toLowerCase();
+const CATEGORIAS_NIVEL = NIVELES_PIRAMIDE;
 
-  if (valor.includes("manager")) return "Manager";
-  if (valor.includes("chief")) return "Chief";
-  if (valor.includes("expert")) return "Expert";
-  if (valor.includes("lead")) return "Lead";
-  if (valor.includes("junior")) return "Junior";
+const ESTADOS_LABORALES = ["Disponible", "Staffing", "Inactivo"];
+const ESTADOS_VISIBLES = ["Disponible", "En proyecto", "Staffing", "Inactivo"];
 
-  if (valor === "designer" || valor === "engineer" || valor === "analyst") {
-    return "Engineer";
-  }
+const ESTADO_LABORAL_COLOR = {
+  Disponible: "bg-teal-50 text-teal-800 border border-teal-200",
+  "En proyecto": "bg-slate-800 text-white border border-slate-800",
+  Staffing: "bg-amber-50 text-amber-900 border border-amber-200",
+  Inactivo: "bg-gray-100 text-gray-600 border border-gray-300",
+};
 
-  return "Sin clasificar";
+function normalizarTexto(valor = "") {
+  return String(valor)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 }
 
-const CATEGORIAS_NIVEL = [
-  "Junior",
-  "Engineer",
-  "Lead",
-  "Expert",
-  "Chief",
-  "Manager",
-];
+function fechaLocalISO() {
+  const ahora = new Date();
+  const offset = ahora.getTimezoneOffset() * 60 * 1000;
+  return new Date(ahora.getTime() - offset).toISOString().slice(0, 10);
+}
+
+function esAsignacionVigente(asignacion) {
+  if (asignacion.estado !== "active") return false;
+
+  const hoy = fechaLocalISO();
+  const inicio = asignacion.fecha_inicio;
+  const liberacion = asignacion.fecha_liberacion;
+
+  return (!inicio || inicio <= hoy) && (!liberacion || liberacion >= hoy);
+}
+
+function obtenerEstadoVisible(persona, personasEnProyecto) {
+  if (personasEnProyecto.has(persona.id)) return "En proyecto";
+
+  if (persona.estado_laboral === "Staffing") return "Staffing";
+  if (persona.estado_laboral === "Inactivo") return "Inactivo";
+
+  return "Disponible";
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return "—";
+  const [year, month, day] = String(fecha).split("-");
+  return year && month && day ? `${day}/${month}/${year}` : fecha;
+}
 
 const slugify = (s) =>
   s
@@ -43,9 +69,14 @@ const slugify = (s) =>
 const EMPTY = {
   nombre: "",
   rol: "",
-  nivel_seniority: "Designer",
+  numero_empleado: "",
+  fecha_ingreso_compania: "",
+  fecha_nacimiento: "",
+  nivel_piramide: "Professional",
+  estado_laboral: "Disponible",
   anos_experiencia: "",
   habilidades: [],
+  skillLevels: [],
   certificaciones: [],
   intereses: [],
   disponible_mentoria: false,
@@ -54,12 +85,12 @@ const EMPTY = {
 
 // Gradient avatar colors based on name hash
 const AVATAR_GRADIENTS = [
-  "from-violet-500 to-purple-600",
-  "from-blue-500 to-indigo-600",
-  "from-emerald-500 to-teal-600",
-  "from-amber-500 to-orange-600",
-  "from-pink-500 to-rose-600",
-  "from-cyan-500 to-blue-600",
+  "from-slate-700 to-slate-950",
+  "from-blue-800 to-slate-950",
+  "from-slate-600 to-blue-900",
+  "from-teal-700 to-slate-900",
+  "from-amber-700 to-slate-900",
+  "from-cyan-800 to-slate-950",
 ];
 function avatarGradient(name) {
   let h = 0;
@@ -75,9 +106,14 @@ function PersonaForm({ initial, onClose }) {
       ? {
           nombre: initial.nombre ?? "",
           rol: initial.rol ?? "",
-          nivel_seniority: initial.nivel_seniority ?? "Designer",
+          numero_empleado: initial.numero_empleado ?? "",
+          fecha_ingreso_compania: initial.fecha_ingreso_compania ?? "",
+          fecha_nacimiento: initial.fecha_nacimiento ?? "",
+          nivel_piramide: initial.nivel_piramide ?? "Professional",
+          estado_laboral: initial.estado_laboral ?? "Disponible",
           anos_experiencia: initial.anos_experiencia ?? "",
           habilidades: initial.habilidades ?? [],
+          skillLevels: [],
           certificaciones: initial.certificaciones ?? [],
           intereses: initial.intereses ?? [],
           disponible_mentoria: initial.disponible_mentoria ?? false,
@@ -85,6 +121,18 @@ function PersonaForm({ initial, onClose }) {
         }
       : { ...EMPTY },
   );
+
+  const { data: nivelesIniciales = [], isLoading: cargandoNiveles } = useQuery({
+    queryKey: ["persona-skills", initial?.id],
+    queryFn: () => personasApi.skills(initial.id),
+    enabled: Boolean(initial?.id),
+  });
+
+  useEffect(() => {
+    if (initial?.id) {
+      setForm((actual) => ({ ...actual, skillLevels: nivelesIniciales }));
+    }
+  }, [initial?.id, nivelesIniciales]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -95,26 +143,39 @@ function PersonaForm({ initial, onClose }) {
     onClose();
   };
 
-  const create = useMutation({
-    mutationFn: personasApi.create,
-    onSuccess: done,
-  });
-  const update = useMutation({
-    mutationFn: (d) => personasApi.update(initial.id, d),
-    onSuccess: done,
-  });
-  const busy = create.isPending || update.isPending;
-  const err = create.error || update.error;
+  const save = useMutation({
+    mutationFn: async () => {
+      const { skillLevels, ...personFields } = form;
+      const data = {
+        ...personFields,
+        habilidades: skillLevels.map((item) => item.nombre),
+        anos_experiencia:
+          form.anos_experiencia !== "" ? Number(form.anos_experiencia) : null,
+      };
 
-  const submit = (e) => {
-    e.preventDefault();
-    const data = {
-      ...form,
-      anos_experiencia:
-        form.anos_experiencia !== "" ? Number(form.anos_experiencia) : null,
-    };
-    if (initial) update.mutate(data);
-    else create.mutate({ ...data, id: slugify(form.nombre) });
+      const persona = initial
+        ? await personasApi.update(initial.id, data)
+        : await personasApi.create({ ...data, id: slugify(form.nombre) });
+
+      await personasApi.replaceSkills(
+        persona.id,
+        skillLevels.map((item) => ({
+          skill_id: item.skill_id,
+          nivel: Number(item.nivel),
+        })),
+      );
+
+      return persona;
+    },
+    onSuccess: done,
+  });
+
+  const busy = save.isPending;
+  const err = save.error;
+
+  const submit = (event) => {
+    event.preventDefault();
+    save.mutate();
   };
 
   return (
@@ -140,15 +201,43 @@ function PersonaForm({ initial, onClose }) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="form-label">Categoría</label>
+          <label className="form-label">N° de empleado</label>
+          <input
+            className="input"
+            value={form.numero_empleado}
+            onChange={(e) => set("numero_empleado", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="form-label">Fecha de ingreso</label>
+          <input
+            type="date"
+            className="input"
+            value={form.fecha_ingreso_compania}
+            onChange={(e) => set("fecha_ingreso_compania", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="form-label">Fecha de nacimiento</label>
+          <input
+            type="date"
+            className="input"
+            value={form.fecha_nacimiento}
+            onChange={(e) => set("fecha_nacimiento", e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label className="form-label">Nivel de pirámide</label>
           <select
             className="input"
-            value={form.nivel_seniority}
-            onChange={(e) => set("nivel_seniority", e.target.value)}
+            value={form.nivel_piramide}
+            onChange={(e) => set("nivel_piramide", e.target.value)}
           >
-            {NIVELES.map((n) => (
+            {NIVELES_PIRAMIDE.map((n) => (
               <option key={n}>{n}</option>
             ))}
           </select>
@@ -163,13 +252,35 @@ function PersonaForm({ initial, onClose }) {
             onChange={(e) => set("anos_experiencia", e.target.value)}
           />
         </div>
+        <div>
+          <label className="form-label">Disponibilidad manual</label>
+          <select
+            className="input"
+            value={form.estado_laboral}
+            onChange={(e) => set("estado_laboral", e.target.value)}
+          >
+            {ESTADOS_LABORALES.map((estado) => (
+              <option key={estado} value={estado}>
+                {estado}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-[11px] text-gray-400">
+            “En proyecto” se calcula automáticamente según las asignaciones
+            activas.
+          </p>
+        </div>
       </div>
       <div>
         <label className="form-label">Habilidades</label>
-        <SkillCheckboxes
-          value={form.habilidades}
-          onChange={(v) => set("habilidades", v)}
-        />
+        {cargandoNiveles ? (
+          <p className="text-xs text-gray-400 py-3">Cargando evaluaciones…</p>
+        ) : (
+          <SkillLevelSelector
+            value={form.skillLevels}
+            onChange={(value) => set("skillLevels", value)}
+          />
+        )}
       </div>
       <div>
         <label className="form-label">Certificaciones</label>
@@ -224,9 +335,13 @@ function PersonaForm({ initial, onClose }) {
 }
 
 // ── Perfil completo ──────────────────────────────────────────────────────────
-function PersonaPanel({ persona, onClose, onEdit }) {
+function PersonaPanel({ persona, estadoVisible, onClose, onEdit }) {
   const qc = useQueryClient();
   const [confirming, setConfirming] = useState(false);
+  const { data: skillsEvaluadas = [] } = useQuery({
+    queryKey: ["persona-skills", persona.id],
+    queryFn: () => personasApi.skills(persona.id),
+  });
 
   const del = useMutation({
     mutationFn: () => personasApi.delete(persona.id),
@@ -247,16 +362,25 @@ function PersonaPanel({ persona, onClose, onEdit }) {
               "w-14 h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center text-white text-lg font-bold shrink-0",
               avatarGradient(persona.nombre),
             )}
-            style={{ boxShadow: "0 4px 14px rgba(28,159,228,0.30)" }}
+            style={{ boxShadow: "0 4px 14px rgba(15,23,42,0.20)" }}
           >
             {persona.nombre.charAt(0)}
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={clsx("badge", NIVEL_COLOR[persona.nivel_seniority])}
+                className={clsx("badge", NIVEL_COLOR[persona.nivel_piramide])}
               >
-                {persona.nivel_seniority}
+                {persona.nivel_piramide ?? "Sin clasificar"}
+              </span>
+              <span
+                className={clsx(
+                  "badge",
+                  ESTADO_LABORAL_COLOR[estadoVisible] ??
+                    "bg-slate-100 text-slate-700 border border-slate-200",
+                )}
+              >
+                {estadoVisible}
               </span>
               {persona.anos_experiencia && (
                 <span className="text-xs text-gray-400 font-medium">
@@ -268,14 +392,50 @@ function PersonaPanel({ persona, onClose, onEdit }) {
           </div>
         </div>
 
-        {persona.habilidades?.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-xl bg-gray-50 p-3">
           <div>
-            <p className="form-label">Habilidades</p>
-            <div className="flex flex-wrap gap-1.5">
-              {persona.habilidades.map((h) => (
-                <span key={h} className="badge bg-brand-50 text-brand-600">
-                  {h}
-                </span>
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+              N° empleado
+            </p>
+            <p className="text-sm font-semibold text-gray-700 mt-0.5">
+              {persona.numero_empleado || "—"}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+              Ingreso
+            </p>
+            <p className="text-sm font-semibold text-gray-700 mt-0.5">
+              {formatearFecha(persona.fecha_ingreso_compania)}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+              Nacimiento
+            </p>
+            <p className="text-sm font-semibold text-gray-700 mt-0.5">
+              {formatearFecha(persona.fecha_nacimiento)}
+            </p>
+          </div>
+        </div>
+
+        {skillsEvaluadas.length > 0 && (
+          <div>
+            <p className="section-label mb-2">Skills evaluadas</p>
+            <div className="space-y-1.5">
+              {skillsEvaluadas.map((skill) => (
+                <div
+                  key={skill.skill_id}
+                  className="flex items-center justify-between gap-3 rounded-lg border border-slate-100 px-3 py-2"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-slate-800 truncate">{skill.nombre}</p>
+                    <p className="text-[10px] text-slate-400">{skill.categoria || "Sin categoría"}</p>
+                  </div>
+                  <span className="w-7 h-7 rounded-md bg-slate-800 text-white text-xs font-bold flex items-center justify-center">
+                    {skill.nivel}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
@@ -470,7 +630,7 @@ function PersonaCard({ persona, onClick }) {
   const skills = persona.habilidades ?? [];
   return (
     <button
-      className="card text-left cursor-pointer w-full h-full flex flex-col hover:-translate-y-1 hover:shadow-lg group"
+      className="card text-left cursor-pointer w-full h-full flex flex-col border border-slate-200/80 hover:-translate-y-0.5 hover:shadow-md group"
       onClick={onClick}
     >
       {/* Identidad: avatar + nombre + rol (nombre con espacio propio, sin competir con la categoría) */}
@@ -480,7 +640,7 @@ function PersonaCard({ persona, onClick }) {
             "w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center text-white text-base font-bold shrink-0",
             avatarGradient(persona.nombre),
           )}
-          style={{ boxShadow: "0 3px 10px rgba(28,159,228,0.25)" }}
+          style={{ boxShadow: "0 3px 10px rgba(15,23,42,0.18)" }}
         >
           {persona.nombre.charAt(0)}
         </div>
@@ -501,10 +661,10 @@ function PersonaCard({ persona, onClick }) {
         <span
           className={clsx(
             "badge",
-            NIVEL_COLOR[persona.nivel_seniority] ?? "bg-gray-100 text-gray-600",
+            NIVEL_COLOR[persona.nivel_piramide] ?? "bg-gray-100 text-gray-600",
           )}
         >
-          {persona.nivel_seniority}
+          {persona.nivel_piramide ?? "Sin clasificar"}
         </span>
       </div>
 
@@ -543,117 +703,286 @@ function PersonaCard({ persona, onClick }) {
 export default function Personas() {
   const [search, setSearch] = useState("");
   const [nivelFilter, setNivelFilter] = useState("");
+  const [estadoFilter, setEstadoFilter] = useState("");
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [vista, setVista] = useState("list");
 
   const { data: personas = [], isLoading } = useQuery({
     queryKey: ["personas"],
     queryFn: () => personasApi.list(),
   });
 
+  const { data: asignaciones = [], isLoading: isLoadingAsignaciones } =
+    useQuery({
+      queryKey: ["asignaciones"],
+      queryFn: () => asignacionesApi.list(),
+    });
+
+  const personasEnProyecto = new Set(
+    asignaciones
+      .filter(esAsignacionVigente)
+      .map((asignacion) => asignacion.persona_id),
+  );
+
+  const estadoVisiblePorPersona = Object.fromEntries(
+    personas.map((persona) => [
+      persona.id,
+      obtenerEstadoVisible(persona, personasEnProyecto),
+    ]),
+  );
+
   const filtered = personas.filter((p) => {
-    const q = search.trim().toLowerCase();
+    const terminosBusqueda = normalizarTexto(search)
+      .split(/\s+/)
+      .filter(Boolean);
+
+    const contenidoPersona = normalizarTexto(
+      [p.nombre, p.rol, p.nivel_piramide, p.numero_empleado]
+        .filter(Boolean)
+        .join(" "),
+    );
 
     const coincideBusqueda =
-      !q ||
-      p.nombre?.toLowerCase().includes(q) ||
-      p.rol?.toLowerCase().includes(q) ||
-      p.nivel_seniority?.toLowerCase().includes(q);
+      terminosBusqueda.length === 0 ||
+      terminosBusqueda.every((termino) => contenidoPersona.includes(termino));
 
-    const coincideCategoria =
-      !nivelFilter || obtenerCategoriaNivel(p.nivel_seniority) === nivelFilter;
+    const coincideCategoria = !nivelFilter || p.nivel_piramide === nivelFilter;
 
-    return coincideBusqueda && coincideCategoria;
+    const coincideEstado =
+      !estadoFilter || estadoVisiblePorPersona[p.id] === estadoFilter;
+
+    return coincideBusqueda && coincideCategoria && coincideEstado;
   });
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div
+        className="p-8 text-white flex items-center justify-between gap-4"
+        style={{
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Equipo DX
-          </h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+            Somos DX
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight">Equipo DX</h2>
+          <p className="text-sm text-white/60 mt-1 font-medium">
             {personas.length} personas
           </p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-primary">
+        <button
+          onClick={() => setCreating(true)}
+          className="btn-primary shrink-0"
+        >
           + Nueva persona
         </button>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-3 flex-wrap">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar por nombre o rol..."
-          className="input max-w-xs"
-        />
-        <select
-          value={nivelFilter}
-          onChange={(e) => setNivelFilter(e.target.value)}
-          className="input w-44"
-        >
-          <option value="">Todas las categorías</option>
-          {CATEGORIAS_NIVEL.map((categoria) => (
-            <option key={categoria} value={categoria}>
-              {categoria}
-            </option>
-          ))}
-        </select>
-      </div>
+      <div className="px-8 space-y-6">
+        {/* Filters */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nombre o rol..."
+            className="input max-w-xs"
+          />
 
-      {/* Grid */}
-      {isLoading ? (
-        <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((p) => (
-            <PersonaCard
-              key={p.id}
-              persona={p}
-              onClick={() => setSelected(p)}
-            />
-          ))}
-          {filtered.length === 0 && (
-            <p className="text-sm text-gray-400 col-span-full py-8 text-center">
-              Sin resultados.
-            </p>
-          )}
+          <select
+            value={nivelFilter}
+            onChange={(e) => setNivelFilter(e.target.value)}
+            className="input w-44"
+          >
+            <option value="">Todas las categorías</option>
+
+            {CATEGORIAS_NIVEL.map((categoria) => (
+              <option key={categoria} value={categoria}>
+                {categoria}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={estadoFilter}
+            onChange={(e) => setEstadoFilter(e.target.value)}
+            className="input w-44"
+          >
+            <option value="">Todos los estados</option>
+            {ESTADOS_LABORALES.map((estado) => (
+              <option key={estado} value={estado}>
+                {estado}
+              </option>
+            ))}
+          </select>
+
+          <p className="basis-full text-[11px] text-gray-400">
+            “En proyecto” se determina automáticamente por asignaciones activas
+            y vigentes.
+          </p>
+
+          <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white">
+            <button
+              type="button"
+              onClick={() => setVista("list")}
+              className={clsx(
+                "px-3 py-2 text-xs font-semibold transition-colors",
+                vista === "list"
+                  ? "bg-brand-500 text-white"
+                  : "text-gray-500 hover:bg-gray-50",
+              )}
+            >
+              Lista
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setVista("cards")}
+              className={clsx(
+                "px-3 py-2 text-xs font-semibold transition-colors",
+                vista === "cards"
+                  ? "bg-brand-500 text-white"
+                  : "text-gray-500 hover:bg-gray-50",
+              )}
+            >
+              Tarjetas
+            </button>
+          </div>
         </div>
-      )}
 
-      {selected && !editing && (
-        <PersonaPanel
-          persona={selected}
-          onClose={() => setSelected(null)}
-          onEdit={() => {
-            setEditing(selected);
-            setSelected(null);
-          }}
-        />
-      )}
+        {/* Vista de tarjetas o lista */}
+        {isLoading || isLoadingAsignaciones ? (
+          <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
+        ) : vista === "cards" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {filtered.map((p) => (
+              <PersonaCard
+                key={p.id}
+                persona={p}
+                onClick={() => setSelected(p)}
+              />
+            ))}
 
-      {(creating || editing) && (
-        <Panel
-          title={editing ? `Editar — ${editing.nombre}` : "Nueva persona"}
-          onClose={() => {
-            setCreating(false);
-            setEditing(null);
-          }}
-        >
-          <PersonaForm
-            initial={editing ?? null}
+            {filtered.length === 0 && (
+              <p className="text-sm text-gray-400 col-span-full py-8 text-center">
+                Sin resultados.
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50">
+                <tr className="text-left text-xs uppercase tracking-wider text-gray-400">
+                  <th className="px-4 py-3">Persona</th>
+                  <th className="px-4 py-3">Rol</th>
+                  <th className="px-4 py-3">Categoría</th>
+                  <th className="px-4 py-3">N° empleado</th>
+                  <th className="px-4 py-3">Fecha de ingreso</th>
+                  <th className="px-4 py-3">Años de experiencia</th>
+                  <th className="px-4 py-3">Estado</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filtered.map((p) => (
+                  <tr
+                    key={p.id}
+                    onClick={() => setSelected(p)}
+                    className="border-t border-gray-100 hover:bg-brand-50/30 cursor-pointer"
+                  >
+                    <td className="px-4 py-3 font-semibold text-gray-900">
+                      {p.nombre}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-500">{p.rol || "—"}</td>
+
+                    <td className="px-4 py-3">
+                      <span
+                        className={clsx(
+                          "badge",
+                          NIVEL_COLOR[p.nivel_piramide] ??
+                            "bg-gray-100 text-gray-600",
+                        )}
+                      >
+                        {p.nivel_piramide ?? "Sin clasificar"}
+                      </span>
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-500">
+                      {p.numero_empleado || "—"}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                      {formatearFecha(p.fecha_ingreso_compania)}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-500">
+                      {p.anos_experiencia ?? "—"}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <span
+                        className={clsx(
+                          "badge",
+                          ESTADO_LABORAL_COLOR[estadoVisiblePorPersona[p.id]] ??
+                            "bg-slate-100 text-slate-700 border border-slate-200",
+                        )}
+                      >
+                        {estadoVisiblePorPersona[p.id]}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+
+                {filtered.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-4 py-8 text-center text-gray-400"
+                    >
+                      Sin resultados.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {selected && !editing && (
+          <PersonaPanel
+            persona={selected}
+            estadoVisible={estadoVisiblePorPersona[selected.id] ?? "Disponible"}
+            onClose={() => setSelected(null)}
+            onEdit={() => {
+              setEditing(selected);
+              setSelected(null);
+            }}
+          />
+        )}
+
+        {(creating || editing) && (
+          <Panel
+            title={editing ? `Editar — ${editing.nombre}` : "Nueva persona"}
             onClose={() => {
               setCreating(false);
               setEditing(null);
             }}
-          />
-        </Panel>
-      )}
+          >
+            <PersonaForm
+              initial={editing ?? null}
+              onClose={() => {
+                setCreating(false);
+                setEditing(null);
+              }}
+            />
+          </Panel>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,2146 @@
+{
+  "fuente": "Skills(1).xlsx",
+  "escala": {
+    "1": "Básico",
+    "2": "Intermedio",
+    "3": "Avanzado",
+    "4": "Especialista",
+    "5": "Referente"
+  },
+  "personas_excel": [
+    "Américo Narea",
+    "Daniel Bravo",
+    "Pablo Godoy",
+    "Claudia Martínez",
+    "Yesnia Pérez",
+    "Rebecca Tapia",
+    "Claudio Rivas",
+    "Samuel Collante",
+    "Ignacio Messina",
+    "Sebastián Muñoz",
+    "Scarlette Villarreal",
+    "Carolina Muñoz",
+    "Camila Bravo",
+    "Francisco Fuentes",
+    "Aracelis Vivanco",
+    "Vicente Rodríguez",
+    "Pablo Jofré"
+  ],
+  "total_evaluaciones": 349,
+  "evaluaciones": [
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "GCP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AgentCore",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Dialogflow CX",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "OpenAI",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "RAG",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Américo Narea",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Branding",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Dirección de Arte",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Marketing Digital",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Motion Graphics",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "UX / CX",
+      "skill": "Design Systems",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "UX / CX",
+      "skill": "Figma",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "UX / CX",
+      "skill": "Prototyping",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Aracelis Vivanco",
+      "categoria_excel": "UX / CX",
+      "skill": "UI Design",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Analysis",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Visualization",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Google Analytics",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Google Tag Manager",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Looker Studio",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "UX / CX",
+      "skill": "CRO",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Camila Bravo",
+      "categoria_excel": "UX / CX",
+      "skill": "Journey Mapping",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "React",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Carolina Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Azure",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Serverless",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Data & Analytics",
+      "skill": "SQL",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Agile Coaching",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Business Analysis",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Change Management",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "PMO",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Product Discovery",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Product Owner",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Project Management",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AgentCore",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Nova Sonic",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "RAG",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "UX / CX",
+      "skill": "Journey Mapping",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "categoria_excel": "UX / CX",
+      "skill": "UX Design",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Business Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Project Management",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Adobe Commerce / Magento",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "PHP",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "React",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Claudio Rivas",
+      "categoria_excel": "Desarrollo",
+      "skill": "TypeScript",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Azure",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "BigQuery",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "GCP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Visualization",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Data & Analytics",
+      "skill": "SQL",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Agile Coaching",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Business Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Change Management",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "PMO",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Product Discovery",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Project Management",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Mobile iOS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "PHP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "RAG",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Daniel Bravo",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Watson Assistant",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Analysis",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Visualization",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Google Analytics",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Google Tag Manager",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Looker Studio",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Data & Analytics",
+      "skill": "SQL",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Francisco Fuentes",
+      "categoria_excel": "UX / CX",
+      "skill": "CRO",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Azure",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "DevSecOps",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "GCP",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Kubernetes",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Serverless",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Terraform",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "Mobile Android",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "Mobile iOS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Ignacio Messina",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Azure",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "BigQuery",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "DevSecOps",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "GCP",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Kubernetes",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Serverless",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Terraform",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Visualization",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Data & Analytics",
+      "skill": "SQL",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Agile Coaching",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Business Analysis",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Change Management",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "PMO",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Product Discovery",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Project Management",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "C#",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Mobile iOS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "PHP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "Desarrollo",
+      "skill": "TypeScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AgentCore",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "AWS Bedrock",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Gemini",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Nova Sonic",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "OpenAI",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "RAG",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Godoy",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Pablo Jofré",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Data Visualization",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Data & Analytics",
+      "skill": "Google Analytics",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Data & Analytics",
+      "skill": "KPIs",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Business Analysis",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Change Management",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Product Discovery",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Idioma",
+      "skill": "Alemán",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Idioma",
+      "skill": "Griego",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "Accessibility (WCAG)",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "CRO",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "Design Systems",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "Figma",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "Journey Mapping",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "Prototyping",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Rebecca Tapia",
+      "categoria_excel": "UX / CX",
+      "skill": "UI Design",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Adobe Commerce / Magento",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Java",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Desarrollo",
+      "skill": "PHP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Samuel Collante",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Firebase",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "Mobile iOS",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "React",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "React Native",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Desarrollo",
+      "skill": "TypeScript",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Spatial Computing",
+      "skill": "Blender",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Scarlette Villarreal",
+      "categoria_excel": "Spatial Computing",
+      "skill": "Unity",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Azure",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "DevSecOps",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Docker",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "GCP",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Kubernetes",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Serverless",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "Terraform",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "Desarrollo",
+      "skill": "Python",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Sebastián Muñoz",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Idioma",
+      "skill": "Inglés",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Branding",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Dirección de Arte",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Marketing Digital",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Marketing & Creative",
+      "skill": "Motion Graphics",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Spatial Computing",
+      "skill": "Blender",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "Spatial Computing",
+      "skill": "Unity",
+      "nivel": 1
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "UX / CX",
+      "skill": "Design Systems",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "UX / CX",
+      "skill": "Figma",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Vicente Rodríguez",
+      "categoria_excel": "UX / CX",
+      "skill": "UI Design",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "AWS",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Cloud & DevOps",
+      "skill": "CI/CD",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Kanban",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Delivery & Producto",
+      "skill": "Scrum",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Adobe Commerce / Magento",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "APIs REST",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Backend",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "CSS",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Frontend",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Full Stack",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "HTML",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "JavaScript",
+      "nivel": 5
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "Node.js",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "PHP",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "React",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "Desarrollo",
+      "skill": "TypeScript",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Chatbots",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "IA Conversacional",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "LLM",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "IA & GenAI",
+      "skill": "Prompt Engineering",
+      "nivel": 2
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "UX / CX",
+      "skill": "Accessibility (WCAG)",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "UX / CX",
+      "skill": "Design Systems",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "UX / CX",
+      "skill": "Figma",
+      "nivel": 4
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "UX / CX",
+      "skill": "Prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_excel": "Yesnia Pérez",
+      "categoria_excel": "UX / CX",
+      "skill": "UI Design",
+      "nivel": 4
+    }
+  ],
+  "duplicados_consolidados": [
+    {
+      "persona_excel": "Claudia Martínez",
+      "skill": "Business Analysis",
+      "nivel": 5,
+      "categorias": [
+        "Delivery & Producto",
+        "UX / CX"
+      ]
+    },
+    {
+      "persona_excel": "Claudia Martínez",
+      "skill": "Product Discovery",
+      "nivel": 5,
+      "categorias": [
+        "Delivery & Producto",
+        "UX / CX"
+      ]
+    }
+  ]
+}

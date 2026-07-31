@@ -1,4 +1,7 @@
-from sqlalchemy import Column, String, Integer, Boolean, Date, Text, JSON, Enum, CheckConstraint, ForeignKey
+from sqlalchemy import (
+    Column, String, Integer, Boolean, Date, Text, JSON, Enum,
+    CheckConstraint, ForeignKey, UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.types import TIMESTAMP
@@ -24,33 +27,58 @@ class Persona(Base):
 
     id = Column(String, primary_key=True)
     nombre = Column(String, nullable=False)
+
+    # Cargo real, por ejemplo: Lead Engineer, Project Leader o Director.
     rol = Column(String, nullable=False)
+
     numero_empleado = Column(String, unique=True, nullable=True)
     responsable = Column(String, nullable=True)
     empresa_actual = Column(String)
     area = Column(String)
+
+    # Columna histórica. Se mantiene temporalmente para no romper los datos
+    # y pantallas anteriores, pero ya no será la fuente de la pirámide.
     nivel_seniority = Column(
-    Enum(
-        "Junior Designer",
-        "Designer",
-        "Lead Designer",
-        "Expert Designer",
-        "Chief Designer",
-        "Junior Analyst",
-        "Analyst",
-        "Lead Analyst",
-        "Expert Analyst",
-        "Chief Analyst",
-        "Junior Engineer",
-        "Engineer",
-        "Lead Engineer",
-        "Expert Engineer",
-        "Manager",
-        name="nivel_seniority_enum",
-    ),
-    default="Designer",
-)
+        Enum(
+            "Junior Designer",
+            "Designer",
+            "Lead Designer",
+            "Expert Designer",
+            "Chief Designer",
+            "Junior Analyst",
+            "Analyst",
+            "Lead Analyst",
+            "Expert Analyst",
+            "Chief Analyst",
+            "Junior Engineer",
+            "Engineer",
+            "Lead Engineer",
+            "Expert Engineer",
+            "Manager",
+            name="nivel_seniority_enum",
+        ),
+        nullable=True,
+        default=None,
+    )
+
+    # Nivel ejecutivo utilizado por Pirámide y filtros.
+    nivel_piramide = Column(String(30), nullable=True)
+
+    # Estado laboral visible y editable desde Equipo.
+    estado_laboral = Column(String(20), nullable=False, default="Disponible", comment="Estado manual: Disponible, Staffing o Inactivo. En proyecto se calcula desde asignaciones.")
+
+    # Datos visibles del nuevo listado.
+    fecha_ingreso_compania = Column(Date, nullable=True)
+    fecha_nacimiento = Column(Date, nullable=True)
+
+    # Datos privados. Se almacenan, pero no se exponen en PersonaOut.
+    numero_documento = Column(String(20), unique=True, nullable=True)
+    sexo = Column(String(10), nullable=True)
+    nacionalidad = Column(String(80), nullable=True)
+
     anos_experiencia = Column(Integer)
+
+    # Campo histórico. Las skills con nivel se gestionarán en persona_skills.
     habilidades = Column(JSON, default=list)
     certificaciones = Column(JSON, default=list)
     intereses = Column(JSON, default=list)
@@ -60,7 +88,33 @@ class Persona(Base):
     evaluacion_historico = Column(JSON, default=list)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    
+
+
+class PersonaSkill(Base):
+    """Nivel de dominio (1–5) de una skill para una persona."""
+
+    __tablename__ = "persona_skills"
+    __table_args__ = (
+        UniqueConstraint("persona_id", "skill_id", name="persona_skills_persona_skill_unique"),
+        CheckConstraint("nivel BETWEEN 1 AND 5", name="persona_skills_nivel_check"),
+    )
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    persona_id = Column(
+        String,
+        ForeignKey("personas.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    skill_id = Column(
+        String(100),
+        ForeignKey("skills.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    nivel = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
 
 class Asignacion(Base):
@@ -154,21 +208,19 @@ class Oportunidad(Base):
     fases = Column(JSON)
     vacantes = Column(Integer, default=1)
     nivel_requerido = Column(
-    Enum(
-        "Junior Designer",
-        "Designer",
-        "Lead Designer",
-        "Expert Designer",
-        "Chief Designer",
-        "Junior Engineer",
-        "Engineer",
-        "Lead Engineer",
-        "Expert Engineer",
-        "Manager",
-        name="nivel_requerido_enum",
-    ),
-    nullable=True,
-)
+        Enum(
+            "Director",
+            "Manager",
+            "Chief",
+            "Evangelist",
+            "Expert",
+            "Leader",
+            "Professional",
+            "Junior",
+            name="nivel_requerido_enum",
+        ),
+        nullable=True,
+    )
     competencias_requeridas = Column(JSON, default=list)
     timeline_start = Column(Date)
     timeline_end = Column(Date)

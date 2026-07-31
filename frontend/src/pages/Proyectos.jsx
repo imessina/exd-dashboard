@@ -40,12 +40,22 @@ const EMPTY = {
   fecha_launch: "",
 };
 
-const FASE_GRADIENT = {
-  discovery: "from-violet-500 to-purple-600",
-  design: "from-blue-500 to-indigo-600",
-  testing: "from-amber-500 to-orange-600",
-  launch: "from-emerald-500 to-teal-600",
-  evolution: "from-pink-500 to-rose-600",
+const FASE_HEADER_STYLE = {
+  discovery: {
+    background: "linear-gradient(135deg, rgba(71,85,105,0.96), rgba(30,41,59,0.98))",
+  },
+  design: {
+    background: "linear-gradient(135deg, rgba(30,64,175,0.92), rgba(15,23,42,0.98))",
+  },
+  testing: {
+    background: "linear-gradient(135deg, rgba(180,138,25,0.82), rgba(120,86,12,0.92))",
+  },
+  launch: {
+    background: "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
+  },
+  evolution: {
+    background: "linear-gradient(135deg, rgba(51,65,85,0.94), rgba(14,116,144,0.88))",
+  },
 };
 
 // ── Formulario ────────────────────────────────────────────────────────────────
@@ -567,18 +577,21 @@ export default function Proyectos() {
       ) : (
         <>
           {/* Kanban por fase — solo proyectos fixed_scope */}
-          <div className="grid grid-cols-5 gap-3 min-w-max">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 w-full">
             {FASES_PROYECTO.map((fase) => (
-              <div key={fase} className="w-72">
+              <div key={fase} className="min-w-0 w-full">
                 <div
                   className={clsx(
-                    "mb-4 rounded-xl px-4 py-2.5 flex items-center justify-between",
-                    "bg-gradient-to-r text-white",
-                    FASE_GRADIENT[fase],
+                    "mb-4 rounded-xl px-4 py-3 flex items-center justify-between gap-3 min-w-0",
+                    "text-white",
                   )}
-                  style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.12)" }}
+                  style={{
+                    ...FASE_HEADER_STYLE[fase],
+                    boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
                 >
-                  <h3 className="text-xs font-bold uppercase tracking-wider">
+                  <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
                     {FASES_LABEL[fase]}
                   </h3>
                   <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
@@ -615,11 +628,16 @@ export default function Proyectos() {
                 <div
                   className={clsx(
                     "rounded-xl px-4 py-2.5 inline-flex items-center gap-2",
-                    "bg-gradient-to-r from-cyan-500 to-teal-600 text-white",
+                    "text-white",
                   )}
-                  style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.12)" }}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(30,64,175,0.90), rgba(15,23,42,0.98))",
+                    boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
                 >
-                  <h3 className="text-xs font-bold uppercase tracking-wider">
+                  <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
                     Time &amp; Materials
                   </h3>
                   <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">

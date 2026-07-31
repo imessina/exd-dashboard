@@ -6,7 +6,7 @@ import Proyectos from "./pages/Proyectos";
 import Oportunidades from "./pages/Oportunidades";
 import SkillMatrix from "./pages/SkillMatrix";
 import Piramide from "./pages/Piramide";
-import Carrera from "./pages/Carrera";
+//import Carrera from "./pages/Carrera";
 import Skills from "./pages/Skills";
 
 // Iconos de línea minimalistas (stroke, sin relleno) — look ejecutivo/corporativo
@@ -128,15 +128,15 @@ const Icon = {
 };
 
 const NAV = [
-  { to: "/", label: "Dashboard", icon: Icon.dashboard },
+  { to: "/", label: "Vista Ejecutiva", icon: Icon.dashboard },
   { to: "/asignaciones", label: "Asignaciones", icon: Icon.calendar },
   { to: "/personas", label: "Equipo", icon: Icon.users },
   { to: "/piramide", label: "Pirámide", icon: Icon.pyramid },
-  { to: "/carrera", label: "Carrera", icon: Icon.chart },
+  //{ to: "/carrera", label: "Carrera", icon: Icon.chart },
   { to: "/skill-matrix", label: "Skill Matrix", icon: Icon.grid },
   { to: "/skills", label: "Skills", icon: Icon.tag },
   { to: "/proyectos", label: "Proyectos", icon: Icon.refresh },
-  { to: "/oportunidades", label: "Pipeline", icon: Icon.rocket },
+  { to: "/oportunidades", label: "Oportunidades", icon: Icon.rocket },
 ];
 
 function Sidebar() {
@@ -148,29 +148,17 @@ function Sidebar() {
         boxShadow: "1px 0 0 rgba(255,255,255,0.05)",
       }}
     >
-      {/* Acento azul de marca en el borde izquierdo */}
-      <div
-        className="absolute inset-y-0 left-0 w-1"
-        style={{
-          background: "linear-gradient(180deg, #1c9fe4 0%, #127cba 100%)",
-        }}
-      />
-
       {/* Logo */}
-      <div className="px-5 pt-6 pb-5">
+      <div className="px-6 pt-6 pb-5">
         <img
           src="/logo.png"
           alt="NTT DATA"
-          className="h-10 w-auto max-w-[220px] object-contain object-left mb-4"
+          className="h-14 w-auto max-w-[250px] object-contain object-left mb-4 -ml-4"
         />
-        <div className="min-w-0">
-          <p className="text-[10px] font-semibold text-brand-300 uppercase tracking-widest leading-none mb-1">
-            DX
-          </p>
-          <h1 className="text-sm font-semibold text-white leading-none truncate">
-            Control Center
-          </h1>
-        </div>
+
+        <h1 className="text-lg font-semibold text-white leading-none truncate">
+          Somos DX
+        </h1>
       </div>
 
       <div className="mx-5 h-px bg-white/10" />
@@ -221,7 +209,7 @@ export default function App() {
             <Route path="/proyectos" element={<Proyectos />} />
             <Route path="/oportunidades" element={<Oportunidades />} />
             <Route path="/piramide" element={<Piramide />} />
-            <Route path="/carrera" element={<Carrera />} />
+            {/* <Route path="/carrera" element={<Carrera />} /> */}
             <Route path="/skills" element={<Skills />} />
           </Routes>
         </main>
