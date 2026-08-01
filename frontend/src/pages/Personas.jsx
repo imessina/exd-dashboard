@@ -58,14 +58,6 @@ function formatearFecha(fecha) {
   return year && month && day ? `${day}/${month}/${year}` : fecha;
 }
 
-const slugify = (s) =>
-  s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-
 const EMPTY = {
   nombre: "",
   rol: "",
@@ -153,9 +145,18 @@ function PersonaForm({ initial, onClose }) {
           form.anos_experiencia !== "" ? Number(form.anos_experiencia) : null,
       };
 
+      const numeroEmpleado = String(form.numero_empleado ?? "").trim();
+
+      if (!initial && !numeroEmpleado) {
+        throw new Error("El número de empleado es obligatorio.");
+      }
+
       const persona = initial
         ? await personasApi.update(initial.id, data)
-        : await personasApi.create({ ...data, id: slugify(form.nombre) });
+        : await personasApi.create({
+            ...data,
+            id: `emp-${numeroEmpleado}`,
+          });
 
       await personasApi.replaceSkills(
         persona.id,
@@ -203,11 +204,17 @@ function PersonaForm({ initial, onClose }) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="form-label">N° de empleado</label>
+          <label className="form-label">N° de empleado {!initial && "*"}</label>
           <input
+            required={!initial}
+            inputMode="numeric"
+            pattern="[0-9]+"
             className="input"
             value={form.numero_empleado}
-            onChange={(e) => set("numero_empleado", e.target.value)}
+            onChange={(e) =>
+              set("numero_empleado", e.target.value.replace(/\D/g, ""))
+            }
+            placeholder="ej: 284356"
           />
         </div>
         <div>
@@ -429,8 +436,12 @@ function PersonaPanel({ persona, estadoVisible, onClose, onEdit }) {
                   className="flex items-center justify-between gap-3 rounded-lg border border-slate-100 px-3 py-2"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-slate-800 truncate">{skill.nombre}</p>
-                    <p className="text-[10px] text-slate-400">{skill.categoria || "Sin categoría"}</p>
+                    <p className="text-sm font-medium text-slate-800 truncate">
+                      {skill.nombre}
+                    </p>
+                    <p className="text-[10px] text-slate-400">
+                      {skill.categoria || "Sin categoría"}
+                    </p>
                   </div>
                   <span className="w-7 h-7 rounded-md bg-slate-800 text-white text-xs font-bold flex items-center justify-center">
                     {skill.nivel}

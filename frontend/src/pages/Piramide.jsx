@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { personasApi } from "../services/api";
+import { asignacionesApi, personasApi } from "../services/api";
 import clsx from "clsx";
 
 function obtenerNivelPiramide(persona = {}) {
@@ -89,11 +89,136 @@ const NIVEL_STYLES = {
   },
 };
 
+function normalizarCategoria(valor = "") {
+  return String(valor).trim().toLowerCase();
+}
+
+function porcentaje(cantidad, total) {
+  return total > 0 ? Math.round((cantidad / total) * 100) : 0;
+}
+
+function fechaLocalISO() {
+  const ahora = new Date();
+  const offset = ahora.getTimezoneOffset() * 60 * 1000;
+  return new Date(ahora.getTime() - offset).toISOString().slice(0, 10);
+}
+
+function esAsignacionVigente(asignacion = {}) {
+  if (asignacion.estado !== "active") return false;
+
+  const hoy = fechaLocalISO();
+  const inicio = asignacion.fecha_inicio;
+  const liberacion = asignacion.fecha_liberacion;
+
+  return (!inicio || inicio <= hoy) && (!liberacion || liberacion >= hoy);
+}
+
+function calcularAntiguedadPromedio(personas = []) {
+  const hoy = new Date();
+  const antiguedades = personas
+    .map((persona) => {
+      if (!persona.fecha_ingreso_compania) return null;
+      const ingreso = new Date(`${persona.fecha_ingreso_compania}T00:00:00`);
+      if (Number.isNaN(ingreso.getTime()) || ingreso > hoy) return null;
+      return (hoy - ingreso) / (365.2425 * 24 * 60 * 60 * 1000);
+    })
+    .filter((valor) => valor !== null);
+
+  if (antiguedades.length === 0) return null;
+  return (
+    antiguedades.reduce((suma, valor) => suma + valor, 0) / antiguedades.length
+  );
+}
+
+function formatearDecimal(valor) {
+  return valor == null ? "—" : valor.toFixed(1).replace(".", ",");
+}
+
+function obtenerCumpleanosDelMes(personas = []) {
+  const hoy = new Date();
+  const mesActual = hoy.getMonth();
+  const diaActual = hoy.getDate();
+
+  return personas
+    .map((persona) => {
+      if (!persona.fecha_nacimiento) return null;
+
+      const partes = String(persona.fecha_nacimiento).slice(0, 10).split("-");
+      if (partes.length !== 3) return null;
+
+      const mes = Number(partes[1]) - 1;
+      const dia = Number(partes[2]);
+
+      if (
+        !Number.isInteger(mes) ||
+        !Number.isInteger(dia) ||
+        mes !== mesActual ||
+        dia < 1 ||
+        dia > 31
+      ) {
+        return null;
+      }
+
+      return {
+        id: persona.id,
+        nombre: persona.nombre,
+        dia,
+        esHoy: dia === diaActual,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.dia - b.dia || a.nombre.localeCompare(b.nombre));
+}
+
+function nombreMesActual() {
+  return new Intl.DateTimeFormat("es-CL", {
+    month: "long",
+  }).format(new Date());
+}
+
+function KpiCard({ titulo, valor, detalle, children, tone = "slate" }) {
+  const tones = {
+    slate: "from-slate-800 to-slate-700",
+    teal: "from-teal-900 to-teal-700",
+    blue: "from-blue-950 to-blue-800",
+    amber: "from-amber-800 to-amber-600",
+  };
+
+  return (
+    <div
+      className={clsx(
+        "rounded-xl p-4 text-white bg-gradient-to-br min-h-[150px] h-auto self-start",
+        "border border-white/10 shadow-[0_4px_18px_rgba(15,23,42,0.18)]",
+        tones[tone],
+      )}
+    >
+      <p className="text-[11px] font-bold text-white/70 uppercase tracking-wider">
+        {titulo}
+      </p>
+      {valor != null && (
+        <p className="text-3xl font-extrabold tracking-tight mt-2">{valor}</p>
+      )}
+      {detalle && (
+        <p className="text-[11px] leading-4 text-white/65 mt-1 font-medium">
+          {detalle}
+        </p>
+      )}
+      {children}
+    </div>
+  );
+}
+
 export default function Piramide() {
   const { data: personas = [], isLoading } = useQuery({
     queryKey: ["personas"],
     queryFn: () => personasApi.list(),
   });
+
+  const { data: asignaciones = [], isLoading: isLoadingAsignaciones } =
+    useQuery({
+      queryKey: ["asignaciones"],
+      queryFn: () => asignacionesApi.list(),
+    });
 
   const groups = NIVELES_ORDER.reduce((acc, nivel) => {
     acc[nivel] = personas.filter(
@@ -103,13 +228,54 @@ export default function Piramide() {
     return acc;
   }, {});
 
-  const seniorPlus = personas.filter((persona) =>
-    ["Leader", "Expert", "Evangelist", "Chief", "Manager", "Director"].includes(
-      obtenerNivelPiramide(persona),
-    ),
-  ).length;
+  const personasEnProyecto = new Set(
+    asignaciones
+      .filter(esAsignacionVigente)
+      .map((asignacion) => asignacion.persona_id),
+  );
 
-  const disponibles = personas.filter((p) => p.disponible_mentoria).length;
+  const estados = personas.reduce(
+    (acc, persona) => {
+      if (personasEnProyecto.has(persona.id)) acc.enProyecto += 1;
+      else if (persona.estado_laboral === "Staffing") acc.staffing += 1;
+      else if (persona.estado_laboral === "Inactivo") acc.inactivo += 1;
+      else acc.disponible += 1;
+      return acc;
+    },
+    { enProyecto: 0, disponible: 0, staffing: 0, inactivo: 0 },
+  );
+
+  const sexos = personas.reduce(
+    (acc, persona) => {
+      const sexo = normalizarCategoria(persona.sexo);
+      if (["f", "femenino", "mujer", "female"].includes(sexo))
+        acc.femenino += 1;
+      else if (["m", "masculino", "hombre", "male"].includes(sexo))
+        acc.masculino += 1;
+      else acc.sinInformar += 1;
+      return acc;
+    },
+    { femenino: 0, masculino: 0, sinInformar: 0 },
+  );
+
+  const nacionalidades = personas.reduce((acc, persona) => {
+    const nacionalidad = String(persona.nacionalidad || "").trim();
+    if (!nacionalidad) return acc;
+    acc[nacionalidad] = (acc[nacionalidad] || 0) + 1;
+    return acc;
+  }, {});
+
+  const nacionalidadesOrdenadas = Object.entries(nacionalidades).sort(
+    (a, b) => b[1] - a[1],
+  );
+  const nacionalidadPrincipal = nacionalidadesOrdenadas[0] || null;
+  const totalConNacionalidad = nacionalidadesOrdenadas.reduce(
+    (suma, [, cantidad]) => suma + cantidad,
+    0,
+  );
+  const antiguedadPromedio = calcularAntiguedadPromedio(personas);
+  const cumpleanosDelMes = obtenerCumpleanosDelMes(personas);
+  const mesActual = nombreMesActual();
 
   return (
     <div className="pt-0 pl-[1px] pr-[2px] pb-0 space-y-8 w-full">
@@ -131,13 +297,12 @@ export default function Piramide() {
       </div>
 
       <div className="px-3 sm:px-5 py-0 min-h-[calc(100dvh-132px)]">
-        {isLoading ? (
+        {isLoading || isLoadingAsignaciones ? (
           <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 xl:gap-6 items-stretch w-full min-h-[calc(100dvh-160px)]">
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 xl:gap-6 items-start w-full">
             {/* ── Pirámide visual ─────────────────────────────────────────── */}
             <div className="card min-w-0 w-full h-full !p-4 sm:!p-6 xl:!p-7">
-              <h3 className="text-sm font-bold text-gray-700 mb-8"></h3>
               <div className="flex flex-col items-center gap-3.5">
                 {NIVELES_ORDER.map((nivel) => {
                   const count = groups[nivel].length;
@@ -262,94 +427,174 @@ export default function Piramide() {
             </div>
 
             {/* ── Stats ───────────────────────────────────────────────────── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-3 w-full">
-              {NIVELES_ORDER.map((nivel) => {
-                const count = groups[nivel].length;
-                const pct =
-                  personas.length > 0
-                    ? Math.round((count / personas.length) * 100)
-                    : 0;
-                return (
-                  <div
-                    key={nivel}
-                    className={clsx(
-                      "card !p-3 sm:!p-4 border border-slate-200/80",
-                      count === 0 && "opacity-40",
-                    )}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className={clsx("badge", NIVEL_STYLES[nivel].badge)}
-                      >
-                        {nivel}
-                      </span>
-                      <span className="text-2xl font-extrabold text-gray-900 tabular-nums">
-                        {count}
-                      </span>
-                    </div>
-                    <div
-                      className="h-1.5 rounded-sm overflow-hidden"
-                      style={{ background: "rgba(71,85,105,0.10)" }}
-                    >
-                      <div
-                        className={clsx(
-                          "h-full rounded-sm transition-all",
-                          NIVEL_STYLES[nivel].dot,
-                        )}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                    <p className="text-[11px] text-gray-400 mt-1 font-medium">
-                      {pct}% del equipo
-                    </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-3 w-full auto-rows-max content-start self-start">
+              {/* KPI ejecutivos */}
+              <KpiCard titulo="Distribución por sexo" tone="blue">
+                <div className="mt-3 space-y-3">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-3xl font-extrabold tracking-tight tabular-nums">
+                      {porcentaje(sexos.femenino, personas.length)}%
+                    </span>
+                    <span className="text-3xl font-black text-cyan-200">F</span>
                   </div>
-                );
-              })}
 
-              {/* KPI gradient cards */}
-              <div
-                className="rounded-lg p-4 text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(30,41,59,0.98), rgba(30,64,97,0.96))",
-                  boxShadow: "0 4px 18px rgba(15,23,42,0.20)",
-                }}
-              >
-                <p className="text-xs font-semibold text-white/70 mb-1.5 uppercase tracking-wide">
-                  Ratio Lead+
-                </p>
-                <p className="text-3xl font-extrabold tracking-tight">
-                  {Math.round(
-                    (seniorPlus / Math.max(personas.length, 1)) * 100,
-                  )}
-                  %
-                </p>
-                <p className="text-[11px] text-white/60 mt-1 font-medium">
-                  {seniorPlus} personas · Leader, Expert, Evangelist, Chief,
-                  Manager o Director
-                </p>
-              </div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-3xl font-extrabold tracking-tight tabular-nums">
+                      {porcentaje(sexos.masculino, personas.length)}%
+                    </span>
+                    <span className="text-3xl font-black text-white/85">M</span>
+                  </div>
+                </div>
 
-              <div
-                className="rounded-lg p-4 text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(17,60,66,0.98), rgba(15,118,110,0.88))",
-                  boxShadow: "0 4px 18px rgba(15,23,42,0.18)",
-                }}
+                <div className="mt-4 h-2 rounded-full overflow-hidden flex bg-white/15">
+                  <div
+                    className="h-full bg-cyan-300/90"
+                    style={{
+                      width: `${porcentaje(sexos.femenino, personas.length)}%`,
+                    }}
+                  />
+                  <div
+                    className="h-full bg-white/70"
+                    style={{
+                      width: `${porcentaje(sexos.masculino, personas.length)}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="mt-1.5 flex items-center justify-between text-[9px] font-semibold uppercase tracking-wide text-white/55">
+                  <span>Femenino</span>
+                  <span>Masculino</span>
+                </div>
+
+                {sexos.sinInformar > 0 && (
+                  <p className="text-[10px] text-white/55 mt-2">
+                    {sexos.sinInformar} sin informar
+                  </p>
+                )}
+              </KpiCard>
+
+              <KpiCard
+                titulo="Nacionalidades"
+                tone="slate"
+                valor={nacionalidadesOrdenadas.length || "—"}
+                detalle={
+                  nacionalidadPrincipal
+                    ? `${nacionalidadPrincipal[0]} representa ${porcentaje(
+                        nacionalidadPrincipal[1],
+                        totalConNacionalidad,
+                      )}% de los registros informados`
+                    : "Sin información registrada"
+                }
               >
-                <p className="text-xs font-semibold text-white/70 mb-1.5 uppercase tracking-wide">
-                  Disponibles mentoría
-                </p>
-                <p className="text-3xl font-extrabold tracking-tight">
-                  {disponibles}
-                </p>
-                <p className="text-[11px] text-white/60 mt-1 font-medium">
-                  {Math.round(
-                    (disponibles / Math.max(personas.length, 1)) * 100,
-                  )}
-                  % del equipo
-                </p>
+                <div className="mt-3 space-y-1.5">
+                  {nacionalidadesOrdenadas
+                    .slice(0, 3)
+                    .map(([nombre, cantidad]) => (
+                      <div
+                        key={nombre}
+                        className="flex justify-between text-[10px] text-white/70"
+                      >
+                        <span className="truncate pr-2">{nombre}</span>
+                        <span className="font-bold tabular-nums">
+                          {porcentaje(cantidad, totalConNacionalidad)}%
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </KpiCard>
+
+              <KpiCard titulo="Estado del equipo" tone="teal">
+                <div className="mt-3 space-y-2 text-[11px]">
+                  {[
+                    ["En proyecto", estados.enProyecto],
+                    ["Disponible", estados.disponible],
+                    ["Staffing", estados.staffing],
+                    ["Inactivo", estados.inactivo],
+                  ].map(([etiqueta, cantidad]) => (
+                    <div
+                      key={etiqueta}
+                      className="flex items-center justify-between gap-3"
+                    >
+                      <span className="text-white/70">{etiqueta}</span>
+                      <span className="font-bold tabular-nums">
+                        {cantidad} · {porcentaje(cantidad, personas.length)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </KpiCard>
+
+              <KpiCard
+                titulo="Antigüedad promedio"
+                tone="amber"
+                valor={`${formatearDecimal(antiguedadPromedio)} años`}
+                detalle={
+                  antiguedadPromedio == null
+                    ? "Sin fechas de ingreso registradas"
+                    : "Promedio calculado desde la fecha de ingreso a la compañía"
+                }
+              />
+              <div className="w-full" style={{ gridColumn: "1 / -1" }}>
+                <KpiCard titulo={`Cumpleaños de ${mesActual}`} tone="slate">
+                  <div className="mt-3">
+                    {cumpleanosDelMes.length === 0 ? (
+                      <p className="text-sm font-semibold text-white/65">
+                        Sin cumpleaños durante este mes
+                      </p>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-3 mb-3">
+                          <p className="text-3xl font-extrabold tracking-tight leading-none">
+                            {cumpleanosDelMes.length}
+                          </p>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/55 leading-3">
+                            {cumpleanosDelMes.length === 1
+                              ? "persona este mes"
+                              : "personas este mes"}
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          {cumpleanosDelMes.map((persona) => (
+                            <div
+                              key={persona.id}
+                              className={clsx(
+                                "flex items-center gap-2 rounded-lg px-3 py-2 min-w-0",
+                                persona.esHoy
+                                  ? "bg-cyan-300/15 border border-cyan-200/30"
+                                  : "bg-white/7 border border-white/10",
+                              )}
+                            >
+                              <span
+                                className={clsx(
+                                  "shrink-0 text-[11px] font-extrabold tabular-nums",
+                                  persona.esHoy
+                                    ? "text-cyan-200"
+                                    : "text-white",
+                                )}
+                              >
+                                {String(persona.dia).padStart(2, "0")} de{" "}
+                                {mesActual.slice(0, 3)}
+                              </span>
+
+                              <span className="text-white/35">·</span>
+
+                              <p className="min-w-0 flex-1 truncate text-[11px] font-semibold text-white/85">
+                                {persona.nombre}
+                              </p>
+
+                              {persona.esHoy && (
+                                <span className="shrink-0 rounded-full bg-cyan-200 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-slate-950">
+                                  Hoy
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </KpiCard>
               </div>
             </div>
           </div>

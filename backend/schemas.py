@@ -139,6 +139,10 @@ class PersonaUpdate(BaseModel):
 
 class PersonaOut(PersonaBase):
     id: str
+    # Datos agregados para indicadores ejecutivos de Pirámide.
+    # numero_documento continúa siendo privado y no se expone.
+    sexo: Optional[str] = None
+    nacionalidad: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

@@ -10,6 +10,7 @@ const HUERFANAS_TAB = "__huerfanas__";
 //  TABLA HEATMAP — personas × skills
 // ═══════════════════════════════════════════════════════════════════════════════
 function HeatmapTable({ skills }) {
+  const [hoveredSkillId, setHoveredSkillId] = useState(null);
   const personaIdToData = {};
 
   for (const skill of skills) {
@@ -40,12 +41,12 @@ function HeatmapTable({ skills }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 overflow-x-auto">
+    <div className="bg-white rounded-2xl border border-slate-300 overflow-x-auto">
       <table className="text-sm min-w-max w-full">
         <thead>
-          <tr className="border-b border-gray-100 bg-white">
+          <tr className="border-b border-slate-300 bg-white">
             <th
-              className="text-left text-xs font-semibold text-gray-500 py-3 px-4 sticky left-0 z-20 bg-white border-r border-gray-100"
+              className="text-left text-xs font-semibold text-gray-600 py-3 px-4 sticky left-0 z-20 bg-white border-r border-slate-300"
               style={{ minWidth: 210 }}
             >
               Persona
@@ -54,7 +55,12 @@ function HeatmapTable({ skills }) {
             {skills.map((skill) => (
               <th
                 key={skill.skill_id}
-                className="text-center text-xs font-semibold text-gray-500 py-3 px-2"
+                onMouseEnter={() => setHoveredSkillId(skill.skill_id)}
+                onMouseLeave={() => setHoveredSkillId(null)}
+                className={clsx(
+                  "text-center text-xs font-semibold text-gray-600 py-3 px-2 border-r border-slate-200 transition-colors",
+                  hoveredSkillId === skill.skill_id && "bg-slate-100",
+                )}
                 style={{ minWidth: 105, maxWidth: 135 }}
                 title={skill.nombre}
               >
@@ -68,9 +74,9 @@ function HeatmapTable({ skills }) {
           {personasOrdenadas.map((persona) => (
             <tr
               key={persona.persona_id}
-              className="border-b border-gray-50 last:border-0 hover:bg-slate-50/70"
+              className="group border-b border-slate-200 last:border-0 hover:bg-slate-100/90 transition-colors"
             >
-              <td className="py-2.5 px-4 sticky left-0 z-10 bg-white border-r border-gray-100">
+              <td className="py-2.5 px-4 sticky left-0 z-10 bg-white border-r border-slate-300 group-hover:bg-slate-100/90 transition-colors">
                 <p className="font-medium text-gray-900 text-xs">
                   {persona.nombre}
                 </p>
@@ -95,19 +101,27 @@ function HeatmapTable({ skills }) {
                   5: "Referente",
                 }[nivel];
                 const nivelColor = {
-                  1: "bg-slate-100 text-slate-700 border-slate-200",
-                  2: "bg-blue-50 text-blue-800 border-blue-200",
-                  3: "bg-blue-100 text-blue-900 border-blue-300",
-                  4: "bg-teal-50 text-teal-900 border-teal-300",
+                  1: "bg-slate-100 text-slate-800 border-slate-400",
+                  2: "bg-blue-50 text-blue-900 border-blue-400",
+                  3: "bg-blue-100 text-blue-950 border-blue-500",
+                  4: "bg-teal-50 text-teal-950 border-teal-500",
                   5: "bg-slate-800 text-white border-slate-800",
                 }[nivel];
 
                 return (
-                  <td key={skill.skill_id} className="py-2 px-1 text-center">
+                  <td
+                    key={skill.skill_id}
+                    onMouseEnter={() => setHoveredSkillId(skill.skill_id)}
+                    onMouseLeave={() => setHoveredSkillId(null)}
+                    className={clsx(
+                      "py-2 px-1 text-center border-r border-slate-200 transition-colors",
+                      hoveredSkillId === skill.skill_id && "bg-slate-100",
+                    )}
+                  >
                     {nivel ? (
                       <div
                         className={clsx(
-                          "mx-auto w-8 h-8 rounded-md border flex items-center justify-center text-xs font-bold",
+                          "mx-auto w-8 h-8 rounded-md border-2 shadow-sm flex items-center justify-center text-xs font-bold",
                           nivelColor,
                         )}
                         title={`${persona.nombre} · ${skill.nombre} · Nivel ${nivel} (${nivelLabel})`}
@@ -234,19 +248,11 @@ export default function SkillMatrix() {
   }, [data]);
 
   if (isLoading) {
-    return (
-      <p className="p-6 text-sm text-gray-400 text-center">
-        Cargando…
-      </p>
-    );
+    return <p className="p-6 text-sm text-gray-400 text-center">Cargando…</p>;
   }
 
   if (!data) {
-    return (
-      <p className="p-6 text-sm text-gray-400 text-center">
-        Sin datos.
-      </p>
-    );
+    return <p className="p-6 text-sm text-gray-400 text-center">Sin datos.</p>;
   }
 
   const categorias = data.categorias_orden ?? [];
@@ -283,8 +289,7 @@ export default function SkillMatrix() {
       <div
         className="p-8 text-white flex items-start justify-between gap-4 flex-wrap"
         style={{
-          background:
-            "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
         }}
       >
         <div className="max-w-3xl">
@@ -292,9 +297,7 @@ export default function SkillMatrix() {
             Somos DX
           </p>
 
-          <h2 className="text-2xl font-bold tracking-tight">
-            Skill Matrix
-          </h2>
+          <h2 className="text-2xl font-bold tracking-tight">Skill Matrix</h2>
 
           <p className="text-sm text-white/60 mt-1 font-medium">
             Inventario de habilidades del equipo organizado por categorías.
@@ -302,16 +305,8 @@ export default function SkillMatrix() {
         </div>
 
         <div className="flex flex-wrap gap-3 text-xs">
-          <Stat
-            label="Skills"
-            value={data.total_skills_catalogo}
-            dark
-          />
-          <Stat
-            label="Personas"
-            value={data.total_personas}
-            dark
-          />
+          <Stat label="Skills" value={data.total_skills_catalogo} dark />
+          <Stat label="Personas" value={data.total_personas} dark />
           <Stat
             label="Sin nadie"
             value={data.skills_sin_personas}
@@ -319,12 +314,7 @@ export default function SkillMatrix() {
             dark
           />
           {huerfanasCount > 0 && (
-            <Stat
-              label="Huérfanas"
-              value={huerfanasCount}
-              tone="warn"
-              dark
-            />
+            <Stat label="Huérfanas" value={huerfanasCount} tone="warn" dark />
           )}
         </div>
       </div>
@@ -334,20 +324,15 @@ export default function SkillMatrix() {
         <div className="flex flex-wrap gap-1 border-b border-gray-200">
           <CategoryTab
             label="Ver todas"
-            count={todasLasSkills.length}
             active={tab === TODAS_TAB}
             onClick={() => setTab(TODAS_TAB)}
           />
 
           {categorias.map((categoria) => {
-            const skillCount =
-              data.data?.[categoria]?.skills?.length ?? 0;
-
             return (
               <CategoryTab
                 key={categoria}
                 label={categoria}
-                count={skillCount}
                 active={tab === categoria}
                 onClick={() => setTab(categoria)}
               />
@@ -357,7 +342,6 @@ export default function SkillMatrix() {
           {huerfanasCount > 0 && (
             <CategoryTab
               label="Huérfanas"
-              count={huerfanasCount}
               active={isHuerfanas}
               warning
               onClick={() => setTab(HUERFANAS_TAB)}
@@ -391,7 +375,13 @@ export default function SkillMatrix() {
             [4, "Especialista", "bg-teal-50 text-teal-900 border-teal-300"],
             [5, "Referente", "bg-slate-800 text-white border-slate-800"],
           ].map(([nivel, label, style]) => (
-            <span key={nivel} className={clsx("rounded-md border px-2 py-1 font-semibold", style)}>
+            <span
+              key={nivel}
+              className={clsx(
+                "rounded-md border px-2 py-1 font-semibold",
+                style,
+              )}
+            >
               {nivel} · {label}
             </span>
           ))}
@@ -409,9 +399,7 @@ export default function SkillMatrix() {
           </p>
         ) : (
           <HeatmapTable
-            skills={skillsToShow.filter(
-              (skill) => skill.personas?.length > 0,
-            )}
+            skills={skillsToShow.filter((skill) => skill.personas?.length > 0)}
           />
         )}
       </div>
@@ -419,19 +407,13 @@ export default function SkillMatrix() {
   );
 }
 
-function CategoryTab({
-  label,
-  count,
-  active,
-  warning = false,
-  onClick,
-}) {
+function CategoryTab({ label, active, warning = false, onClick }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={clsx(
-        "px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px flex items-center gap-2",
+        "px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px flex items-center",
         active
           ? warning
             ? "border-amber-600 text-amber-800"
@@ -442,19 +424,6 @@ function CategoryTab({
       )}
     >
       {label}
-
-      <span
-        className={clsx(
-          "text-xs px-1.5 py-0.5 rounded-full",
-          active
-            ? warning
-              ? "bg-amber-100 text-amber-800"
-              : "bg-brand-100 text-brand-700"
-            : "bg-gray-100 text-gray-500",
-        )}
-      >
-        {count}
-      </span>
     </button>
   );
 }
@@ -487,9 +456,7 @@ function Stat({ label, value, tone = "normal", dark = false }) {
       <p
         className={clsx(
           "text-[10px] uppercase tracking-wider mt-0.5",
-          dark && tone !== "warn"
-            ? "text-white/60"
-            : "text-gray-500",
+          dark && tone !== "warn" ? "text-white/60" : "text-gray-500",
         )}
       >
         {label}
