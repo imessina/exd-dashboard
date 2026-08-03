@@ -187,7 +187,7 @@ function KpiCard({ titulo, valor, detalle, children, tone = "slate" }) {
   return (
     <div
       className={clsx(
-        "rounded-xl p-4 text-white bg-gradient-to-br min-h-[150px] h-auto self-start",
+        "rounded-xl p-4 text-white bg-gradient-to-br min-h-[150px] h-full",
         "border border-white/10 shadow-[0_4px_18px_rgba(15,23,42,0.18)]",
         tones[tone],
       )}
@@ -268,7 +268,6 @@ export default function Piramide() {
   const nacionalidadesOrdenadas = Object.entries(nacionalidades).sort(
     (a, b) => b[1] - a[1],
   );
-  const nacionalidadPrincipal = nacionalidadesOrdenadas[0] || null;
   const totalConNacionalidad = nacionalidadesOrdenadas.reduce(
     (suma, [, cantidad]) => suma + cantidad,
     0,
@@ -477,30 +476,26 @@ export default function Piramide() {
                 titulo="Nacionalidades"
                 tone="slate"
                 valor={nacionalidadesOrdenadas.length || "—"}
-                detalle={
-                  nacionalidadPrincipal
-                    ? `${nacionalidadPrincipal[0]} representa ${porcentaje(
-                        nacionalidadPrincipal[1],
-                        totalConNacionalidad,
-                      )}% de los registros informados`
-                    : "Sin información registrada"
-                }
               >
-                <div className="mt-3 space-y-1.5">
-                  {nacionalidadesOrdenadas
-                    .slice(0, 3)
-                    .map(([nombre, cantidad]) => (
+                {nacionalidadesOrdenadas.length === 0 ? (
+                  <p className="mt-3 text-[11px] font-medium text-white/60">
+                    Sin información registrada
+                  </p>
+                ) : (
+                  <div className="mt-3 space-y-1.5">
+                    {nacionalidadesOrdenadas.map(([nombre, cantidad]) => (
                       <div
                         key={nombre}
-                        className="flex justify-between text-[10px] text-white/70"
+                        className="flex items-center justify-between gap-3 text-[10px] text-white/75"
                       >
-                        <span className="truncate pr-2">{nombre}</span>
-                        <span className="font-bold tabular-nums">
+                        <span className="min-w-0 break-words">{nombre}</span>
+                        <span className="shrink-0 font-bold tabular-nums text-white/90">
                           {porcentaje(cantidad, totalConNacionalidad)}%
                         </span>
                       </div>
                     ))}
-                </div>
+                  </div>
+                )}
               </KpiCard>
 
               <KpiCard titulo="Estado del equipo" tone="teal">

@@ -125,6 +125,13 @@ function StatCard({ label, value, icon: IconComp, highlight }) {
 }
 
 export default function Dashboard() {
+  const fechaActual = new Intl.DateTimeFormat("es-CL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
   const { data: summary } = useQuery({
     queryKey: ["dashboard-summary"],
     queryFn: dashboardApi.summary,
@@ -148,7 +155,7 @@ export default function Dashboard() {
     <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* ── Hero section — navy con acento azul corporativo ─────────────── */}
       <div
-        className="p-8 text-white relative overflow-hidden"
+        className="p-8 text-white relative overflow-hidden flex items-center justify-between gap-6"
         style={{
           background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
         }}
@@ -160,6 +167,15 @@ export default function Dashboard() {
           <h2 className="text-2xl font-bold tracking-tight">Vista Ejecutiva</h2>
           <p className="text-white/60 mt-1 font-medium text-sm">
             Vista general del equipo, proyectos y operación
+          </p>
+        </div>
+
+        <div className="hidden sm:block text-right shrink-0">
+          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.16em]">
+            Fecha actual
+          </p>
+          <p className="mt-1 text-sm font-semibold text-white/80 capitalize">
+            {fechaActual}
           </p>
         </div>
       </div>
