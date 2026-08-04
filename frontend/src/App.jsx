@@ -8,6 +8,7 @@ import SkillMatrix from "./pages/SkillMatrix";
 import Piramide from "./pages/Piramide";
 //import Carrera from "./pages/Carrera";
 import Skills from "./pages/Skills";
+import Curriculums from "./pages/Curriculums";
 
 // Iconos de línea minimalistas (stroke, sin relleno) — look ejecutivo/corporativo
 const Icon = {
@@ -112,6 +113,18 @@ const Icon = {
       <path d="M4 13a8 8 0 0 0 14.6 4.4M20 20v-5h-5" />
     </svg>
   ),
+  document: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      {...p}
+    >
+      <path d="M6 3h8l4 4v14H6z" />
+      <path d="M14 3v5h5M9 12h6M9 16h6" />
+    </svg>
+  ),
   rocket: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -135,6 +148,7 @@ const NAV = [
   //{ to: "/carrera", label: "Carrera", icon: Icon.chart },
   { to: "/skill-matrix", label: "Skill Matrix", icon: Icon.grid },
   { to: "/skills", label: "Skills", icon: Icon.tag },
+  { to: "/curriculums", label: "Currículums", icon: Icon.document },
   { to: "/proyectos", label: "Proyectos", icon: Icon.refresh },
   { to: "/oportunidades", label: "Oportunidades", icon: Icon.rocket },
 ];
@@ -211,6 +225,7 @@ export default function App() {
             <Route path="/piramide" element={<Piramide />} />
             {/* <Route path="/carrera" element={<Carrera />} /> */}
             <Route path="/skills" element={<Skills />} />
+            <Route path="/curriculums" element={<Curriculums />} />
           </Routes>
         </main>
       </div>

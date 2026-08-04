@@ -6,10 +6,27 @@ import clsx from "clsx";
 const TODAS_TAB = "__todas__";
 const HUERFANAS_TAB = "__huerfanas__";
 
+function normalizarBusqueda(valor = "") {
+  return String(valor)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function coincidePorTerminos(valor = "", busqueda = "") {
+  const terminos = normalizarBusqueda(busqueda).split(/\s+/).filter(Boolean);
+
+  if (terminos.length === 0) return true;
+
+  const contenido = normalizarBusqueda(valor);
+  return terminos.every((termino) => contenido.includes(termino));
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  TABLA HEATMAP — personas × skills
 // ═══════════════════════════════════════════════════════════════════════════════
-function HeatmapTable({ skills }) {
+function HeatmapTable({ skills, personaSearch = "" }) {
   const [hoveredSkillId, setHoveredSkillId] = useState(null);
   const personaIdToData = {};
 
@@ -19,9 +36,9 @@ function HeatmapTable({ skills }) {
     }
   }
 
-  const personasOrdenadas = Object.values(personaIdToData).sort((a, b) =>
-    a.nombre.localeCompare(b.nombre),
-  );
+  const personasOrdenadas = Object.values(personaIdToData)
+    .filter((persona) => coincidePorTerminos(persona.nombre, personaSearch))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   if (personasOrdenadas.length === 0 || skills.length === 0) {
     return (
@@ -41,12 +58,12 @@ function HeatmapTable({ skills }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-300 overflow-x-auto">
+    <div className="bg-white rounded-2xl border border-slate-300 overflow-auto max-h-[calc(100dvh-330px)]">
       <table className="text-sm min-w-max w-full">
         <thead>
           <tr className="border-b border-slate-300 bg-white">
             <th
-              className="text-left text-xs font-semibold text-gray-600 py-3 px-4 sticky left-0 z-20 bg-white border-r border-slate-300"
+              className="text-left text-xs font-semibold text-gray-600 py-3 px-4 sticky top-0 left-0 z-30 bg-white border-r border-slate-300 shadow-[0_1px_0_rgba(203,213,225,1)]"
               style={{ minWidth: 210 }}
             >
               Persona
@@ -58,8 +75,10 @@ function HeatmapTable({ skills }) {
                 onMouseEnter={() => setHoveredSkillId(skill.skill_id)}
                 onMouseLeave={() => setHoveredSkillId(null)}
                 className={clsx(
-                  "text-center text-xs font-semibold text-gray-600 py-3 px-2 border-r border-slate-200 transition-colors",
-                  hoveredSkillId === skill.skill_id && "bg-slate-100",
+                  "sticky top-0 z-20 text-center text-xs font-semibold text-gray-600 py-3 px-2 border-r border-slate-200 transition-colors shadow-[0_1px_0_rgba(203,213,225,1)]",
+                  hoveredSkillId === skill.skill_id
+                    ? "bg-slate-100"
+                    : "bg-white",
                 )}
                 style={{ minWidth: 105, maxWidth: 135 }}
                 title={skill.nombre}
@@ -210,7 +229,8 @@ function HuerfanasTable({ huerfanas }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function SkillMatrix() {
   const [tab, setTab] = useState(TODAS_TAB);
-  const [search, setSearch] = useState("");
+  const [personaSearch, setPersonaSearch] = useState("");
+  const [skillSearch, setSkillSearch] = useState("");
 
   const { data, isLoading } = useQuery({
     queryKey: ["skill-matrix"],
@@ -258,29 +278,25 @@ export default function SkillMatrix() {
   const categorias = data.categorias_orden ?? [];
   const huerfanasCount = data.huerfanas?.length ?? 0;
   const isHuerfanas = tab === HUERFANAS_TAB;
-  const filtroTexto = search.trim().toLowerCase();
+  const filtroSkill = skillSearch.trim();
 
-  const matchesSearch = (skill) => {
-    if (!filtroTexto) return true;
-
-    if (skill.nombre.toLowerCase().includes(filtroTexto)) {
-      return true;
-    }
-
-    return (skill.personas ?? []).some((persona) =>
-      persona.nombre.toLowerCase().includes(filtroTexto),
-    );
-  };
+  const filtrarSkills = (skills = []) =>
+    skills.filter((skill) => coincidePorTerminos(skill.nombre, filtroSkill));
 
   let skillsToShow = [];
   let huerfanasToShow = [];
 
   if (isHuerfanas) {
-    huerfanasToShow = (data.huerfanas ?? []).filter(matchesSearch);
+    huerfanasToShow = filtrarSkills(data.huerfanas ?? []).map((skill) => ({
+      ...skill,
+      personas: (skill.personas ?? []).filter((persona) =>
+        coincidePorTerminos(persona.nombre, personaSearch),
+      ),
+    }));
   } else if (tab === TODAS_TAB) {
-    skillsToShow = todasLasSkills.filter(matchesSearch);
+    skillsToShow = filtrarSkills(todasLasSkills);
   } else {
-    skillsToShow = (data.data?.[tab]?.skills ?? []).filter(matchesSearch);
+    skillsToShow = filtrarSkills(data.data?.[tab]?.skills ?? []);
   }
 
   return (
@@ -307,12 +323,6 @@ export default function SkillMatrix() {
         <div className="flex flex-wrap gap-3 text-xs">
           <Stat label="Skills" value={data.total_skills_catalogo} dark />
           <Stat label="Personas" value={data.total_personas} dark />
-          <Stat
-            label="Sin nadie"
-            value={data.skills_sin_personas}
-            tone={data.skills_sin_personas > 0 ? "warn" : "normal"}
-            dark
-          />
           {huerfanasCount > 0 && (
             <Stat label="Huérfanas" value={huerfanasCount} tone="warn" dark />
           )}
@@ -349,17 +359,34 @@ export default function SkillMatrix() {
           )}
         </div>
 
-        {/* Búsqueda */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Buscar skill o persona…"
-            className="input text-sm max-w-72"
-          />
+        {/* Búsquedas separadas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
+          <div>
+            <label className="block mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Buscar persona
+            </label>
+            <input
+              value={personaSearch}
+              onChange={(event) => setPersonaSearch(event.target.value)}
+              placeholder="Ej: Busca por nombre o apellido"
+              className="input text-sm w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Buscar skill
+            </label>
+            <input
+              value={skillSearch}
+              onChange={(event) => setSkillSearch(event.target.value)}
+              placeholder="Ej: AWS, Bedrock o Backend"
+              className="input text-sm w-full"
+            />
+          </div>
 
           {!isHuerfanas && (
-            <p className="text-xs text-gray-400">
+            <p className="md:col-span-2 text-xs text-gray-400">
               {skillsToShow.length} skill
               {skillsToShow.length !== 1 ? "s" : ""} en la tabla
             </p>
@@ -393,13 +420,14 @@ export default function SkillMatrix() {
           <HuerfanasTable huerfanas={huerfanasToShow} />
         ) : skillsToShow.length === 0 ? (
           <p className="text-sm text-gray-400 py-10 text-center">
-            {filtroTexto
-              ? "Sin resultados para esta búsqueda."
+            {skillSearch.trim()
+              ? "Sin resultados para la búsqueda de skills."
               : "Esta categoría no tiene skills disponibles."}
           </p>
         ) : (
           <HeatmapTable
             skills={skillsToShow.filter((skill) => skill.personas?.length > 0)}
+            personaSearch={personaSearch}
           />
         )}
       </div>

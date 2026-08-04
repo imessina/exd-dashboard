@@ -170,6 +170,86 @@ class PersonaSkillOut(BaseModel):
     nivel: int
 
 
+# ── Curriculum Schemas ───────────────────────────────────────────────────────
+
+class CurriculumExperienciaInput(BaseModel):
+    titulo: Optional[str] = None
+    cliente: Optional[str] = None
+    proyecto: Optional[str] = None
+    rol: Optional[str] = None
+    descripcion: Optional[str] = None
+    periodo: Optional[str] = None
+    orden: int = Field(ge=1, le=3)
+
+
+class CurriculumExperienciaOut(CurriculumExperienciaInput):
+    id: UUID
+    curriculum_id: UUID
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CurriculumBase(BaseModel):
+    resumen_profesional: Optional[str] = None
+    areas_especializacion: List[Any] = Field(default_factory=list)
+    herramientas_tecnologias: List[Any] = Field(default_factory=list)
+    clientes_asesorados: List[Any] = Field(default_factory=list)
+    estudios_posgrados: List[Any] = Field(default_factory=list)
+    idiomas: List[Any] = Field(default_factory=list)
+    certificaciones: List[Any] = Field(default_factory=list)
+    archivo_origen: Optional[str] = None
+    requiere_revision: bool = True
+    activo: bool = True
+
+
+class CurriculumCreate(CurriculumBase):
+    persona_id: str
+    experiencias: List[CurriculumExperienciaInput] = Field(default_factory=list, max_length=3)
+
+
+class CurriculumUpdate(BaseModel):
+    resumen_profesional: Optional[str] = None
+    areas_especializacion: Optional[List[Any]] = None
+    herramientas_tecnologias: Optional[List[Any]] = None
+    clientes_asesorados: Optional[List[Any]] = None
+    estudios_posgrados: Optional[List[Any]] = None
+    idiomas: Optional[List[Any]] = None
+    certificaciones: Optional[List[Any]] = None
+    archivo_origen: Optional[str] = None
+    requiere_revision: Optional[bool] = None
+    activo: Optional[bool] = None
+    experiencias: Optional[List[CurriculumExperienciaInput]] = Field(default=None, max_length=3)
+
+
+class CurriculumPersonaResumen(BaseModel):
+    id: str
+    nombre: str
+    rol: str
+    area: Optional[str] = None
+    empresa_actual: Optional[str] = None
+    anos_experiencia: Optional[int] = None
+    numero_empleado: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CurriculumOut(CurriculumBase):
+    id: UUID
+    persona_id: str
+    persona: CurriculumPersonaResumen
+    experiencias: List[CurriculumExperienciaOut] = Field(default_factory=list)
+    skills: List[PersonaSkillOut] = Field(default_factory=list)
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
 # ── Asignacion Schemas ───────────────────────────────────────────────────────
 
 class AsignacionBase(BaseModel):

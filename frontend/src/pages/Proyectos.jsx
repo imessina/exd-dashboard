@@ -42,19 +42,24 @@ const EMPTY = {
 
 const FASE_HEADER_STYLE = {
   discovery: {
-    background: "linear-gradient(135deg, rgba(71,85,105,0.96), rgba(30,41,59,0.98))",
+    background:
+      "linear-gradient(135deg, rgba(71,85,105,0.96), rgba(30,41,59,0.98))",
   },
   design: {
-    background: "linear-gradient(135deg, rgba(30,64,175,0.92), rgba(15,23,42,0.98))",
+    background:
+      "linear-gradient(135deg, rgba(30,64,175,0.92), rgba(15,23,42,0.98))",
   },
   testing: {
-    background: "linear-gradient(135deg, rgba(180,138,25,0.82), rgba(120,86,12,0.92))",
+    background:
+      "linear-gradient(135deg, rgba(180,138,25,0.82), rgba(120,86,12,0.92))",
   },
   launch: {
-    background: "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
+    background:
+      "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
   },
   evolution: {
-    background: "linear-gradient(135deg, rgba(51,65,85,0.94), rgba(14,116,144,0.88))",
+    background:
+      "linear-gradient(135deg, rgba(51,65,85,0.94), rgba(14,116,144,0.88))",
   },
 };
 
@@ -556,50 +561,113 @@ export default function Proyectos() {
   }, {});
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
+      {/* Header */}
+      <div
+        className="p-8 text-white flex items-center justify-between gap-4"
+        style={{
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+            Somos DX
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight">
             Proyectos activos
           </h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">
+          <p className="text-sm text-white/60 mt-1 font-medium">
             {fixedScope.length} proyecto{fixedScope.length !== 1 ? "s" : ""}
             {timeMaterials.length > 0 && ` · ${timeMaterials.length} T&M`}
           </p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-primary">
+        <button
+          onClick={() => setCreating(true)}
+          className="btn-primary shrink-0"
+        >
           + Nuevo proyecto
         </button>
       </div>
 
-      {isLoading ? (
-        <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
-      ) : (
-        <>
-          {/* Kanban por fase — solo proyectos fixed_scope */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 w-full">
-            {FASES_PROYECTO.map((fase) => (
-              <div key={fase} className="min-w-0 w-full">
-                <div
-                  className={clsx(
-                    "mb-4 rounded-xl px-4 py-3 flex items-center justify-between gap-3 min-w-0",
-                    "text-white",
-                  )}
-                  style={{
-                    ...FASE_HEADER_STYLE[fase],
-                    boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
-                    {FASES_LABEL[fase]}
-                  </h3>
-                  <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
-                    {byFase[fase].length}
-                  </span>
+      <div className="px-8">
+        {isLoading ? (
+          <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
+        ) : (
+          <>
+            {/* Kanban por fase — solo proyectos fixed_scope */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 w-full">
+              {FASES_PROYECTO.map((fase) => (
+                <div key={fase} className="min-w-0 w-full">
+                  <div
+                    className={clsx(
+                      "mb-4 rounded-xl px-4 py-3 flex items-center justify-between gap-3 min-w-0",
+                      "text-white",
+                    )}
+                    style={{
+                      ...FASE_HEADER_STYLE[fase],
+                      boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
+                      {FASES_LABEL[fase]}
+                    </h3>
+                    <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
+                      {byFase[fase].length}
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {byFase[fase].map((p) => (
+                      <ProyectoCard
+                        key={p.id}
+                        proyecto={p}
+                        asignados={enrichedAsignaciones.filter(
+                          (a) => a.proyecto_id === p.id,
+                        )}
+                        onEdit={() => setEditing(p)}
+                      />
+                    ))}
+                    {byFase[fase].length === 0 && (
+                      <div className="border-2 border-dashed border-gray-200 rounded-2xl h-24 flex items-center justify-center">
+                        <span className="text-xs text-gray-400">
+                          Sin proyectos
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {byFase[fase].map((p) => (
+              ))}
+            </div>
+
+            {/* Sección Time & Materials */}
+            {timeMaterials.length > 0 && (
+              <div className="mt-10">
+                <div className="mb-4 flex items-center gap-3">
+                  <div
+                    className={clsx(
+                      "rounded-xl px-4 py-2.5 inline-flex items-center gap-2",
+                      "text-white",
+                    )}
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(30,64,175,0.90), rgba(15,23,42,0.98))",
+                      boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
+                      Time &amp; Materials
+                    </h3>
+                    <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
+                      {timeMaterials.length}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    Asignaciones de capacidad sin alcance cerrado
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {timeMaterials.map((p) => (
                     <ProyectoCard
                       key={p.id}
                       proyecto={p}
@@ -609,61 +677,12 @@ export default function Proyectos() {
                       onEdit={() => setEditing(p)}
                     />
                   ))}
-                  {byFase[fase].length === 0 && (
-                    <div className="border-2 border-dashed border-gray-200 rounded-2xl h-24 flex items-center justify-center">
-                      <span className="text-xs text-gray-400">
-                        Sin proyectos
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Sección Time & Materials */}
-          {timeMaterials.length > 0 && (
-            <div className="mt-10">
-              <div className="mb-4 flex items-center gap-3">
-                <div
-                  className={clsx(
-                    "rounded-xl px-4 py-2.5 inline-flex items-center gap-2",
-                    "text-white",
-                  )}
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(30,64,175,0.90), rgba(15,23,42,0.98))",
-                    boxShadow: "0 4px 14px rgba(15,23,42,0.16)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
-                    Time &amp; Materials
-                  </h3>
-                  <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
-                    {timeMaterials.length}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-400">
-                  Asignaciones de capacidad sin alcance cerrado
-                </p>
-              </div>
-              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {timeMaterials.map((p) => (
-                  <ProyectoCard
-                    key={p.id}
-                    proyecto={p}
-                    asignados={enrichedAsignaciones.filter(
-                      (a) => a.proyecto_id === p.id,
-                    )}
-                    onEdit={() => setEditing(p)}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </div>
 
       {creating && (
         <Panel title="Nuevo proyecto" onClose={() => setCreating(false)}>

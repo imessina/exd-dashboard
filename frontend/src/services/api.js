@@ -88,6 +88,29 @@ export const skillsApi = {
       .then((r) => r.data),
 };
 
+// ── Currículums ──────────────────────────────────────────────────────────────
+export const curriculumsApi = {
+  list: (params) => api.get("/curriculums/", { params }).then((r) => r.data),
+
+  getByPersona: (personaId) =>
+    api.get(`/curriculums/persona/${personaId}`).then((r) => r.data),
+
+  updateByPersona: (personaId, data) =>
+    api.put(`/curriculums/persona/${personaId}`, data).then((r) => r.data),
+
+  downloadPdf: (personaId) =>
+    api.get(`/curriculums/persona/${personaId}/pdf`, {
+      responseType: "blob",
+    }),
+
+  downloadZip: (personaIds) =>
+    api.post(
+      "/curriculums/exportar-zip",
+      { persona_ids: personaIds },
+      { responseType: "blob" },
+    ),
+};
+
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 export const dashboardApi = {
   summary: () => api.get("/dashboard/summary").then((r) => r.data),

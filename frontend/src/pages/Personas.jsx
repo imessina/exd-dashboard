@@ -744,6 +744,17 @@ export default function Personas() {
     ]),
   );
 
+  const resumenEstados = personas.reduce(
+    (acc, persona) => {
+      const estado = estadoVisiblePorPersona[persona.id] ?? "Disponible";
+      if (estado === "En proyecto") acc.enProyecto += 1;
+      else if (estado === "Staffing") acc.staffing += 1;
+      else if (estado === "Disponible") acc.disponibles += 1;
+      return acc;
+    },
+    { enProyecto: 0, disponibles: 0, staffing: 0 },
+  );
+
   const filtered = personas.filter((p) => {
     const terminosBusqueda = normalizarTexto(search)
       .split(/\s+/)
@@ -794,73 +805,112 @@ export default function Personas() {
       </div>
 
       <div className="px-8 space-y-6">
-        {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre o rol..."
-            className="input max-w-xs"
-          />
+        {/* Filters + resumen */}
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_420px] gap-5 items-start">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar por nombre o rol..."
+                className="input max-w-xs"
+              />
 
-          <select
-            value={nivelFilter}
-            onChange={(e) => setNivelFilter(e.target.value)}
-            className="input w-44"
-          >
-            <option value="">Todas las categorías</option>
+              <select
+                value={nivelFilter}
+                onChange={(e) => setNivelFilter(e.target.value)}
+                className="input w-44"
+              >
+                <option value="">Todas las categorías</option>
 
-            {CATEGORIAS_NIVEL.map((categoria) => (
-              <option key={categoria} value={categoria}>
-                {categoria}
-              </option>
-            ))}
-          </select>
+                {CATEGORIAS_NIVEL.map((categoria) => (
+                  <option key={categoria} value={categoria}>
+                    {categoria}
+                  </option>
+                ))}
+              </select>
 
-          <select
-            value={estadoFilter}
-            onChange={(e) => setEstadoFilter(e.target.value)}
-            className="input w-44"
-          >
-            <option value="">Todos los estados</option>
-            {ESTADOS_LABORALES.map((estado) => (
-              <option key={estado} value={estado}>
-                {estado}
-              </option>
-            ))}
-          </select>
+              <select
+                value={estadoFilter}
+                onChange={(e) => setEstadoFilter(e.target.value)}
+                className="input w-44"
+              >
+                <option value="">Todos los estados</option>
+                {ESTADOS_VISIBLES.map((estado) => (
+                  <option key={estado} value={estado}>
+                    {estado}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <p className="basis-full text-[11px] text-gray-400">
-            “En proyecto” se determina automáticamente por asignaciones activas
-            y vigentes.
-          </p>
+            <p className="text-[11px] text-gray-400">
+              “En proyecto” se determina automáticamente por asignaciones
+              activas y vigentes.
+            </p>
 
-          <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white">
-            <button
-              type="button"
-              onClick={() => setVista("list")}
-              className={clsx(
-                "px-3 py-2 text-xs font-semibold transition-colors",
-                vista === "list"
-                  ? "bg-brand-500 text-white"
-                  : "text-gray-500 hover:bg-gray-50",
-              )}
-            >
-              Lista
-            </button>
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white w-fit">
+              <button
+                type="button"
+                onClick={() => setVista("list")}
+                className={clsx(
+                  "px-3 py-2 text-xs font-semibold transition-colors",
+                  vista === "list"
+                    ? "bg-brand-500 text-white"
+                    : "text-gray-500 hover:bg-gray-50",
+                )}
+              >
+                Lista
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setVista("cards")}
-              className={clsx(
-                "px-3 py-2 text-xs font-semibold transition-colors",
-                vista === "cards"
-                  ? "bg-brand-500 text-white"
-                  : "text-gray-500 hover:bg-gray-50",
-              )}
-            >
-              Tarjetas
-            </button>
+              <button
+                type="button"
+                onClick={() => setVista("cards")}
+                className={clsx(
+                  "px-3 py-2 text-xs font-semibold transition-colors",
+                  vista === "cards"
+                    ? "bg-brand-500 text-white"
+                    : "text-gray-500 hover:bg-gray-50",
+                )}
+              >
+                Tarjetas
+              </button>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-300 bg-slate-200/70 p-5 shadow-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Resumen de estado
+            </p>
+
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <div className="rounded-xl bg-white/70 border border-slate-200 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                  En proyecto
+                </p>
+                <p className="mt-2 text-2xl font-bold text-slate-800">
+                  {resumenEstados.enProyecto}
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-white/70 border border-teal-200 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-700">
+                  Disponibles
+                </p>
+                <p className="mt-2 text-2xl font-bold text-teal-700">
+                  {resumenEstados.disponibles}
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-white/70 border border-amber-200 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+                  Staffing
+                </p>
+                <p className="mt-2 text-2xl font-bold text-amber-700">
+                  {resumenEstados.staffing}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

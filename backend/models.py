@@ -2,8 +2,9 @@ from sqlalchemy import (
     Column, String, Integer, Boolean, Date, Text, JSON, Enum,
     CheckConstraint, ForeignKey, UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from sqlalchemy.types import TIMESTAMP
 import uuid
 from database import Base
@@ -115,6 +116,73 @@ class PersonaSkill(Base):
     nivel = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+
+
+class Curriculum(Base):
+    __tablename__ = "curriculums"
+    __table_args__ = (
+        UniqueConstraint("persona_id", name="curriculums_persona_unique"),
+    )
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    persona_id = Column(
+        String,
+        ForeignKey("personas.id", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    resumen_profesional = Column(Text, nullable=True)
+    areas_especializacion = Column(JSONB, nullable=False, default=list)
+    herramientas_tecnologias = Column(JSONB, nullable=False, default=list)
+    clientes_asesorados = Column(JSONB, nullable=False, default=list)
+    estudios_posgrados = Column(JSONB, nullable=False, default=list)
+    idiomas = Column(JSONB, nullable=False, default=list)
+    certificaciones = Column(JSONB, nullable=False, default=list)
+    archivo_origen = Column(Text, nullable=True)
+    requiere_revision = Column(Boolean, nullable=False, default=True)
+    activo = Column(Boolean, nullable=False, default=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    persona = relationship("Persona")
+    experiencias = relationship(
+        "CurriculumExperiencia",
+        back_populates="curriculum",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        order_by="CurriculumExperiencia.orden",
+    )
+
+
+class CurriculumExperiencia(Base):
+    __tablename__ = "curriculum_experiencias"
+    __table_args__ = (
+        CheckConstraint("orden BETWEEN 1 AND 3", name="curriculum_experiencias_orden_check"),
+        UniqueConstraint(
+            "curriculum_id",
+            "orden",
+            name="curriculum_experiencias_curriculum_orden_unique",
+        ),
+    )
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    curriculum_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("curriculums.id", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    titulo = Column(Text, nullable=True)
+    cliente = Column(Text, nullable=True)
+    proyecto = Column(Text, nullable=True)
+    rol = Column(Text, nullable=True)
+    descripcion = Column(Text, nullable=True)
+    periodo = Column(Text, nullable=True)
+    orden = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    curriculum = relationship("Curriculum", back_populates="experiencias")
 
 
 class Asignacion(Base):
