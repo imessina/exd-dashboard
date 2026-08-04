@@ -1,0 +1,121 @@
+{
+  "modo": "APLICAR",
+  "fuente": "Skills(1).xlsx",
+  "total_excel": 349,
+  "personas_excel": 17,
+  "skills_excel": 76,
+  "personas_coincidentes": 17,
+  "skills_coincidentes": 76,
+  "filas_validas": 349,
+  "filas_omitidas": 0,
+  "personas_no_encontradas": [],
+  "personas_ambiguas": [],
+  "skills_no_encontradas": [],
+  "skills_ambiguas": [],
+  "coincidencias_personas": [
+    {
+      "nombre_excel": "Américo Narea",
+      "persona_id": "emp-291244",
+      "nombre_dashboard": "Americo Gonzalo Narea Donoso",
+      "numero_empleado": "291244"
+    },
+    {
+      "nombre_excel": "Aracelis Vivanco",
+      "persona_id": "emp-264521",
+      "nombre_dashboard": "Aracelis Alejandra Vivanco Muñoz",
+      "numero_empleado": "264521"
+    },
+    {
+      "nombre_excel": "Camila Bravo",
+      "persona_id": "emp-217777",
+      "nombre_dashboard": "Camila Andrea Bravo Navea",
+      "numero_empleado": "217777"
+    },
+    {
+      "nombre_excel": "Carolina Muñoz",
+      "persona_id": "emp-293412",
+      "nombre_dashboard": "Carolina Paz Muñoz Peñafiel",
+      "numero_empleado": "293412"
+    },
+    {
+      "nombre_excel": "Claudia Martínez",
+      "persona_id": "emp-182058",
+      "nombre_dashboard": "Claudia Andrea Martinez Sepulveda",
+      "numero_empleado": "182058"
+    },
+    {
+      "nombre_excel": "Claudio Rivas",
+      "persona_id": "emp-247920",
+      "nombre_dashboard": "Claudio Andres Rivas Navarro",
+      "numero_empleado": "247920"
+    },
+    {
+      "nombre_excel": "Daniel Bravo",
+      "persona_id": "emp-133135",
+      "nombre_dashboard": "Daniel Marcelo Bravo Flores",
+      "numero_empleado": "133135"
+    },
+    {
+      "nombre_excel": "Francisco Fuentes",
+      "persona_id": "emp-195910",
+      "nombre_dashboard": "Francisco Javier Fuentes Ortega",
+      "numero_empleado": "195910"
+    },
+    {
+      "nombre_excel": "Ignacio Messina",
+      "persona_id": "emp-284351",
+      "nombre_dashboard": "Ignacio Alonso Messina Luna",
+      "numero_empleado": "284351"
+    },
+    {
+      "nombre_excel": "Pablo Godoy",
+      "persona_id": "emp-173177",
+      "nombre_dashboard": "Pablo Ariel Godoy Espinoza",
+      "numero_empleado": "173177"
+    },
+    {
+      "nombre_excel": "Pablo Jofré",
+      "persona_id": "emp-284355",
+      "nombre_dashboard": "Pablo Sebastian Jofre Jara",
+      "numero_empleado": "284355"
+    },
+    {
+      "nombre_excel": "Rebecca Tapia",
+      "persona_id": "emp-295869",
+      "nombre_dashboard": "Rebecca Eloisa Tapia Urbina",
+      "numero_empleado": "295869"
+    },
+    {
+      "nombre_excel": "Samuel Collante",
+      "persona_id": "emp-247947",
+      "nombre_dashboard": "Samuel Francisco Collante Meza",
+      "numero_empleado": "247947"
+    },
+    {
+      "nombre_excel": "Scarlette Villarreal",
+      "persona_id": "emp-200559",
+      "nombre_dashboard": "Scarlette Aracely Villarreal Avila",
+      "numero_empleado": "200559"
+    },
+    {
+      "nombre_excel": "Sebastián Muñoz",
+      "persona_id": "emp-284350",
+      "nombre_dashboard": "Sebastian Alonso Muñoz Zamora",
+      "numero_empleado": "284350"
+    },
+    {
+      "nombre_excel": "Vicente Rodríguez",
+      "persona_id": "emp-245078",
+      "nombre_dashboard": "Vicente Rodriguez Santa Maria",
+      "numero_empleado": "245078"
+    },
+    {
+      "nombre_excel": "Yesnia Pérez",
+      "persona_id": "emp-191476",
+      "nombre_dashboard": "Yesnia Araceli Perez Ojeda",
+      "numero_empleado": "191476"
+    }
+  ],
+  "aplicado": true,
+  "registros_insertados_o_actualizados": 349
+}
