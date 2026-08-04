@@ -1,0 +1,20 @@
+PASO 3 — IMPORTACIÓN DE CURRÍCULUMS
+
+Copiar respetando estas rutas:
+
+backend/importar_curriculums.py
+backend/data/curriculums_carga_inicial.json
+
+Primero ejecutar simulación:
+
+    python importar_curriculums.py
+
+Revisar:
+
+    reporte_importacion_curriculums.json
+
+Solo si la simulación informa 56 registros válidos, ejecutar:
+
+    python importar_curriculums.py --apply
+
+No usar --replace-existing en la carga inicial.

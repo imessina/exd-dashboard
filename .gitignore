@@ -56,3 +56,7 @@ backend/.venv/
 # Local tools and temporary files
 .graphify/
 push_log*.txt
+
+backend/reporte_importacion_skills.json
+push_log.txt
+README.txt

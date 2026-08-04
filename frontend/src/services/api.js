@@ -25,6 +25,9 @@ export const personasApi = {
   create: (data) => api.post("/personas", data).then((r) => r.data),
   update: (id, data) => api.put(`/personas/${id}`, data).then((r) => r.data),
   delete: (id) => api.delete(`/personas/${id}`),
+  skills: (id) => api.get(`/personas/${id}/skills`).then((r) => r.data),
+  replaceSkills: (id, skills) =>
+    api.put(`/personas/${id}/skills`, { skills }).then((r) => r.data),
 };
 
 // ── Asignaciones ─────────────────────────────────────────────────────────────
@@ -83,6 +86,29 @@ export const skillsApi = {
     api
       .delete("/skills/categorias", { params: { nombre } })
       .then((r) => r.data),
+};
+
+// ── Currículums ──────────────────────────────────────────────────────────────
+export const curriculumsApi = {
+  list: (params) => api.get("/curriculums/", { params }).then((r) => r.data),
+
+  getByPersona: (personaId) =>
+    api.get(`/curriculums/persona/${personaId}`).then((r) => r.data),
+
+  updateByPersona: (personaId, data) =>
+    api.put(`/curriculums/persona/${personaId}`, data).then((r) => r.data),
+
+  downloadPdf: (personaId) =>
+    api.get(`/curriculums/persona/${personaId}/pdf`, {
+      responseType: "blob",
+    }),
+
+  downloadZip: (personaIds) =>
+    api.post(
+      "/curriculums/exportar-zip",
+      { persona_ids: personaIds },
+      { responseType: "blob" },
+    ),
 };
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────

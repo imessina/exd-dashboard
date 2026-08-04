@@ -1,175 +1,337 @@
-import { useState, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { skillsApi } from '../services/api'
-import clsx from 'clsx'
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { skillsApi } from "../services/api";
+import clsx from "clsx";
 
-const SIN_CAT = '— Sin categoría —'
+const SIN_CATEGORIA = "— Sin categoría —";
 
 const CAT_COLOR = {
-  'Research, Discovery & Insight':                            'text-violet-700',
-  'UX/UI, Interaction & Visual Design':                       'text-indigo-700',
-  'Product Design & Strategy':                                'text-blue-700',
-  'Service Design & Transformation':                          'text-cyan-700',
-  'Design Systems, Accesibility & Quality':                   'text-teal-700',
-  'Strategy, Business & Measurement':                         'text-amber-700',
-  'Facilitation/Leadership & Stakeholder Management':         'text-emerald-700',
-  'Technology, Tools, & AI Enablement':                       'text-fuchsia-700',
-  'Professional & Interpersonal Skills':                      'text-pink-700',
-}
-const catColor = c => CAT_COLOR[c] ?? 'text-gray-600'
+  "Cloud & DevOps": "text-blue-700",
+  "Data & Analytics": "text-cyan-700",
+  "Delivery & Producto": "text-amber-700",
+  Desarrollo: "text-emerald-700",
+  "IA & GenAI": "text-fuchsia-700",
+  "Marketing & Creative": "text-rose-900",
+  "Spatial Computing": "text-violet-900",
+  "UX / CX": "text-violet-700",
+};
 
-/**
- * Selector de skills por checkboxes agrupados por categoría.
- *
- * Props:
- *   value:    string[]              -- nombres de skills seleccionadas
- *   onChange: (string[]) => void    -- callback con la nueva lista
- */
+const CAT_BG = {
+  "Cloud & DevOps": "bg-blue-50",
+  "Data & Analytics": "bg-cyan-50",
+  "Delivery & Producto": "bg-amber-50",
+  Desarrollo: "bg-emerald-50",
+  "IA & GenAI": "bg-fuchsia-50",
+  "Marketing & Creative": "bg-rose-50",
+  "Spatial Computing": "bg-violet-50",
+  "UX / CX": "bg-violet-50",
+};
+
+const CATEGORIAS_ORDEN = [
+  "Cloud & DevOps",
+  "Data & Analytics",
+  "Delivery & Producto",
+  "Desarrollo",
+  "IA & GenAI",
+  "Marketing & Creative",
+  "UX / CX",
+];
+
+function ordenarCategorias(categorias) {
+  return [...categorias].sort((a, b) => {
+    if (a === SIN_CATEGORIA) return 1;
+    if (b === SIN_CATEGORIA) return -1;
+
+    const aIndex = CATEGORIAS_ORDEN.indexOf(a);
+    const bIndex = CATEGORIAS_ORDEN.indexOf(b);
+
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+    if (aIndex !== -1) return -1;
+    if (bIndex !== -1) return 1;
+
+    return a.localeCompare(b);
+  });
+}
+
 export default function SkillCheckboxes({ value = [], onChange }) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("");
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const [categoriaAbierta, setCategoriaAbierta] = useState(null);
 
   const { data: skills = [], isLoading } = useQuery({
-    queryKey: ['skills'],
-    queryFn:  skillsApi.list,
-  })
+    queryKey: ["skills"],
+    queryFn: skillsApi.list,
+  });
 
-  const valueSet = useMemo(() => new Set(value), [value])
+  const seleccionadas = useMemo(() => new Set(value), [value]);
 
-  // Skills activas (catálogo) + huérfanas (declaradas en `value` pero no en el catálogo)
-  const skillsActivas = skills.filter(s => s.activa)
-  const nombresEnCat  = useMemo(() => new Set(skills.map(s => s.nombre)), [skills])
-  const huerfanas     = value.filter(v => !nombresEnCat.has(v))
+  const skillsActivas = useMemo(
+    () => skills.filter((skill) => skill.activa),
+    [skills],
+  );
 
-  // Agrupar por categoría
   const grupos = useMemo(() => {
-    const g = {}
-    const filtro = search.trim().toLowerCase()
-    for (const s of skillsActivas) {
-      // Filtro: incluir si matchea la búsqueda O si ya está seleccionada
-      if (filtro && !s.nombre.toLowerCase().includes(filtro) && !valueSet.has(s.nombre)) continue
-      const cat = s.categoria ?? SIN_CAT
-      if (!g[cat]) g[cat] = []
-      g[cat].push(s)
-    }
-    // Ordenar dentro del grupo: seleccionadas primero, luego alfabético
-    for (const cat in g) {
-      g[cat].sort((a, b) => {
-        const aSel = valueSet.has(a.nombre) ? 0 : 1
-        const bSel = valueSet.has(b.nombre) ? 0 : 1
-        if (aSel !== bSel) return aSel - bSel
-        return a.nombre.localeCompare(b.nombre)
-      })
-    }
-    // Ordenar categorías: sin categoría al final
-    return Object.entries(g).sort((a, b) => {
-      if (a[0] === SIN_CAT) return 1
-      if (b[0] === SIN_CAT) return -1
-      return a[0].localeCompare(b[0])
-    })
-  }, [skillsActivas, search, valueSet])
+    const agrupadas = {};
 
-  const toggle = nombre => {
-    if (valueSet.has(nombre)) onChange(value.filter(v => v !== nombre))
-    else onChange([...value, nombre])
-  }
+    for (const skill of skillsActivas) {
+      const categoria = skill.categoria || SIN_CATEGORIA;
 
-  const clearAll = () => onChange([])
+      if (!agrupadas[categoria]) agrupadas[categoria] = [];
+      agrupadas[categoria].push(skill);
+    }
+
+    for (const categoria of Object.keys(agrupadas)) {
+      agrupadas[categoria].sort((a, b) =>
+        a.nombre.localeCompare(b.nombre),
+      );
+    }
+
+    return ordenarCategorias(Object.keys(agrupadas)).map((categoria) => ({
+      categoria,
+      skills: agrupadas[categoria],
+    }));
+  }, [skillsActivas]);
+
+  const filtro = search.trim().toLowerCase();
+
+  const gruposFiltrados = useMemo(() => {
+    if (!filtro) return grupos;
+
+    return grupos
+      .map((grupo) => ({
+        ...grupo,
+        skills: grupo.skills.filter((skill) =>
+          skill.nombre.toLowerCase().includes(filtro),
+        ),
+      }))
+      .filter((grupo) => grupo.skills.length > 0);
+  }, [grupos, filtro]);
+
+  const toggleSkill = (nombre) => {
+    if (seleccionadas.has(nombre)) {
+      onChange(value.filter((skill) => skill !== nombre));
+    } else {
+      onChange([...value, nombre]);
+    }
+  };
+
+  const toggleCategoria = (categoria) => {
+    setCategoriaAbierta((actual) =>
+      actual === categoria ? null : categoria,
+    );
+  };
 
   if (isLoading) {
-    return <p className="text-xs text-gray-400 py-3">Cargando catálogo de skills…</p>
+    return (
+      <p className="text-xs text-gray-400 py-3">
+        Cargando catálogo de skills...
+      </p>
+    );
   }
 
-  if (skillsActivas.length === 0 && huerfanas.length === 0) {
+  if (skillsActivas.length === 0) {
     return (
       <div className="rounded-xl border-2 border-dashed border-gray-200 p-4 text-center">
         <p className="text-xs text-gray-500">
-          El catálogo de skills está vacío. Agrega skills desde la pestaña <strong>Skills</strong> primero.
+          No hay skills activas en el catálogo.
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-3">
-      {/* Header: buscador + contador + clear */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <input value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="Filtrar skills…"
-          className="input text-xs flex-1 min-w-32 max-w-64" />
-        <span className="text-xs text-gray-400">
-          {value.length} seleccionada{value.length !== 1 ? 's' : ''}
-        </span>
-        {value.length > 0 && (
-          <button type="button" onClick={clearAll}
-            className="text-xs text-gray-400 hover:text-red-600">
-            Limpiar
-          </button>
+      {/* Botón principal único */}
+      <button
+        type="button"
+        onClick={() => {
+          setMenuAbierto((actual) => !actual);
+          if (menuAbierto) setCategoriaAbierta(null);
+        }}
+        className={clsx(
+          "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-left transition-colors",
+          menuAbierto
+            ? "border-brand-200 bg-brand-50"
+            : "border-gray-200 bg-white hover:bg-gray-50",
         )}
-      </div>
+        aria-expanded={menuAbierto}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            className={clsx(
+              "w-4 h-4 text-gray-400 transition-transform shrink-0",
+              menuAbierto && "rotate-90",
+            )}
+            aria-hidden="true"
+          >
+            <path
+              d="m7.5 5 5 5-5 5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
 
-      {/* Grupos por categoría */}
-      <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-        {grupos.map(([cat, items]) => (
-          <div key={cat}>
-            <p className={clsx('text-xs font-bold uppercase tracking-wider mb-1.5', catColor(cat))}>
-              {cat}
-              <span className="ml-1.5 text-gray-400 font-normal normal-case tracking-normal">
-                ({items.filter(s => valueSet.has(s.nombre)).length}/{items.length})
-              </span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-800">
+              Categorías Skills
             </p>
-            <div className="grid grid-cols-2 gap-1">
-              {items.map(s => {
-                const checked = valueSet.has(s.nombre)
-                return (
-                  <label key={s.id}
-                    className={clsx(
-                      'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-xs transition-colors',
-                      checked
-                        ? 'bg-brand-50 hover:bg-brand-100'
-                        : 'hover:bg-gray-50',
-                    )}>
-                    <input type="checkbox" checked={checked}
-                      onChange={() => toggle(s.nombre)}
-                      className="w-3.5 h-3.5 accent-brand-500 shrink-0" />
-                    <span className={clsx(
-                      'truncate',
-                      checked ? 'text-brand-700 font-medium' : 'text-gray-700',
-                    )} title={s.nombre}>
-                      {s.nombre}
-                    </span>
-                  </label>
-                )
-              })}
-            </div>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {value.length} seleccionada{value.length !== 1 ? "s" : ""}
+            </p>
           </div>
-        ))}
+        </div>
 
-        {grupos.length === 0 && search && (
-          <p className="text-xs text-gray-400 italic py-3">Sin resultados para "{search}".</p>
+        {value.length > 0 && (
+          <span className="inline-flex min-w-7 h-7 px-2 items-center justify-center rounded-full bg-brand-100 text-brand-700 text-xs font-bold shrink-0">
+            {value.length}
+          </span>
         )}
-      </div>
+      </button>
 
-      {/* Skills huérfanas: existen en la persona pero ya no en el catálogo */}
-      {huerfanas.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-2.5">
-          <p className="text-xs text-amber-800 font-semibold mb-1.5">
-            ⚠️ Skills no presentes en el catálogo ({huerfanas.length})
-          </p>
-          <p className="text-xs text-amber-700 mb-2">
-            Probablemente fueron renombradas o eliminadas. Quítalas o pídele a un admin que las añada al catálogo.
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {huerfanas.map(h => (
-              <span key={h}
-                className="inline-flex items-center gap-1 text-xs bg-white border border-amber-200 px-2 py-0.5 rounded">
-                {h}
-                <button type="button" onClick={() => toggle(h)}
-                  className="text-amber-500 hover:text-red-600 font-bold">×</button>
-              </span>
-            ))}
+      {/* Contenido desplegable principal */}
+      {menuAbierto && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar una skill..."
+              className="input text-sm flex-1 min-w-48"
+            />
+
+            {value.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onChange([])}
+                className="text-xs font-semibold text-gray-400 hover:text-red-600"
+              >
+                Limpiar
+              </button>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+            {gruposFiltrados.map(({ categoria, skills: skillsCategoria }) => {
+              const abierta =
+                filtro.length > 0 || categoriaAbierta === categoria;
+
+              const cantidadSeleccionadas = skillsCategoria.filter((skill) =>
+                seleccionadas.has(skill.nombre),
+              ).length;
+
+              return (
+                <div
+                  key={categoria}
+                  className="border-b border-gray-100 last:border-b-0"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleCategoria(categoria)}
+                    className={clsx(
+                      "w-full flex items-center justify-between gap-3 px-4 py-3 text-left transition-colors",
+                      abierta
+                        ? CAT_BG[categoria] || "bg-gray-50"
+                        : "bg-white hover:bg-gray-50",
+                    )}
+                    aria-expanded={abierta}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <svg
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        className={clsx(
+                          "w-4 h-4 shrink-0 text-gray-400 transition-transform",
+                          abierta && "rotate-90",
+                        )}
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="m7.5 5 5 5-5 5"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+
+                      <span
+                        className={clsx(
+                          "text-xs font-bold uppercase tracking-wider truncate",
+                          CAT_COLOR[categoria] || "text-gray-700",
+                        )}
+                      >
+                        {categoria}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs text-gray-400">
+                        {cantidadSeleccionadas}/{skillsCategoria.length}
+                      </span>
+
+                      {cantidadSeleccionadas > 0 && (
+                        <span className="inline-flex min-w-6 h-6 px-1.5 items-center justify-center rounded-full bg-brand-100 text-brand-700 text-xs font-bold">
+                          {cantidadSeleccionadas}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+
+                  {abierta && (
+                    <div className="px-4 py-3 bg-white border-t border-gray-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        {skillsCategoria.map((skill) => {
+                          const checked = seleccionadas.has(skill.nombre);
+
+                          return (
+                            <label
+                              key={skill.id}
+                              className={clsx(
+                                "flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer transition-colors",
+                                checked
+                                  ? "bg-brand-50"
+                                  : "hover:bg-gray-50",
+                              )}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() => toggleSkill(skill.nombre)}
+                                className="w-4 h-4 accent-brand-500 shrink-0"
+                              />
+
+                              <span
+                                className={clsx(
+                                  "text-xs",
+                                  checked
+                                    ? "font-semibold text-brand-700"
+                                    : "text-gray-700",
+                                )}
+                              >
+                                {skill.nombre}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {gruposFiltrados.length === 0 && (
+              <p className="text-sm text-gray-400 text-center py-6">
+                No hay skills que coincidan con la búsqueda.
+              </p>
+            )}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

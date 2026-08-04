@@ -12,19 +12,29 @@ import Panel from "../components/Panel";
 import TagInput from "../components/TagInput";
 
 const STATUS_COLORS = {
-  opportunity: "bg-gray-100 text-gray-600",
-  approved: "bg-blue-100 text-blue-700",
-  bidding: "bg-amber-100 text-amber-700",
-  signed: "bg-emerald-100 text-emerald-700",
-  executing: "bg-brand-100 text-brand-700",
+  opportunity: "bg-slate-100 text-slate-700",
+  approved: "bg-blue-100 text-blue-800",
+  bidding: "bg-amber-100 text-amber-800",
+  signed: "bg-teal-100 text-teal-800",
+  executing: "bg-cyan-100 text-cyan-800",
 };
 
-const STATUS_GRADIENT = {
-  opportunity: "from-gray-400 to-gray-500",
-  approved: "from-blue-500 to-indigo-600",
-  bidding: "from-amber-500 to-orange-600",
-  signed: "from-emerald-500 to-teal-600",
-  executing: "from-violet-500 to-purple-600",
+const STATUS_HEADER_STYLE = {
+  opportunity: {
+    background: "linear-gradient(135deg, rgba(71,85,105,0.96), rgba(30,41,59,0.98))",
+  },
+  approved: {
+    background: "linear-gradient(135deg, rgba(30,64,175,0.92), rgba(15,23,42,0.98))",
+  },
+  bidding: {
+    background: "linear-gradient(135deg, rgba(180,138,25,0.82), rgba(120,86,12,0.92))",
+  },
+  signed: {
+    background: "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
+  },
+  executing: {
+    background: "linear-gradient(135deg, rgba(14,116,144,0.88), rgba(15,23,42,0.98))",
+  },
 };
 
 // ── Match panel ───────────────────────────────────────────────────────────────
@@ -380,37 +390,50 @@ export default function Oportunidades() {
   }, {});
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
+      <div
+        className="p-8 text-white flex items-center justify-between gap-4"
+        style={{
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+            Somos DX
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight">
             Pipeline de Oportunidades
           </h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">
+          <p className="text-sm text-white/60 mt-1 font-medium">
             {opps.length} oportunidades
           </p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-primary">
+        <button onClick={() => setCreating(true)} className="btn-primary shrink-0">
           + Nueva oportunidad
         </button>
       </div>
 
+      <div className="px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+
       {isLoading ? (
         <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
       ) : (
-        <div className="grid grid-cols-5 gap-3 min-w-max">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 w-full">
           {OPORTUNIDAD_STATUS.map((status) => (
-            <div key={status} className="w-72">
+            <div key={status} className="min-w-0 w-full">
               {/* Gradient status header */}
               <div
                 className={clsx(
-                  "mb-4 rounded-xl px-4 py-2.5 flex items-center justify-between",
-                  "bg-gradient-to-r text-white",
-                  STATUS_GRADIENT[status],
+                  "mb-4 rounded-xl px-4 py-3 flex items-center justify-between gap-3 min-w-0",
+                  "text-white",
                 )}
-                style={{ boxShadow: "0 3px 12px rgba(0,0,0,0.12)" }}
+                style={{
+                  ...STATUS_HEADER_STYLE[status],
+                  boxShadow: "0 4px 14px rgba(15, 23, 42, 0.16)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
               >
-                <h3 className="text-xs font-bold uppercase tracking-wider">
+                <h3 className="text-[11px] sm:text-xs font-bold uppercase tracking-wide whitespace-nowrap truncate">
                   {OPORTUNIDAD_STATUS_LABEL[status]}
                 </h3>
                 <span className="text-xs font-bold bg-white/20 rounded-full w-5 h-5 flex items-center justify-center">
@@ -454,6 +477,7 @@ export default function Oportunidades() {
           <OportunidadForm initial={editing} onClose={() => setEditing(null)} />
         </Panel>
       )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { dashboardApi, asignacionesApi } from "../services/api";
+import { dashboardApi, asignacionesApi, personasApi } from "../services/api";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -81,6 +81,14 @@ const Icon = {
   ),
 };
 
+function formatearNombre(valor = "") {
+  return String(valor)
+    .replace(/[-_]+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (letra) => letra.toUpperCase());
+}
+
 function StatCard({ label, value, icon: IconComp, highlight }) {
   const tone =
     highlight === "danger"
@@ -117,6 +125,13 @@ function StatCard({ label, value, icon: IconComp, highlight }) {
 }
 
 export default function Dashboard() {
+  const fechaActual = new Intl.DateTimeFormat("es-CL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
   const { data: summary } = useQuery({
     queryKey: ["dashboard-summary"],
     queryFn: dashboardApi.summary,
@@ -127,129 +142,152 @@ export default function Dashboard() {
     queryFn: () => asignacionesApi.proximasLiberaciones(14),
   });
 
+  const { data: personas = [] } = useQuery({
+    queryKey: ["personas"],
+    queryFn: () => personasApi.list(),
+  });
+
+  const personaMap = Object.fromEntries(
+    personas.map((persona) => [persona.id, persona]),
+  );
+
   return (
-    <div className="p-8 space-y-8 w-full">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* ── Hero section — navy con acento azul corporativo ─────────────── */}
       <div
-        className="rounded-2xl p-8 text-white relative overflow-hidden"
+        className="p-8 text-white relative overflow-hidden flex items-center justify-between gap-6"
         style={{
-          background:
-            "linear-gradient(120deg, #101a2e 0%, #0f6690 70%, #1c9fe4 100%)",
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
         }}
       >
         <div className="relative">
           <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-            DX Control Center
+            Somos DX
           </p>
-          <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Vista Ejecutiva</h2>
           <p className="text-white/60 mt-1 font-medium text-sm">
-            Vista operativa del equipo
+            Vista general del equipo, proyectos y operación
+          </p>
+        </div>
+
+        <div className="hidden sm:block text-right shrink-0">
+          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.16em]">
+            Fecha actual
+          </p>
+          <p className="mt-1 text-sm font-semibold text-white/80 capitalize">
+            {fechaActual}
           </p>
         </div>
       </div>
 
-      {/* ── KPI cards ────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
-        <StatCard
-          label="Personas"
-          value={summary?.total_personas}
-          icon={Icon.users}
-        />
-        <StatCard
-          label="Asignaciones activas"
-          value={summary?.asignaciones_activas}
-          icon={Icon.calendar}
-        />
-        <StatCard
-          label="Liberaciones en 14 días"
-          value={summary?.liberaciones_proximas}
-          icon={Icon.unlock}
-          highlight={summary?.liberaciones_proximas > 0 ? "success" : undefined}
-        />
-        <StatCard
-          label="Proyectos activos"
-          value={summary?.proyectos_activos}
-          icon={Icon.refresh}
-        />
-        <StatCard
-          label="Pipeline abierto"
-          value={summary?.oportunidades_abiertas}
-          icon={Icon.rocket}
-        />
-        <StatCard
-          label="Proyectos en riesgo"
-          value={summary?.proyectos_at_risk}
-          icon={Icon.alert}
-          highlight={summary?.proyectos_at_risk > 0 ? "danger" : undefined}
-        />
-      </div>
+      {/* ── Contenido con margen lateral responsivo ───────── */}
+      <div className="px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* ── KPI cards ────────────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <StatCard
+            label="Personas"
+            value={summary?.total_personas}
+            icon={Icon.users}
+          />
+          <StatCard
+            label="Asignaciones activas"
+            value={summary?.asignaciones_activas}
+            icon={Icon.calendar}
+          />
+          <StatCard
+            label="Liberaciones en 14 días"
+            value={summary?.liberaciones_proximas}
+            icon={Icon.unlock}
+            highlight={
+              summary?.liberaciones_proximas > 0 ? "success" : undefined
+            }
+          />
+          <StatCard
+            label="Proyectos activos"
+            value={summary?.proyectos_activos}
+            icon={Icon.refresh}
+          />
+          <StatCard
+            label="Oportunidades de Proyectos"
+            value={summary?.oportunidades_abiertas}
+            icon={Icon.rocket}
+          />
+          <StatCard
+            label="Proyectos en riesgo"
+            value={summary?.proyectos_at_risk}
+            icon={Icon.alert}
+            highlight={summary?.proyectos_at_risk > 0 ? "danger" : undefined}
+          />
+        </div>
 
-      {/* ── Próximas liberaciones ─────────────────────────── */}
-      <div className="card">
-        <h3 className="font-bold text-gray-900 mb-5 flex items-center gap-2.5">
-          <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-navy-50 text-navy-500">
-            <Icon.unlock className="w-4 h-4" />
-          </span>
-          <span className="text-base">Liberaciones próximas</span>
-          <span className="text-xs font-semibold text-gray-400 ml-1">
-            · 14 días
-          </span>
-        </h3>
+        {/* ── Próximas liberaciones ─────────────────────────── */}
+        <div className="card">
+          <h3 className="font-bold text-gray-900 mb-5 flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-navy-50 text-navy-500">
+              <Icon.unlock className="w-4 h-4" />
+            </span>
+            <span className="text-base">Liberaciones próximas</span>
+            <span className="text-xs font-semibold text-gray-400 ml-1">
+              · 14 días
+            </span>
+          </h3>
 
-        {!liberaciones?.length ? (
-          <div className="py-8 text-center">
-            <p className="text-sm text-gray-400 font-medium">
-              Sin liberaciones en las próximas 2 semanas
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Persona
-                  </th>
-                  <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Proyecto
-                  </th>
-                  <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Cliente
-                  </th>
-                  <th className="pb-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Liberación
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {liberaciones.map((a) => (
-                  <tr
-                    key={a.id}
-                    className="border-b border-gray-50 last:border-0 hover:bg-brand-50/30 transition-colors"
-                  >
-                    <td className="py-3.5 pr-6 font-semibold text-gray-800">
-                      {a.persona_id}
-                    </td>
-                    <td className="py-3.5 pr-6 text-gray-500">
-                      {a.proyecto_id}
-                    </td>
-                    <td className="py-3.5 pr-6 text-gray-500">{a.cliente}</td>
-                    <td className="py-3.5">
-                      <span
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full
-                                       bg-emerald-100 text-emerald-700 text-xs font-bold"
-                      >
-                        {format(new Date(a.fecha_liberacion), "dd MMM", {
-                          locale: es,
-                        })}
-                      </span>
-                    </td>
+          {!liberaciones?.length ? (
+            <div className="py-8 text-center">
+              <p className="text-sm text-gray-400 font-medium">
+                Sin liberaciones en las próximas 2 semanas
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Persona
+                    </th>
+                    <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Proyecto
+                    </th>
+                    <th className="pb-3 pr-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Cliente
+                    </th>
+                    <th className="pb-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Liberación
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {liberaciones.map((a) => (
+                    <tr
+                      key={a.id}
+                      className="border-b border-gray-50 last:border-0 hover:bg-brand-50/30 transition-colors"
+                    >
+                      <td className="py-3.5 pr-6 font-semibold text-gray-800">
+                        {personaMap[a.persona_id]?.nombre ??
+                          formatearNombre(a.persona_id)}
+                      </td>
+                      <td className="py-3.5 pr-6 text-gray-500">
+                        {formatearNombre(a.proyecto_id)}
+                      </td>
+                      <td className="py-3.5 pr-6 text-gray-500">{a.cliente}</td>
+                      <td className="py-3.5">
+                        <span
+                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full
+                                       bg-emerald-100 text-emerald-700 text-xs font-bold"
+                        >
+                          {format(new Date(a.fecha_liberacion), "dd MMM", {
+                            locale: es,
+                          })}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

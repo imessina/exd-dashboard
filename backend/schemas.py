@@ -27,6 +27,23 @@ class NivelSeniority(str, Enum):
 
     manager = "Manager"
 
+
+class NivelPiramide(str, Enum):
+    director = "Director"
+    manager = "Manager"
+    chief = "Chief"
+    evangelist = "Evangelist"
+    expert = "Expert"
+    leader = "Leader"
+    professional = "Professional"
+    junior = "Junior"
+
+class EstadoLaboral(str, Enum):
+    disponible = "Disponible"
+    staffing = "Staffing"
+    inactivo = "Inactivo"
+
+
 class AsignacionEstado(str, Enum):
     active = "active"
     paused = "paused"
@@ -66,35 +83,48 @@ class OportunidadStatus(str, Enum):
 # ── Persona Schemas ──────────────────────────────────────────────────────────
 
 class PersonaBase(BaseModel):
+    # Datos visibles en la aplicación.
     nombre: str
     rol: str
     numero_empleado: Optional[str] = None
+    fecha_ingreso_compania: Optional[date] = None
+    fecha_nacimiento: Optional[date] = None
+    nivel_piramide: Optional[NivelPiramide] = None
+    estado_laboral: EstadoLaboral = EstadoLaboral.disponible
+
     responsable: Optional[str] = None
     empresa_actual: Optional[str] = None
     area: Optional[str] = None
-    nivel_seniority: Optional[NivelSeniority] = NivelSeniority.designer
     anos_experiencia: Optional[int] = None
-    habilidades: Optional[List[str]] = []
-    certificaciones: Optional[List[str]] = []
-    intereses: Optional[List[str]] = []
-    disponible_mentoria: Optional[bool] = False
+    certificaciones: List[str] = Field(default_factory=list)
+    intereses: List[str] = Field(default_factory=list)
+    disponible_mentoria: bool = False
     portfolio_link: Optional[str] = None
     evaluacion_ultima: Optional[Any] = None
-    evaluacion_historico: Optional[List[Any]] = []
+    evaluacion_historico: List[Any] = Field(default_factory=list)
+
+    # Compatibilidad temporal con la versión anterior.
+    nivel_seniority: Optional[NivelSeniority] = None
+    habilidades: List[Any] = Field(default_factory=list)
+
 
 class PersonaCreate(PersonaBase):
     id: str
+
 
 class PersonaUpdate(BaseModel):
     nombre: Optional[str] = None
     rol: Optional[str] = None
     numero_empleado: Optional[str] = None
+    fecha_ingreso_compania: Optional[date] = None
+    fecha_nacimiento: Optional[date] = None
+    nivel_piramide: Optional[NivelPiramide] = None
+    estado_laboral: Optional[EstadoLaboral] = None
+
     responsable: Optional[str] = None
     empresa_actual: Optional[str] = None
     area: Optional[str] = None
-    nivel_seniority: Optional[NivelSeniority] = None
     anos_experiencia: Optional[int] = None
-    habilidades: Optional[List[str]] = None
     certificaciones: Optional[List[str]] = None
     intereses: Optional[List[str]] = None
     disponible_mentoria: Optional[bool] = None
@@ -102,8 +132,117 @@ class PersonaUpdate(BaseModel):
     evaluacion_ultima: Optional[Any] = None
     evaluacion_historico: Optional[List[Any]] = None
 
+    # Compatibilidad temporal. No usar para las personas nuevas.
+    nivel_seniority: Optional[NivelSeniority] = None
+    habilidades: Optional[List[Any]] = None
+
+
 class PersonaOut(PersonaBase):
     id: str
+    # Datos agregados para indicadores ejecutivos de Pirámide.
+    # numero_documento continúa siendo privado y no se expone.
+    sexo: Optional[str] = None
+    nacionalidad: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+
+
+# ── Persona Skill Schemas ────────────────────────────────────────────────────
+
+class PersonaSkillInput(BaseModel):
+    skill_id: str
+    nivel: int = Field(ge=1, le=5)
+
+
+class PersonaSkillsReplace(BaseModel):
+    skills: List[PersonaSkillInput] = Field(default_factory=list)
+
+
+class PersonaSkillOut(BaseModel):
+    skill_id: str
+    nombre: str
+    categoria: Optional[str] = None
+    nivel: int
+
+
+# ── Curriculum Schemas ───────────────────────────────────────────────────────
+
+class CurriculumExperienciaInput(BaseModel):
+    titulo: Optional[str] = None
+    cliente: Optional[str] = None
+    proyecto: Optional[str] = None
+    rol: Optional[str] = None
+    descripcion: Optional[str] = None
+    periodo: Optional[str] = None
+    orden: int = Field(ge=1, le=3)
+
+
+class CurriculumExperienciaOut(CurriculumExperienciaInput):
+    id: UUID
+    curriculum_id: UUID
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CurriculumBase(BaseModel):
+    resumen_profesional: Optional[str] = None
+    areas_especializacion: List[Any] = Field(default_factory=list)
+    herramientas_tecnologias: List[Any] = Field(default_factory=list)
+    clientes_asesorados: List[Any] = Field(default_factory=list)
+    estudios_posgrados: List[Any] = Field(default_factory=list)
+    idiomas: List[Any] = Field(default_factory=list)
+    certificaciones: List[Any] = Field(default_factory=list)
+    archivo_origen: Optional[str] = None
+    requiere_revision: bool = True
+    activo: bool = True
+
+
+class CurriculumCreate(CurriculumBase):
+    persona_id: str
+    experiencias: List[CurriculumExperienciaInput] = Field(default_factory=list, max_length=3)
+
+
+class CurriculumUpdate(BaseModel):
+    resumen_profesional: Optional[str] = None
+    areas_especializacion: Optional[List[Any]] = None
+    herramientas_tecnologias: Optional[List[Any]] = None
+    clientes_asesorados: Optional[List[Any]] = None
+    estudios_posgrados: Optional[List[Any]] = None
+    idiomas: Optional[List[Any]] = None
+    certificaciones: Optional[List[Any]] = None
+    archivo_origen: Optional[str] = None
+    requiere_revision: Optional[bool] = None
+    activo: Optional[bool] = None
+    experiencias: Optional[List[CurriculumExperienciaInput]] = Field(default=None, max_length=3)
+
+
+class CurriculumPersonaResumen(BaseModel):
+    id: str
+    nombre: str
+    rol: str
+    area: Optional[str] = None
+    empresa_actual: Optional[str] = None
+    anos_experiencia: Optional[int] = None
+    numero_empleado: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CurriculumOut(CurriculumBase):
+    id: UUID
+    persona_id: str
+    persona: CurriculumPersonaResumen
+    experiencias: List[CurriculumExperienciaOut] = Field(default_factory=list)
+    skills: List[PersonaSkillOut] = Field(default_factory=list)
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -193,7 +332,7 @@ class OportunidadBase(BaseModel):
     alcance: Optional[str] = None
     fases: Optional[Any] = None
     vacantes: Optional[int] = 1
-    nivel_requerido: Optional[NivelSeniority] = None
+    nivel_requerido: Optional[NivelPiramide] = None
     competencias_requeridas: Optional[List[str]] = []
     timeline_start: Optional[date] = None
     timeline_end: Optional[date] = None
@@ -208,7 +347,7 @@ class OportunidadUpdate(BaseModel):
     cliente: Optional[str] = None
     alcance: Optional[str] = None
     vacantes: Optional[int] = None
-    nivel_requerido: Optional[NivelSeniority] = None
+    nivel_requerido: Optional[NivelPiramide] = None
     competencias_requeridas: Optional[List[str]] = None
     timeline_start: Optional[date] = None
     timeline_end: Optional[date] = None

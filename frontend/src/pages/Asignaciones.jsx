@@ -895,14 +895,20 @@ export default function Asignaciones() {
   ];
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* ── Header ── */}
-      <div className="flex items-start justify-between gap-4">
+      <div
+        className="p-8 text-white flex items-center justify-between gap-4"
+        style={{
+          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Asignaciones
-          </h2>
-          <p className="text-sm text-gray-400 mt-1 font-medium">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+            Somos DX
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight">Asignaciones</h2>
+          <p className="text-sm text-white/60 mt-1 font-medium">
             {personas.length} personas · {proyectos.length} proyectos ·{" "}
             {libresCount} disponibles
           </p>
@@ -915,96 +921,98 @@ export default function Asignaciones() {
         </button>
       </div>
 
-      {/* ── Alertas de próximas liberaciones ── */}
-      {!isLoading && (
-        <ProximasLiberaciones
-          asignaciones={asignaciones}
-          personaMap={personaMap}
-          proyectoMap={proyectoMap}
-        />
-      )}
+      <div className="px-8 space-y-6">
+        {/* ── Alertas de próximas liberaciones ── */}
+        {!isLoading && (
+          <ProximasLiberaciones
+            asignaciones={asignaciones}
+            personaMap={personaMap}
+            proyectoMap={proyectoMap}
+          />
+        )}
 
-      {/* ── Controles del Gantt ── */}
-      <div className="flex items-center gap-3 flex-wrap">
-        {/* Filtro */}
-        <div
-          className="flex rounded-full overflow-hidden p-0.5"
-          style={{ background: "rgba(28,159,228,0.10)" }}
-        >
-          {FILTERS.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              className={clsx(
-                "px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-150",
-                filter === f.key
-                  ? "bg-brand-500 text-white shadow-sm"
-                  : "text-gray-500 hover:text-gray-700",
-              )}
-              style={
-                filter === f.key
-                  ? { boxShadow: "0 2px 8px rgba(28,159,228,0.35)" }
-                  : {}
-              }
-            >
-              {f.label}
-            </button>
-          ))}
+        {/* ── Controles del Gantt ── */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Filtro */}
+          <div
+            className="flex rounded-full overflow-hidden p-0.5"
+            style={{ background: "rgba(28,159,228,0.10)" }}
+          >
+            {FILTERS.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={clsx(
+                  "px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-150",
+                  filter === f.key
+                    ? "bg-brand-500 text-white shadow-sm"
+                    : "text-gray-500 hover:text-gray-700",
+                )}
+                style={
+                  filter === f.key
+                    ? { boxShadow: "0 2px 8px rgba(28,159,228,0.35)" }
+                    : {}
+                }
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Búsqueda */}
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar persona o rol…"
+            className="input max-w-xs text-sm"
+          />
+
+          {/* Leyenda */}
+          <div className="ml-auto">
+            <Leyenda asignaciones={asignaciones} proyectoMap={proyectoMap} />
+          </div>
         </div>
 
-        {/* Búsqueda */}
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar persona o rol…"
-          className="input max-w-xs text-sm"
-        />
+        {/* ── Gantt ── */}
+        {isLoading ? (
+          <p className="text-sm text-gray-400 py-8 text-center">Cargando…</p>
+        ) : (
+          <GanttChart
+            personas={personas}
+            asignaciones={asignaciones}
+            proyectoMap={proyectoMap}
+            filter={filter}
+            search={search}
+            onEdit={openEdit}
+            onAdd={openCreate}
+          />
+        )}
 
-        {/* Leyenda */}
-        <div className="ml-auto">
-          <Leyenda asignaciones={asignaciones} proyectoMap={proyectoMap} />
-        </div>
+        {/* ── Panels ── */}
+        {panel?.mode === "create" && (
+          <Panel title="Nueva asignación" onClose={closePanel}>
+            <AsignacionForm
+              defaultPersonaId={panel.personaId}
+              personas={personas}
+              proyectos={proyectos}
+              onClose={closePanel}
+            />
+          </Panel>
+        )}
+        {panel?.mode === "edit" && (
+          <Panel
+            title={`Editar · ${personaMap[panel.asig.persona_id]?.nombre ?? "—"}`}
+            onClose={closePanel}
+          >
+            <AsignacionForm
+              initial={panel.asig}
+              personas={personas}
+              proyectos={proyectos}
+              onClose={closePanel}
+            />
+          </Panel>
+        )}
       </div>
-
-      {/* ── Gantt ── */}
-      {isLoading ? (
-        <p className="text-sm text-gray-400 py-8 text-center">Cargando…</p>
-      ) : (
-        <GanttChart
-          personas={personas}
-          asignaciones={asignaciones}
-          proyectoMap={proyectoMap}
-          filter={filter}
-          search={search}
-          onEdit={openEdit}
-          onAdd={openCreate}
-        />
-      )}
-
-      {/* ── Panels ── */}
-      {panel?.mode === "create" && (
-        <Panel title="Nueva asignación" onClose={closePanel}>
-          <AsignacionForm
-            defaultPersonaId={panel.personaId}
-            personas={personas}
-            proyectos={proyectos}
-            onClose={closePanel}
-          />
-        </Panel>
-      )}
-      {panel?.mode === "edit" && (
-        <Panel
-          title={`Editar · ${personaMap[panel.asig.persona_id]?.nombre ?? "—"}`}
-          onClose={closePanel}
-        >
-          <AsignacionForm
-            initial={panel.asig}
-            personas={personas}
-            proyectos={proyectos}
-            onClose={closePanel}
-          />
-        </Panel>
-      )}
     </div>
   );
 }
