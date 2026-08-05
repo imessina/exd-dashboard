@@ -9,7 +9,7 @@ La aplicación es de uso interno. En su versión actual no requiere autenticaci�
 - **Dashboard** (`/`) — Resumen ejecutivo con KPIs en tiempo real: personas, asignaciones activas, liberaciones próximas, proyectos activos, pipeline abierto y proyectos en riesgo.
 - **Asignaciones** (`/asignaciones`) — Gestión de asignaciones de personas a proyectos, incluyendo dedicación, fechas, estado y próximas liberaciones.
 - **Equipo / Personas** (`/personas`) — Registro del equipo, seniority, rol, experiencia, habilidades y datos profesionales.
-- **Proyectos** (`/proyectos`) — Administración de proyectos activos, distinguiendo _Fixed Scope_ de _Time & Materials_, junto con su estado y health.
+- **Proyectos** (`/proyectos`) — Administración de proyectos activos, distinguiendo *Fixed Scope* de *Time & Materials*, junto con su estado y health.
 - **Oportunidades** (`/oportunidades`) — Pipeline comercial y seguimiento de oportunidades.
 - **Skill Matrix** (`/skill-matrix`) — Matriz de capacidades basada en el catálogo de skills y evaluaciones reales de las personas.
 - **Skills** (`/skills`) — Catálogo de habilidades con creación, edición, eliminación y categorización.
@@ -53,7 +53,10 @@ Ejemplo de descarga múltiple:
 
 ```json
 {
-  "persona_ids": ["emp-123", "emp-456"]
+  "persona_ids": [
+    "emp-123",
+    "emp-456"
+  ]
 }
 ```
 
