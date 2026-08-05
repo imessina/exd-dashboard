@@ -1,8 +1,8 @@
-# ExD Control Center
+# Dashboard DX — Gestión de Personas y Capacidades
 
-Panel de gestión operativa para el equipo **Experience Design (ExD)** de NTT DATA. Centraliza la información del equipo, las asignaciones, los proyectos activos, las oportunidades comerciales, las capacidades técnicas y los currículums profesionales, con el objetivo de apoyar decisiones sobre staffing, disponibilidad, desarrollo y presentación de perfiles.
+Aplicación interna para la gestión de personas del área **DX de NTT DATA**. Centraliza la información profesional del equipo, sus asignaciones, skills, currículums, proyectos y oportunidades, facilitando la búsqueda de perfiles, la revisión de capacidades y la toma de decisiones sobre staffing, disponibilidad y desarrollo profesional.
 
-La aplicación es de uso interno. En su versión actual no requiere autenticación de usuarios.
+El sistema funciona como un panel unificado de personas y capacidades del área DX. En su versión actual no requiere autenticación de usuarios.
 
 ## Módulos
 
@@ -15,6 +15,18 @@ La aplicación es de uso interno. En su versión actual no requiere autenticaci�
 - **Skills** (`/skills`) — Catálogo de habilidades con creación, edición, eliminación y categorización.
 - **Currículums** (`/curriculums`) — Mantenedor de CV profesionales integrado con personas y skills.
 - **Carrera** y **Pirámide** — Vistas para desarrollo profesional y estructura del equipo.
+
+## Propósito de la aplicación
+
+El Dashboard DX busca entregar una vista centralizada y actualizada de las personas que integran el área. Sus principales objetivos son:
+
+- localizar perfiles según experiencia, rol o skills;
+- conocer el estado y la disponibilidad de las personas;
+- mantener currículums profesionales actualizados;
+- apoyar la asignación de personas a proyectos y oportunidades;
+- visualizar capacidades técnicas y profesionales del equipo;
+- detectar perfiles sin CV o que requieren revisión;
+- generar documentos profesionales individuales o en lote.
 
 ## Módulo de currículums
 
@@ -133,7 +145,7 @@ cp .env.example .env
 Ejemplo:
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/exd_control
+DATABASE_URL=postgresql://user:password@localhost:5432/dashboard_dx
 ENVIRONMENT=development
 DEBUG=true
 CORS_ORIGINS=http://localhost:5173,http://localhost:3000
