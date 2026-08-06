@@ -1,0 +1,112 @@
+{
+  "persona_id": "emp-182831",
+  "persona_nombre": "Alejandro Ignacio Peñaloza Silva",
+  "archivo": "AlejandroPeñalozaSilva_ExperienceDesign_20241122.pptx",
+  "advertencias": [
+    "No se detectaron áreas de especialización."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 25,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Alejandro Peñaloza Silva\nDiseñador UX / UI @NTTData"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Overview\nDiseñador UX/UI con una sólida experiencia fusionando diseño centrado en el usuario y estrategias de Optimización de la Tasa de Conversión (CRO). Mi enfoque se basa en crear experiencias digitales atractivas y funcionales que no solo mejoren la usabilidad, sino que también maximicen la conversión y el valor del producto. A través de una combinación de investigación de usuarios, diseño de interfaces intuitivas y pruebas iterativas, me esfuerzo por obtener resultados impactantes que aporten valor tanto a los usuarios como a los objetivos comerciales. Comprometido con la excelencia en el diseño, siempre busco oportunidades para aprender, innovar y crecer profesionalmente.\n\nExperiencia Seleccionadas\n\nBANNKING | Banco Itaú – Medios de Pago para la App (08/24 – Actualidad)\nDiseño de la experiencia de usuario para los medios de pago dentro de la aplicación móvil de Banco Itaú, buscando optimizar la fluidez y seguridad de las transacciones.\nInvestigaciones de usuarios (research) para entender necesidades y comportamientos, lo que permitió crear soluciones de diseño más centradas en el usuario y adaptadas a sus expectativas.\nDiseño de interfaces intuitivas para mejorar la experiencia de pago, asegurando que fuera simple, rápida y confiable.\nLlevé a cabo pruebas de usabilidad (testing) para validar las soluciones de diseño y realizar ajustes según los resultados obtenidos, optimizando continuamente la experiencia del usuario.\nColaboración con equipos de desarrollo y producto para asegurar una implementación exitosa, alineada con los objetivos de negocio y las mejores prácticas en seguridad de pagos.\n\n TELECOM | Proyecto E-commerce Movistar (04/23 – 07/24)\nDiseño y optimización de la experiencia de usuario para la plataforma de e-commerce de Movistar, enfocándome en mejorar la navegación y facilitar el proceso de compra para aumentar la conversión.\nColaboración con equipos de desarrollo y marketing para garantizar una implementación eficiente de las mejoras en la interfaz.\nResearch y pruebas de usabilidad y análisis de comportamiento de usuarios, lo que resultó en un diseño más intuitivo y centrado en las necesidades del cliente."
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de Especialización\nExperiencia de usuario\nAnálisis heurístico y benchmarking\nJourney maps y mapa de empatía\nDiseño de interfaces\nPrototipos funcionales\nPatrones de diseño\nDesign System\n\nEstudios y Posgrados\nDiplomado UX Design, Diseño de experiencia de usuario - Universidad Finis Terrae, Designar\nDiseño en comunicación visual – Universidad Tecnológica Metropolitana"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Otras Experiencias \nTELECOM | Proyecto de Optimización del Sitio Web de Movistar Empresas\nRediseñé la interfaz del sitio web público de Movistar Empresas, mejorando la experiencia de navegación para clientes B2B.\nImplementé mejoras en el diseño visual y la estructura de contenido, logrando una navegación más fluida y una mejor accesibilidad para usuarios corporativos.\nColaboré con el equipo de contenido para garantizar una alineación visual coherente y optimizada para conversiones.\n\nBNNKING | Proyecto Cálculo Costo de Fondo Empresas Banco BCI\nDiseño de la experiencia para cálculo de costo de fondo empresas, mejorando la experiencia de usuario mediante una interfaz limpia y sencilla.\nColaboración con los analistas de datos y el equipo de desarrollo para garantizar la precisión en el diseño de la herramienta y su funcionalidad.\nPruebas iterativas para asegurarme de que la solución fuera accesible y fácil de usar, generando una mayor satisfacción del cliente.\n\nDiseñador UX/UI & Content Writer | Proyecto Asistente Virtual Transbank\nFui responsable del diseño de la experiencia de usuario del asistente virtual de Transbank, buscando hacer la interacción más intuitiva y fluida para los usuarios finales.\nAdemás, trabajé como content writer, creando el flujo de conversación del asistente\nRealicé pruebas de usabilidad para validar la efectividad de la interfaz y el contenido"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Análisis de Datos"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Css"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Google Analytics"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Hotjar"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "Looker studio"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Suite Office\nSuite Google\nGoogle Plataform"
+    },
+    {
+      "diapositiva_o_bloque": 21,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 22,
+      "texto": "Html"
+    },
+    {
+      "diapositiva_o_bloque": 23,
+      "texto": "JS"
+    },
+    {
+      "diapositiva_o_bloque": 24,
+      "texto": "Alejandro Peñaloza Silva\nDiseñador UX / UI @NTTData"
+    },
+    {
+      "diapositiva_o_bloque": 25,
+      "texto": "Áreas de Especialización\nExperiencia de usuario\nAnálisis heurístico y benchmarking\nJourney maps y mapa de empatía\nDiseño de interfaces\nPrototipos funcionales\nPatrones de diseño\nDesign System\n\nEstudios y Posgrados\nDiplomado UX Design, Diseño de experiencia de usuario - Universidad Finis Terrae, Designar\nDiseño en comunicación visual – Universidad Tecnológica Metropolitana"
+    }
+  ]
+}

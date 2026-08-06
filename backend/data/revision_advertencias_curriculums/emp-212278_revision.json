@@ -1,0 +1,85 @@
+{
+  "persona_id": "emp-212278",
+  "persona_nombre": "Felipe Ignacio Zapata Soto",
+  "archivo": "FelipeZapataSoto_DX_20251006.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional.",
+    "No se detectaron experiencias."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 18,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Experiencias \nDesarrollador Bots | Telefonica B2B (03/2025) \nDesarrollo de módulos y flujos conversacionales para el Bot de WhatsApp de Telefónica, orientado a clientes B2B.\nImplementación de lógica de negocio, optimizando tiempos de respuesta y mejorando la experiencia del usuario final.\n\nDesarrollador Mobile | Telefonica B2B (05/2024 – 02/2025) \nDesarrollo de una aplicación móvil desde cero utilizando React Native, estableciendo una base sólida para el proyecto.\nConfiguración inicial del proyecto, definiendo la estructura de carpetas, dependencias y herramientas de desarrollo.\nDesarrollo de componentes reutilizables y modulares para la interfaz de usuario, integrando el sistema de diseño Mística.\n\nDesarrollador Mobile | Telefonica B2B-B2C(09/2022– 2/2023) \nParticipé en sesiones de análisis para comprender los requisitos del negocio y los traduje en especificaciones técnicas para el desarrollo de la aplicación móvil.\nLideré la creación de funcionalidades clave, como el inicio de sesión y el WebView, utilizando React Native.\nDesarrollé e implementé un WebView que funcionó como la columna vertebral de la aplicación, permitiendo la visualización de contenido web principal y proporcionando una experiencia de usuario fluida y coherente.\n\nDesarrollador Web | Transbank(04/2022 – 08/2022) \nDiseñé y desarrollé un portal de pagos web utilizando HTML, CSS y JavaScript, asegurando una experiencia de usuario fluida y segura.\nTrabajé en la interfaz de usuario, mejorando la accesibilidad y la usabilidad, siguiendo buenas prácticas de desarrollo web y estándares de seguridad.\nAnalytics Web| Telefonica B2C (01/2022 – 04/2022) \nImplementé y gestioné Google Analytics y Tag Manager para realizar un seguimiento y análisis de métricas clave en la web.\nUtilicé Google Tag Manager para configurar eventos personalizados, mejorando la medición de interacciones específicas"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Tecnologías\n\nHtml\nJavascript\nCSS\nBootstrap\nTypescript\nReact\nReact Native"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Análisis de Datos\n\nGoogle Analytics\nTag Manager"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "GitHub\nAzure \nAWS"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Felipe Zapata Soto\nEngineer"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Áreas de Especialización\nDesarrollador mobile\n\nEstudios y Posgrados\nDesarrollo Web, DesafioLatam​.\nIngeniería en Informática, Duoc UC.\nCurso iOS, NTTDATA."
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Clientes Asesorados"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "persona_id": "emp-291244",
+  "persona_nombre": "Americo Gonzalo Narea Donoso",
+  "archivo": "AméricoNarea_CAI_02072026.pptx",
+  "diapositivas": [
+    {
+      "diapositiva": 1,
+      "textos": [
+        "Overview\nLingüista computacional y Prompt Engineer con 2 años de experiencia en el diseño, desarrollo y monitoreo de soluciones de IA conversacional.\nPoseo experiencia en Análisis del Discurso y Corpus, empleando herramientas como Lancsbox y Sketch Engine.\nManejo servicios de NLU e IA Generativa en la nube, tales como Dialogflow CX, Conversational Agents y Vertex en GCP, Amazon Lex / Polly / Bedrock / Agentcore / Connect / NovaSonic / S3 / CloudWatch / CLI / IAM / Lambda.\nManejo básico de Python enfocado en agentes de GenAI y automatización de pruebas.\nCuento con experiencia en la implementación y optimización de modelos de Texto a Habla (TTS) y de Habla a Texto (STT) mediante SSML.\nTengo experiencia en la aplicación de Grandes Modelos de Lenguaje (LLM) para agentes conversacionales y bases de conocimiento.\nMe caracterizo por integrar el análisis lingüístico al diseño de experiencias conversacionales, fomentando interacciones humano/IA naturales, y el diseño y contrucción de estructuras agénticas y multiagénticas. Ambos casos alineados con los objetivos de cada proyecto.\n\nExperiencia Seleccionadas\nSECTOR BANCA | ITAU – PROMPT ENGINEER   (11/2025 – 01/2026) \nProyecto IAdvisors: desarrollo de un chatbot orientado a la facilitación de portafolios y documentación bancaria relevante para ejecutivos del banco Itaú, utilizando GenAI y servicios de AWS.\nMis tareas en este proyecto cubren: \nDiseño de flujos conversacionales.\nConstrucción y diseño de una estructura agéntica utilizando GenAI a través de Bedrock Agents.\nConstrucción y diseño de prompting enfocado a la solución requerida.\nConfiguración de Base de Conocimientos\nGestión de actividades y coordinación directa con cliente para asegurar un buen alineamiento con las espectativas y objetivos del proyecto.\nOrganización y Desarrollo, en conjunto con el cliente, de Historias de Usuario para definir el alcance de la solución. \n\nSECTOR BANCA | TRANSBANK – PROMPT ENGINEER   (02/2026 – 06/2026) \nProyecto de diseño y desarrollo de un voicebot con base multiagéntica para atención al cliente utilizando GenAI y servicios de AWS.\nMis tareas en este proyecto cubren: \nDiseño de flujos conversacionales.\nConstrucción y diseño de una estructura multiagéntica utilizando GenAI a través de Bedrock AgentCore.\nConfiguración de Genesys y su conexión con servicios de AWS\nTraza, evaluación y análisis de llamadas de prueba en Genesys.\nConstrucción y diseño de prompting enfocado a la solución requerida.\nConfiguración y automatización de evaluación y procesamiento de datos reales para medir performance de los agentes.\nGestión de actividades y coordinación directa con cliente para asegurar un buen alineamiento con las espectativas y objetivos del proyecto.\nOrganización y Desarrollo, en conjunto con el cliente, de Historias de Usuario para definir el alcance de la solución.",
+        "Américo Narea\nJunior Engineer – Prompt Engineer",
+        "Áreas de Especialización\n\nIA Conversacional\nDesarrollo Chatbots y Voicebots\nProcesamiento del Lenguaje Natural\n\n\nEstudios y Posgrados\n\nCandidato a Magíster en Lingüística con Mención en Lengua Española. Universidad de Chile.\n\nLicenciado en Lingüística y Literatura Hispánica. Universidad de Chile"
+      ]
+    },
+    {
+      "diapositiva": 2,
+      "textos": [
+        "Herramientas",
+        "- Tecnologías",
+        "- Colaborativas",
+        "- Otras herramientas",
+        "Clientes Asesorados",
+        "Otras Experiencias\n\nSECTOR TELECOMINICACIONES | HOLDTECH – LINGÜÍSTA COMPUTACIONAL  (03/2024 – 04/2025) \nProyectos orientados al diseño y desarrollo de agentes conversacionales para ventas en frío (outbound) enfocado en clientes WOM y Claro.\nMis tareas en estos proyectos fueron: \nDiseño conversacional para agentes de televentas.\nAnálisis de corpus empleando Lancsbox y SketchEngine para la creación y mejoras de estrategias de entrenamiento de intents y entities.\nConstrucción de agentes mediante la plataforma de NLU Dialogflow CX (GCP).\nAdecuación de voz sintética con uso de SSML \nSeguimiento y monitoreo de los agentes en producción.\nPrompting para clasificación de intents con LLM\nDefinición de estrategias de desarrollo y plan de crecimiento de cada proyecto\nGestión y distribución de tareas del equipo",
+        "Américo Narea\nJunior Engineer – Prompt Engineer",
+        "- Análisis de Datos",
+        "SketchEngine",
+        "Áreas de Especialización\n\nIA Conversacional\nDesarrollo Chatbots y Voicebots\nProcesamiento del Lenguaje Natural\n\n\nEstudios y Posgrados\n\nCandidato a Magíster en Lingüística con Mención en Lengua Española. Universidad de Chile.\n\nLicenciado en Lingüística y Literatura Hispánica. Universidad de Chile",
+        "Lancsbox"
+      ]
+    }
+  ]
+}

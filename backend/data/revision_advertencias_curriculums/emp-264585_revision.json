@@ -1,0 +1,96 @@
+{
+  "persona_id": "emp-264585",
+  "persona_nombre": "Pablo Ignacio Quintanilla Peralta",
+  "archivo": "PabloQuintanillaPeralta_CAI_20241122.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 21,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Pablo Quintanilla Peralta\nJunior engineer - NTT DATA"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Datos generales\nLingüista computacional – Prompt Engineer. Lingüista con enfoque en la lingüística aplicada a la computación con experiencia en diseño conversacional, diseño y entrenamiento de agentes conversacionales en diferentes nubes: GCP y AWS. Experiencia de trabajo bajo metodología ágil. \nInvestigador en temas relacionados a la aplicación de herramientas computacionales que procesan lenguaje natural. Actualmente investigando acerca de la aplicación del sistema de marcación de síntesis de voz (SSML) en la producción de síntesis de voz.\n\nExperiencias seleccionadas\nDESARROLLO | LATAM AIRLINES (01/08/2024 – actualidad) \nEntrenamiento en reconocimiento y asertividad de agente conversacional. Realización de pruebas y obtención de métricas para análisis y propuestas de mejoras. Desarrollo de metodología de trabajo en cada sprint del proyecto.\nCreación de instrumentos de prueba para medir la precisión de reconocimiento del agente conversacional;\nDesarrollo de insumos para medir la asertividad y controlar las fases del entrenamiento acorde a su avance;\nEjecución de pruebas y análisis de resultados con proyecciones de mejoras;\nRecolección de datos para crear instrumentos de evaluación y para reentrenamiento;\nOrganización, trabajo y coordinación en equipo para abarcar el entrenamiento.\n\nDISEÑO CONVERSACIONAL | HOLDTECH (01/04/2024 – 31/07/2024) \nDiseñar, construir y testear agentes conversacionales (voicebot, chatbot) bajo la metodología de trabajo scrum. Manejo de plataforma de NLP, NLU y NLG, DialogFlowCX. Evaluación y análisis de corpus mediante la aplicación LancsBox X. Análisis de datos con excel. Manejo de lenguaje de marcación de síntesis de voz SSML.\nDiseño de agentes conversacionales con respectivo entrenamiento;\nRevisión, clasificación y evaluación de resultados de pruebas masivas con clientes reales;\nCreación y propuestas en equipo sobre metodologías de trabajo para cada fase del proyecto;\nTrabajo con corpus de llamadas para entrenamiento;\nDiseño de síntesis de voz con lenguaje de marcación SSML."
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de Especialización\nPrompt engineer\nI.A. conversacional en NLU\n\nEstudios y Posgrados\nLicenciado en Lengua y Literatura Hispánicas – Universidad de Chile (Santiago - Chile)\nCandidato a Magíster en Lingüística Española - Universidad de Chile (Santiago – Chile)"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Otras Experiencias \n\nEDUCACIÓN|UNIVERSIDAD DE CHILE (08/08/2022 - 27/04/2024)\nPlanificar y realizar los módulos Gramática Comunicativa de los cursos de español post elemental y pre intermedio, perteneciente al Área de Español en el Departamento de Lingüística de la universidad. Creación y revisión de pruebas y exámenes a partir de las unidades estudiadas en clases.\nReuniones en equipo para planificación semestral;\nDiseño de instrumentos de evaluación, tales como pruebas de unidad y exámenes;\nCapacidad de comunicación intercultural con estudiantes internacionales.\n\nINVESTIGACIÓN | UNIVERSIDAD DE CHILE (06/09/2021 - 23/06/2022)\nRevisión de documentos, obras y planes de estudio relacionados con el estudio y la enseñanza de italiano como segunda lengua en la Universidad de Chile, en el marco del proyecto Historiografía de la Lingüística Aplicada en Chile (HILACH)\nTrabajo colaborativo en grupo para diseñar la investigación;\nRecopilación de datos del corpus seleccionado para investigar;\nAnálisis e interpretación de los datos obtenidos desde un marco teórico diseñado;\nRedacción del artículo de investigación en equipo."
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Análisis de Datos"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Amazon CloudWatch"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Suite Office\nSuite Google\nGoogle Platform\nAWS Platform"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "LancsBox"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Pablo Quintanilla Peralta\nJunior engineer - NTT DATA"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Tecnologías​"
+    },
+    {
+      "diapositiva_o_bloque": 21,
+      "texto": "Amazon Lex – Amazon Polly – Amazon Bedrock\n\nDialogFlow"
+    }
+  ]
+}

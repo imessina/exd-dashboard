@@ -179,7 +179,7 @@ class CurriculumExperienciaInput(BaseModel):
     rol: Optional[str] = None
     descripcion: Optional[str] = None
     periodo: Optional[str] = None
-    orden: int = Field(ge=1, le=3)
+    orden: int = Field(ge=1)
 
 
 class CurriculumExperienciaOut(CurriculumExperienciaInput):

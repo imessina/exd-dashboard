@@ -1,0 +1,92 @@
+{
+  "persona_id": "emp-222846",
+  "persona_nombre": "Francisca Guajardo Arellano",
+  "archivo": "FranciscaGuajardoArellano_ExperienceOptimization_20260619.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 20,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Otras Experiencias \n\nMEGASECTOR | Clínica Alemana (02/2026 - Actualidad)            Liderazgo de proyecto Núcleo 2026 Diseño UX, con foco en el delivery de módulos.\n\nBANCA| Banco Chile y Banco Itaú (12/2025 - 02/2027)            Liderazgo de equipo en proyectos de Voicebot y Chatbot\n\nINDUSTRIA | LATAM (05/2024 - 08/2025)                    Diseño de experiencias conversacionales para el asistente virtual Voicebot, manejado a través de IA en AWS. Análisis de KPIs y diseño de propuestas para mejorar indicadores, especialmente NPS, CSAT y hallazgos en general. Investigación y estudio para definir la identidad del voicebot.\n\nASISTENTES VIRTUALES | Eva Conversational AI, NTT DATA (12/2023 - 04/2023) Apoyo en creación de contenidos para la plataforma de asistentes virtuales Eva, además de gestion del equipo web para optimizaciones dentro del sitio.\n\nDOCENCIA | Academia Adity (10/2020 - 08/2022) IP Los Leones (03/2021 – 08/2021) Docente para el curso de ”Google Ads” y “Google Tag Manager\" en Modalidad Online.\nDocente de asignatura Aplicación de Estrategias Digitales, Ingeniería en Marketing IP Los Leones\n\nMARKETING DIGITAL | Clínica Everest, Medicien, Red MTS, Toctoc.com, AFP Modelo, Clínica Alemana, Dimacofi, Manager Software, Fundación Portas (08/2016 - 04/2022) Gestión de clientes, generación de copys para landing pages, creación y optimización de \ncampañas en Google Ads y Meta Ads y marcaje de sitios web."
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Análisis de Datos"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Google Analytics"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Hotjar"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Looker \nstudio"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Suite Office\nSuite Google"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Google Tag Manager"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Francisca Guajardo Arellano \nLead Analyst en NTT DATA"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Áreas de Especialización\nUX Writing\nOptimización de flujos\nAnálisis de datos\nCRO\nCreación de campañas digitales\nEstrategias digitales\n\nEstudios y Posgrados\nMaster in Management en Kedge Business School Francia\nIngeniería Comercial, Mención Marketing en Universidad Andrés Bello\n\nInglés Avanzado"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Google Ads"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "Amazon\nPolly"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Meta Ads"
+    }
+  ]
+}

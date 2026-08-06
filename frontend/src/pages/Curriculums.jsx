@@ -124,7 +124,6 @@ function experienciaVacia(orden) {
 function crearFormulario(curriculum) {
   const experiencias = [...(curriculum.experiencias ?? [])]
     .sort((a, b) => (a.orden ?? 99) - (b.orden ?? 99))
-    .slice(0, 3)
     .map((item, indice) => ({
       titulo: item.titulo ?? "",
       cliente: item.cliente ?? "",
@@ -135,8 +134,8 @@ function crearFormulario(curriculum) {
       orden: indice + 1,
     }));
 
-  while (experiencias.length < 3) {
-    experiencias.push(experienciaVacia(experiencias.length + 1));
+  if (experiencias.length === 0) {
+    experiencias.push(experienciaVacia(1));
   }
 
   return {
@@ -218,6 +217,31 @@ function EditorCurriculum({ curriculum, onClose, onSaved }) {
         posicion === indice ? { ...item, [campo]: valor } : item,
       ),
     }));
+    setMensaje("");
+  };
+
+  const agregarExperiencia = () => {
+    setForm((actual) => ({
+      ...actual,
+      experiencias: [
+        ...actual.experiencias,
+        experienciaVacia(actual.experiencias.length + 1),
+      ],
+    }));
+    setMensaje("");
+  };
+
+  const eliminarExperiencia = (indice) => {
+    setForm((actual) => {
+      const restantes = actual.experiencias
+        .filter((_, posicion) => posicion !== indice)
+        .map((item, posicion) => ({ ...item, orden: posicion + 1 }));
+
+      return {
+        ...actual,
+        experiencias: restantes.length > 0 ? restantes : [experienciaVacia(1)],
+      };
+    });
     setMensaje("");
   };
 
@@ -351,9 +375,18 @@ function EditorCurriculum({ curriculum, onClose, onSaved }) {
                 key={indice}
                 className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4"
               >
-                <p className="mb-4 text-sm font-bold text-slate-900">
-                  Experiencia {indice + 1}
-                </p>
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <p className="text-sm font-bold text-slate-900">
+                    Experiencia {indice + 1}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => eliminarExperiencia(indice)}
+                    className="btn-secondary !px-3 !py-1.5 !text-xs"
+                  >
+                    Eliminar
+                  </button>
+                </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
@@ -408,6 +441,14 @@ function EditorCurriculum({ curriculum, onClose, onSaved }) {
               </div>
             ))}
           </div>
+
+          <button
+            type="button"
+            onClick={agregarExperiencia}
+            className="btn-secondary mt-4"
+          >
+            Agregar experiencia
+          </button>
         </section>
 
         <div className="flex flex-wrap gap-5 rounded-xl border border-slate-200 p-4">

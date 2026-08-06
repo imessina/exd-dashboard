@@ -1,0 +1,16 @@
+{
+  "persona_id": "emp-224426",
+  "persona_nombre": "Angelo Giovanni Aranda Boggioni",
+  "archivo": "AngeloArandaBoggioni_DigitalExperience_20250408.pptx",
+  "diapositivas": [
+    {
+      "diapositiva": 1,
+      "textos": [
+        "Angelo Giovanni Aranda Boggioni\n\nEngineer\n aarandab@emeal.nttdata.com",
+        "Resumen\nDesarrollador Full-Stack Liferay y AEM con tres años de experiencia y un fuerte enfoque en diseño responsive, especializado en la creación de portlets y servicios REST API con Java, JavaScript, Jquery, HTML5, CSS3 y Bootstrap. Destacado por mis habilidades en SEO y optimización de rendimiento, junto con un compromiso por mantener una alta cobertura en pruebas unitarias con Junit5 y Mockito. Destrezas en la resolución eficiente de problemas técnicos y capacidad para resolver problemas con rapidez.\n\nExperiencia\nEnel - Desarrollador Full-stack AEM 6.5 en NTT DATA (07/2024 – Presente) \nImplementé reCAPTCHA para mejorar la seguridad del sitio web de Enel, aplicando modificaciones en la lógica de back-end y añadiendo validaciones del lado del front-end. Utilicé Java 11 en el contexto de Adobe Experience Manager (AEM) 6.5 para desarrollar e integrar estas funcionalidades.\u000bParticipé en el desarrollo y mantención de los sitios públicos y privados de Enel Chile, Colombia, Brasil y Perú, creando formularios, resolviendo incidencias, y desarrollando o modificando servicios según requerimientos.\n\nTransbank - Desarrollador Full-stack Liferay 7.2 en NTT DATA (05/2022 – 04/2024) \nDiseñé y desarrollé portlets y servicios web utilizando tecnologías como Java, JavaScript, jQuery, HTML5, CSS3 y Bootstrap, enfocándome en la creación de interfaces responsivas adaptativas para todas las pantallas y en la metodología REST API.\nImplementé pruebas unitarias con Junit5 y Mockito en todos los desarrollos, asegurando una cobertura superior al 80% del código. Optimicé soluciones web para mejorar el SEO y las prácticas de programación, asegurando ejecuciones rápidas y eficientes, y resolviendo problemas técnicos en plazos cortos.\nCreé y gestioné contenidos web, incluyendo plantillas, menús de navegación, listas de datos dinámicos y documentos multimedia, mejorando la gestión de imágenes en el portal de Liferay.\nPersonalicé y modifiqué módulos WAR para adaptarlos a las necesidades corporativas, mejorando la experiencia del usuario final.\n\nCChC - Desarrollador Back-end Liferay 7.1 en Azurian (01/2021 – 03/2021) \nDesarrollé módulos back-end en Java, aplicando patrones de arquitectura REST API y realizando pruebas unitarias con JUnit4 y Mockito. Además, diseñé el modelo entidad-relación (MER) de la base de datos según las necesidades del cliente, optimizando el rendimiento y la escalabilidad del sistema.",
+        "Áreas de Especialización\nDesarrollador full-stack\n\nEstudios y Posgrados\nTitulado y licenciado en Ingeniería en Informática",
+        "Herramientas\nLiferay 7.2 y 7.1\nAEM 6.5\nJava\nPython\nC++\nJavaScript\nHTML5\nCSS3\nMysql\nOracle Database\nFirestore Database\n\nMetodologías y otros\nMetodología Scrum / Cascada\nRepositorios Git / Bitbucket\nJenkins\nKiuwan\nArtifactory\nConfluence\nJira\nAWS\nFigma"
+      ]
+    }
+  ]
+}

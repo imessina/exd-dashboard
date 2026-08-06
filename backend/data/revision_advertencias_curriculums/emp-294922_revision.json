@@ -1,0 +1,92 @@
+{
+  "persona_id": "emp-294922",
+  "persona_nombre": "John Fernando Calderon Vera",
+  "archivo": "JohnCalderonVera_ExperienceDesign_20260603.pptx",
+  "advertencias": [
+    "No se detectaron experiencias."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 20,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "John Calderón vera\nJunior designer"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Overview\nDiseñador UX/UI con formación en Diseño y Desarrollo, especializado en el diseño de experiencias digitales centradas en el usuario y orientadas a resultados de negocio. Combino pensamiento analítico y visión creativa para traducir necesidades complejas en interfaces claras y eficientes, apoyándome en metodologías como Design Thinking, procesos de UX Research y prototipado iterativo.\nInteresado en la innovación continua y en la aplicación de tecnologías emergentes —incluida la IA generativa— para optimizar flujos de diseño, mejorar la experiencia del usuario y aportar valor tangible a los proyectos.\n\nExperiencia Seleccionadas"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Áreas de Especialización\nExperience designer\nDesarrollo web front-end\n\nEstudios y Posgrados\nDiseño y Desarrollo Web\nDuoc UC | 2023 – 2025\nDiseño UX: Experiencia de Usuario + Figma Curso de IA Generativa\nUdemy | 2025\n\nCurso de IA Generativa\nUdemy | 2025"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "HTML"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "CSS"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "JS"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Jquery"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "PHP"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "SALUD | Clínica Alemana – UX/UI Consultant (2025 – actualidad)\nDiseño de soluciones digitales enfocadas en mejorar la experiencia del paciente y usuarios internos.\nAdaptación a entornos corporativos exigentes y de rápida iteración.\nPresentación de propuestas funcionales ante stakeholders.\nMejora de procesos digitales internos mediante rediseño de experiencia de usuario."
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Json"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Python"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Suite Adobe\nSuite Office\n- Chat gpt"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "Clientes"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Canva"
+    }
+  ]
+}
