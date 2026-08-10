@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { asignacionesApi, personasApi } from "../services/api";
+import { personasApi } from "../services/api";
 import clsx from "clsx";
 
 function obtenerNivelPiramide(persona = {}) {
@@ -18,70 +18,70 @@ function nombreCorto(nombre = "") {
 }
 
 const NIVELES_ORDER = [
-  "Director",
-  "Manager",
-  "Chief",
-  "Evangelist",
-  "Expert",
-  "Leader",
-  "Professional",
-  "Junior",
+  "Executive",
+  "Top manager",
+  "Top Leader",
+  "Top Expert Leader",
+  "Expert Lead",
+  "Lead",
+  "Key Contributor",
+  "Contributor",
 ];
 
 const NIVEL_WIDTH = {
-  Director: 100,
-  Manager: 94,
-  Chief: 88,
-  Evangelist: 82,
-  Expert: 76,
-  Leader: 70,
-  Professional: 61,
-  Junior: 53,
+  Executive: 100,
+  "Top manager": 94,
+  "Top Leader": 88,
+  "Top Expert Leader": 82,
+  "Expert Lead": 76,
+  Lead: 70,
+  "Key Contributor": 61,
+  Contributor: 53,
 };
 
 const NIVEL_STYLES = {
-  Director: {
+  Executive: {
     gradient: "linear-gradient(135deg, rgba(15,23,42,0.98), rgba(2,6,23,1))",
     dot: "bg-slate-950",
     badge: "bg-slate-900 text-white",
   },
-  Manager: {
+  "Top manager": {
     gradient:
       "linear-gradient(135deg, rgba(51,65,85,0.96), rgba(15,23,42,0.98))",
     dot: "bg-slate-700",
     badge: "bg-slate-700 text-white",
   },
-  Chief: {
+  "Top Leader": {
     gradient:
       "linear-gradient(135deg, rgba(30,58,138,0.94), rgba(15,23,42,0.98))",
     dot: "bg-blue-900",
     badge: "bg-blue-950 text-blue-100",
   },
-  Evangelist: {
+  "Top Expert Leader": {
     gradient:
       "linear-gradient(135deg, rgba(180,138,25,0.80), rgba(92,65,10,0.94))",
     dot: "bg-amber-700",
     badge: "bg-amber-100 text-amber-900 border border-amber-300/70",
   },
-  Expert: {
+  "Expert Lead": {
     gradient:
       "linear-gradient(135deg, rgba(30,64,175,0.90), rgba(30,41,59,0.98))",
     dot: "bg-blue-800",
     badge: "bg-blue-800 text-blue-100",
   },
-  Leader: {
+  Lead: {
     gradient:
       "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
     dot: "bg-teal-800",
     badge: "bg-teal-800 text-teal-100",
   },
-  Professional: {
+  "Key Contributor": {
     gradient:
       "linear-gradient(135deg, rgba(71,85,105,0.92), rgba(30,64,97,0.94))",
     dot: "bg-slate-600",
     badge: "bg-slate-200 text-slate-800",
   },
-  Junior: {
+  Contributor: {
     gradient:
       "linear-gradient(135deg, rgba(148,163,184,0.88), rgba(71,85,105,0.94))",
     dot: "bg-slate-400",
@@ -95,22 +95,6 @@ function normalizarCategoria(valor = "") {
 
 function porcentaje(cantidad, total) {
   return total > 0 ? Math.round((cantidad / total) * 100) : 0;
-}
-
-function fechaLocalISO() {
-  const ahora = new Date();
-  const offset = ahora.getTimezoneOffset() * 60 * 1000;
-  return new Date(ahora.getTime() - offset).toISOString().slice(0, 10);
-}
-
-function esAsignacionVigente(asignacion = {}) {
-  if (asignacion.estado !== "active") return false;
-
-  const hoy = fechaLocalISO();
-  const inicio = asignacion.fecha_inicio;
-  const liberacion = asignacion.fecha_liberacion;
-
-  return (!inicio || inicio <= hoy) && (!liberacion || liberacion >= hoy);
 }
 
 function calcularAntiguedadPromedio(personas = []) {
@@ -214,12 +198,6 @@ export default function Piramide() {
     queryFn: () => personasApi.list(),
   });
 
-  const { data: asignaciones = [], isLoading: isLoadingAsignaciones } =
-    useQuery({
-      queryKey: ["asignaciones"],
-      queryFn: () => asignacionesApi.list(),
-    });
-
   const groups = NIVELES_ORDER.reduce((acc, nivel) => {
     acc[nivel] = personas.filter(
       (persona) => obtenerNivelPiramide(persona) === nivel,
@@ -227,23 +205,6 @@ export default function Piramide() {
 
     return acc;
   }, {});
-
-  const personasEnProyecto = new Set(
-    asignaciones
-      .filter(esAsignacionVigente)
-      .map((asignacion) => asignacion.persona_id),
-  );
-
-  const estados = personas.reduce(
-    (acc, persona) => {
-      if (personasEnProyecto.has(persona.id)) acc.enProyecto += 1;
-      else if (persona.estado_laboral === "Staffing") acc.staffing += 1;
-      else if (persona.estado_laboral === "Inactivo") acc.inactivo += 1;
-      else acc.disponible += 1;
-      return acc;
-    },
-    { enProyecto: 0, disponible: 0, staffing: 0, inactivo: 0 },
-  );
 
   const sexos = personas.reduce(
     (acc, persona) => {
@@ -278,25 +239,39 @@ export default function Piramide() {
 
   return (
     <div className="pt-0 pl-[1px] pr-[2px] pb-0 space-y-8 w-full">
-      <div
-        className="p-8 text-white"
-        style={{
-          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        }}
-      >
-        <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-          Somos DX
-        </p>
-        <h2 className="text-2xl font-bold tracking-tight">
-          Pirámide del Equipo
-        </h2>
-        <p className="text-sm text-white/60 mt-1 font-medium">
-          {personas.length} personas · distribución por categoría
-        </p>
+      <div className="relative min-h-[170px] overflow-hidden text-white">
+        <img
+          src="/banner-personas.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "center" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,18,40,0.90) 0%, rgba(6,18,40,0.72) 27%, rgba(6,18,40,0.32) 53%, rgba(6,18,40,0.08) 78%, rgba(6,18,40,0.02) 100%)",
+          }}
+        />
+        <div className="relative z-10 flex min-h-[170px] items-center px-8 py-6">
+          <div>
+            <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+              Somos DX
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Pirámide del Equipo
+            </h2>
+            <p className="text-sm text-white/70 mt-1 font-medium">
+              {personas.length} personas · distribución por segmento
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="px-3 sm:px-5 py-0 min-h-[calc(100dvh-132px)]">
-        {isLoading || isLoadingAsignaciones ? (
+        {isLoading ? (
           <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 xl:gap-6 items-start w-full">
@@ -331,7 +306,8 @@ export default function Piramide() {
                           )}
                           style={{
                             width: `${widthPct}%`,
-                            minWidth: nivel === "Junior" ? "200px" : "180px",
+                            minWidth:
+                              nivel === "Contributor" ? "200px" : "180px",
                             maxWidth: "100%",
                             background: styles.gradient,
                             border: "1px solid rgba(255,255,255,0.08)",
@@ -375,9 +351,10 @@ export default function Piramide() {
               {/* Ratio bar */}
               <div className="mt-8 pt-5 border-t border-gray-100">
                 <div className="flex justify-between text-xs text-gray-400 mb-2 font-semibold">
-                  <span>Junior / Professional</span>
+                  <span>Contributor / Key Contributor</span>
                   <span>
-                    Leader / Expert / Evangelist / Chief / Manager / Director
+                    Lead / Expert Lead / Top Leader / Top Expert Leader / Top
+                    manager / Executive
                   </span>
                 </div>
                 <div
@@ -496,27 +473,6 @@ export default function Piramide() {
                     ))}
                   </div>
                 )}
-              </KpiCard>
-
-              <KpiCard titulo="Estado del equipo" tone="teal">
-                <div className="mt-3 space-y-2 text-[11px]">
-                  {[
-                    ["En proyecto", estados.enProyecto],
-                    ["Disponible", estados.disponible],
-                    ["Staffing", estados.staffing],
-                    ["Inactivo", estados.inactivo],
-                  ].map(([etiqueta, cantidad]) => (
-                    <div
-                      key={etiqueta}
-                      className="flex items-center justify-between gap-3"
-                    >
-                      <span className="text-white/70">{etiqueta}</span>
-                      <span className="font-bold tabular-nums">
-                        {cantidad} · {porcentaje(cantidad, personas.length)}%
-                      </span>
-                    </div>
-                  ))}
-                </div>
               </KpiCard>
 
               <KpiCard

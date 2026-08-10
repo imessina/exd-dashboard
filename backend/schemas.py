@@ -29,14 +29,14 @@ class NivelSeniority(str, Enum):
 
 
 class NivelPiramide(str, Enum):
-    director = "Director"
-    manager = "Manager"
-    chief = "Chief"
-    evangelist = "Evangelist"
-    expert = "Expert"
-    leader = "Leader"
-    professional = "Professional"
-    junior = "Junior"
+    executive = "Executive"
+    top_manager = "Top manager"
+    top_leader = "Top Leader"
+    top_expert_leader = "Top Expert Leader"
+    expert_lead = "Expert Lead"
+    lead = "Lead"
+    key_contributor = "Key Contributor"
+    contributor = "Contributor"
 
 class EstadoLaboral(str, Enum):
     disponible = "Disponible"
@@ -93,6 +93,7 @@ class PersonaBase(BaseModel):
     estado_laboral: EstadoLaboral = EstadoLaboral.disponible
 
     responsable: Optional[str] = None
+    oferta_valor: Optional[str] = None
     empresa_actual: Optional[str] = None
     area: Optional[str] = None
     anos_experiencia: Optional[int] = None
@@ -122,6 +123,7 @@ class PersonaUpdate(BaseModel):
     estado_laboral: Optional[EstadoLaboral] = None
 
     responsable: Optional[str] = None
+    oferta_valor: Optional[str] = None
     empresa_actual: Optional[str] = None
     area: Optional[str] = None
     anos_experiencia: Optional[int] = None
@@ -207,7 +209,7 @@ class CurriculumBase(BaseModel):
 
 class CurriculumCreate(CurriculumBase):
     persona_id: str
-    experiencias: List[CurriculumExperienciaInput] = Field(default_factory=list, max_length=3)
+    experiencias: List[CurriculumExperienciaInput] = Field(default_factory=list)
 
 
 class CurriculumUpdate(BaseModel):
@@ -221,7 +223,7 @@ class CurriculumUpdate(BaseModel):
     archivo_origen: Optional[str] = None
     requiere_revision: Optional[bool] = None
     activo: Optional[bool] = None
-    experiencias: Optional[List[CurriculumExperienciaInput]] = Field(default=None, max_length=3)
+    experiencias: Optional[List[CurriculumExperienciaInput]] = Field(default=None)
 
 
 class CurriculumPersonaResumen(BaseModel):

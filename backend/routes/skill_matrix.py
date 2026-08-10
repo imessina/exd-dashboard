@@ -1,8 +1,8 @@
 """Skill Matrix basada en persona_skills y niveles de dominio 1–5."""
 from collections import defaultdict
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -35,12 +35,27 @@ def _ordenar_categorias(cats: List[str]) -> List[str]:
 
 
 @router.get("/")
-def get_skill_matrix(db: Session = Depends(get_db)):
+def get_skill_matrix(
+    oferta_valor: Optional[str] = Query(None, description="Oferta de valor; __sin_asignar__ para valores nulos"),
+    db: Session = Depends(get_db),
+):
     skills = db.query(models.Skill).order_by(models.Skill.nombre).all()
-    personas = db.query(models.Persona).order_by(models.Persona.nombre).all()
+    personas_query = db.query(models.Persona)
+    if oferta_valor == "__sin_asignar__":
+        personas_query = personas_query.filter(models.Persona.oferta_valor.is_(None))
+    elif oferta_valor:
+        personas_query = personas_query.filter(models.Persona.oferta_valor == oferta_valor)
+    personas = personas_query.order_by(models.Persona.nombre).all()
 
     persona_by_id = {persona.id: persona for persona in personas}
-    evaluaciones = db.query(models.PersonaSkill).all()
+    persona_ids = list(persona_by_id)
+    evaluaciones = (
+        db.query(models.PersonaSkill)
+        .filter(models.PersonaSkill.persona_id.in_(persona_ids))
+        .all()
+        if persona_ids
+        else []
+    )
     evaluaciones_por_skill: Dict[str, list] = defaultdict(list)
     for evaluacion in evaluaciones:
         persona = persona_by_id.get(evaluacion.persona_id)

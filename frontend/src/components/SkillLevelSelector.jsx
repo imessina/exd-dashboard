@@ -162,7 +162,7 @@ export default function SkillLevelSelector({ value = [], onChange }) {
                   type="button"
                   onClick={() => eliminar(item.skill_id)}
                   className="text-slate-400 hover:text-red-600 text-lg leading-none"
-                  title="Quitar skill"
+                  title="Quitar capacidad"
                 >
                   ×
                 </button>
@@ -183,10 +183,10 @@ export default function SkillLevelSelector({ value = [], onChange }) {
       >
         <div>
           <p className="text-sm font-semibold text-slate-900">
-            + Agregar skill y evaluar
+            + Agregar capacidad y evaluar
           </p>
           <p className="text-[11px] text-slate-400">
-            Selecciona una skill y luego define su nivel del 1 al 5.
+            Selecciona una capacidad y luego define su nivel del 1 al 5.
           </p>
         </div>
         <span className="text-xs font-bold text-slate-500">
@@ -200,7 +200,7 @@ export default function SkillLevelSelector({ value = [], onChange }) {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar una skill…"
+              placeholder="Buscar una capacidad…"
               className="input text-sm"
             />
           </div>

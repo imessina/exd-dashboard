@@ -30,7 +30,6 @@ function SkillForm({ initial, onClose, categoriasExistentes }) {
   const [creandoCat, setCreandoCat] = useState(false);
   const [nuevaCat, setNuevaCat] = useState("");
 
-  // Mostrar únicamente categorías que actualmente tienen skills en la BD.
   const categorias = useMemo(
     () => ordenarCategorias(categoriasExistentes ?? []),
     [categoriasExistentes],
@@ -41,7 +40,7 @@ function SkillForm({ initial, onClose, categoriasExistentes }) {
   const done = () => {
     qc.invalidateQueries({ queryKey: ["skills"] });
     qc.invalidateQueries({ queryKey: ["skills-categorias"] });
-    qc.invalidateQueries({ queryKey: ["personas"] }); // por si el rename propaga
+    qc.invalidateQueries({ queryKey: ["personas"] });
     onClose();
   };
 
@@ -150,7 +149,7 @@ function SkillForm({ initial, onClose, categoriasExistentes }) {
           className="input resize-none"
           value={form.descripcion}
           onChange={(e) => set("descripcion", e.target.value)}
-          placeholder="Opcional. Aclara qué cubre esta skill."
+          placeholder="Opcional. Aclara qué cubre esta capacidad."
         />
       </div>
 
@@ -178,21 +177,39 @@ function SkillForm({ initial, onClose, categoriasExistentes }) {
           Cancelar
         </button>
         <button type="submit" disabled={busy} className="btn-primary">
-          {busy ? "Guardando..." : initial ? "Guardar cambios" : "Crear skill"}
+          {busy
+            ? "Guardando..."
+            : initial
+              ? "Guardar cambios"
+              : "Crear capacidad"}
         </button>
       </div>
     </form>
   );
 }
 
-// ── Gestor de categorías (renombrar / fusionar / eliminar) ───────────────────
+// ── Gestor de categorías ───────────────────────────────────────────────────
 function CategoriaManager({ skills, onClose }) {
   const qc = useQueryClient();
-  const [editando, setEditando] = useState(null); // categoría en edición
+  const [editando, setEditando] = useState(null);
   const [valor, setValor] = useState("");
   const [borrando, setBorrando] = useState(null);
+  const [gestionando, setGestionando] = useState(null);
+  const [capacidadSeleccionada, setCapacidadSeleccionada] = useState("");
+  const [creandoCapacidadEn, setCreandoCapacidadEn] = useState(null);
+  const [nuevaCapacidad, setNuevaCapacidad] = useState({
+    nombre: "",
+    descripcion: "",
+    activa: true,
+  });
+  const [creandoCategoria, setCreandoCategoria] = useState(false);
+  const [nuevaCategoria, setNuevaCategoria] = useState({
+    nombre: "",
+    capacidad: "",
+    descripcion: "",
+    activa: true,
+  });
 
-  // Conteo de skills por categoría (solo categorías reales, no "sin categoría")
   const cats = useMemo(() => {
     const counts = {};
     for (const s of skills) {
@@ -204,6 +221,7 @@ function CategoriaManager({ skills, onClose }) {
   const refrescar = () => {
     qc.invalidateQueries({ queryKey: ["skills"] });
     qc.invalidateQueries({ queryKey: ["skills-categorias"] });
+    qc.invalidateQueries({ queryKey: ["personas"] });
   };
 
   const rename = useMutation({
@@ -215,11 +233,61 @@ function CategoriaManager({ skills, onClose }) {
       setValor("");
     },
   });
+
   const remove = useMutation({
     mutationFn: (nombre) => skillsApi.deleteCategoria(nombre),
     onSuccess: () => {
       refrescar();
       setBorrando(null);
+    },
+  });
+
+  const moverCapacidad = useMutation({
+    mutationFn: ({ skill, categoria }) =>
+      skillsApi.update(skill.id, {
+        nombre: skill.nombre,
+        categoria,
+        descripcion: skill.descripcion ?? "",
+        activa: skill.activa ?? true,
+      }),
+    onSuccess: () => {
+      refrescar();
+      setCapacidadSeleccionada("");
+    },
+  });
+
+  const crearCapacidad = useMutation({
+    mutationFn: ({ categoria, capacidad }) =>
+      skillsApi.create({
+        nombre: capacidad.nombre.trim(),
+        categoria,
+        descripcion: capacidad.descripcion.trim() || null,
+        activa: capacidad.activa,
+      }),
+    onSuccess: () => {
+      refrescar();
+      setCreandoCapacidadEn(null);
+      setNuevaCapacidad({ nombre: "", descripcion: "", activa: true });
+    },
+  });
+
+  const crearCategoria = useMutation({
+    mutationFn: (data) =>
+      skillsApi.create({
+        nombre: data.capacidad.trim(),
+        categoria: data.nombre.trim(),
+        descripcion: data.descripcion.trim() || null,
+        activa: data.activa,
+      }),
+    onSuccess: () => {
+      refrescar();
+      setCreandoCategoria(false);
+      setNuevaCategoria({
+        nombre: "",
+        capacidad: "",
+        descripcion: "",
+        activa: true,
+      });
     },
   });
 
@@ -230,127 +298,473 @@ function CategoriaManager({ skills, onClose }) {
     valor.trim() !== editando &&
     nombresExistentes.includes(valor.trim());
 
+  const errorGeneral =
+    rename.error ||
+    remove.error ||
+    moverCapacidad.error ||
+    crearCapacidad.error ||
+    crearCategoria.error;
+
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-gray-500">
-        Renombrar propaga el cambio a todas las skills de la categoría. Si el
-        nombre nuevo ya existe, las categorías se <strong>fusionan</strong>.
-        Eliminar deja esas skills sin categoría.
-      </p>
+    <div className="space-y-5">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+        <p className="text-sm font-semibold text-slate-800">
+          Administración de categorías
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          Puedes renombrar categorías, mover capacidades existentes entre
+          categorías, crear nuevas capacidades dentro de una categoría y crear
+          nuevas categorías.
+        </p>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={() => {
+            setCreandoCategoria((actual) => !actual);
+            setGestionando(null);
+            setEditando(null);
+            setBorrando(null);
+          }}
+        >
+          + Nueva categoría
+        </button>
+      </div>
+
+      {creandoCategoria && (
+        <div className="rounded-2xl border border-brand-200 bg-brand-50/30 p-4 space-y-4">
+          <div>
+            <p className="text-sm font-semibold text-slate-900">
+              Crear nueva categoría
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Actualmente las categorías existen a partir de las capacidades
+              asignadas. Por eso la nueva categoría se crea junto con su primera
+              capacidad.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="form-label">Nombre de categoría *</label>
+              <input
+                className="input"
+                value={nuevaCategoria.nombre}
+                onChange={(e) =>
+                  setNuevaCategoria((actual) => ({
+                    ...actual,
+                    nombre: e.target.value,
+                  }))
+                }
+                placeholder="ej: Arquitectura"
+              />
+            </div>
+            <div>
+              <label className="form-label">Primera capacidad *</label>
+              <input
+                className="input"
+                value={nuevaCategoria.capacidad}
+                onChange={(e) =>
+                  setNuevaCategoria((actual) => ({
+                    ...actual,
+                    capacidad: e.target.value,
+                  }))
+                }
+                placeholder="ej: Solution Architecture"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="form-label">Descripción de la capacidad</label>
+            <textarea
+              rows={2}
+              className="input resize-none"
+              value={nuevaCategoria.descripcion}
+              onChange={(e) =>
+                setNuevaCategoria((actual) => ({
+                  ...actual,
+                  descripcion: e.target.value,
+                }))
+              }
+              placeholder="Opcional"
+            />
+          </div>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={nuevaCategoria.activa}
+              onChange={(e) =>
+                setNuevaCategoria((actual) => ({
+                  ...actual,
+                  activa: e.target.checked,
+                }))
+              }
+              className="w-4 h-4 accent-brand-500"
+            />
+            <span className="text-sm text-gray-700">Capacidad activa</span>
+          </label>
+
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                setCreandoCategoria(false);
+                setNuevaCategoria({
+                  nombre: "",
+                  capacidad: "",
+                  descripcion: "",
+                  activa: true,
+                });
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={
+                !nuevaCategoria.nombre.trim() ||
+                !nuevaCategoria.capacidad.trim() ||
+                crearCategoria.isPending
+              }
+              onClick={() => crearCategoria.mutate(nuevaCategoria)}
+            >
+              {crearCategoria.isPending ? "Creando…" : "Crear categoría"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {cats.length === 0 ? (
         <p className="text-sm text-gray-400 py-4 text-center">
           No hay categorías asignadas todavía.
         </p>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100">
-          {cats.map(([cat, count]) => (
-            <div key={cat} className="px-4 py-3">
-              {editando === cat ? (
-                <div className="space-y-2">
-                  <input
-                    className="input w-full"
-                    autoFocus
-                    value={valor}
-                    onChange={(e) => setValor(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && valor.trim())
-                        rename.mutate({ actual: cat, nuevo: valor.trim() });
-                    }}
-                  />
-                  {esFusion && (
-                    <p className="text-xs text-amber-600">
-                      ⚠️ Ya existe «{valor.trim()}» — se fusionarán.
-                    </p>
-                  )}
-                  <div className="flex gap-2">
-                    <button
-                      className="btn-primary text-xs"
-                      disabled={!valor.trim() || rename.isPending}
-                      onClick={() =>
-                        rename.mutate({ actual: cat, nuevo: valor.trim() })
-                      }
-                    >
-                      {rename.isPending
-                        ? "Guardando…"
-                        : esFusion
-                          ? "Fusionar"
-                          : "Renombrar"}
-                    </button>
-                    <button
-                      className="btn-secondary text-xs"
-                      onClick={() => {
-                        setEditando(null);
-                        setValor("");
+        <div className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+          {cats.map(([cat, count]) => {
+            const capacidadesCategoria = skills.filter(
+              (skill) => skill.categoria === cat,
+            );
+            const capacidadesDisponibles = skills
+              .filter((skill) => skill.categoria !== cat)
+              .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+            return (
+              <div key={cat} className="px-4 py-4">
+                {editando === cat ? (
+                  <div className="space-y-2">
+                    <input
+                      className="input w-full"
+                      autoFocus
+                      value={valor}
+                      onChange={(e) => setValor(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && valor.trim()) {
+                          rename.mutate({ actual: cat, nuevo: valor.trim() });
+                        }
                       }}
-                    >
-                      Cancelar
-                    </button>
+                    />
+                    {esFusion && (
+                      <p className="text-xs text-amber-600">
+                        ⚠️ Ya existe «{valor.trim()}» — se fusionarán.
+                      </p>
+                    )}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        className="btn-primary text-xs"
+                        disabled={!valor.trim() || rename.isPending}
+                        onClick={() =>
+                          rename.mutate({ actual: cat, nuevo: valor.trim() })
+                        }
+                      >
+                        {rename.isPending
+                          ? "Guardando…"
+                          : esFusion
+                            ? "Fusionar"
+                            : "Renombrar"}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-secondary text-xs"
+                        onClick={() => {
+                          setEditando(null);
+                          setValor("");
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : borrando === cat ? (
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-red-600">
-                    ¿Eliminar «{cat}»? Sus {count} skill{count !== 1 ? "s" : ""}{" "}
-                    quedarán sin categoría.
-                  </span>
-                  <div className="flex gap-2 shrink-0">
-                    <button
-                      className="text-xs text-red-600 font-semibold hover:underline"
-                      disabled={remove.isPending}
-                      onClick={() => remove.mutate(cat)}
-                    >
-                      Sí
-                    </button>
-                    <button
-                      className="text-xs text-gray-500 hover:underline"
-                      onClick={() => setBorrando(null)}
-                    >
-                      No
-                    </button>
+                ) : borrando === cat ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-red-600">
+                      ¿Eliminar «{cat}»? Se eliminarán también sus {count}{" "}
+                      {count === 1 ? "capacidad" : "capacidades"}. Esta acción
+                      no se puede deshacer.
+                    </span>
+                    <div className="flex gap-2 shrink-0">
+                      <button
+                        type="button"
+                        className="text-xs text-red-600 font-semibold hover:underline"
+                        disabled={remove.isPending}
+                        onClick={() => remove.mutate(cat)}
+                      >
+                        Sí
+                      </button>
+                      <button
+                        type="button"
+                        className="text-xs text-gray-500 hover:underline"
+                        onClick={() => setBorrando(null)}
+                      >
+                        No
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <span
-                    className={clsx("badge text-xs", skillCategoryBadge(cat))}
-                  >
-                    {cat}
-                  </span>
-                  <span className="text-xs text-gray-400 flex-1">
-                    {count} skill{count !== 1 ? "s" : ""}
-                  </span>
-                  <button
-                    className="text-xs text-brand-600 hover:text-brand-800 font-semibold"
-                    onClick={() => {
-                      setEditando(cat);
-                      setValor(cat);
-                      setBorrando(null);
-                    }}
-                  >
-                    ✏️ Renombrar
-                  </button>
-                  <button
-                    className="text-xs text-red-400 hover:text-red-600"
-                    onClick={() => {
-                      setBorrando(cat);
-                      setEditando(null);
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={clsx(
+                          "badge text-xs",
+                          skillCategoryBadge(cat),
+                        )}
+                      >
+                        {cat}
+                      </span>
+                      <span className="text-xs text-gray-400 flex-1">
+                        {count} {count === 1 ? "capacidad" : "capacidades"}
+                      </span>
+                      <button
+                        type="button"
+                        className="text-xs text-brand-600 hover:text-brand-800 font-semibold"
+                        onClick={() => {
+                          setEditando(cat);
+                          setValor(cat);
+                          setBorrando(null);
+                          setGestionando(null);
+                        }}
+                      >
+                        ✏️ Renombrar
+                      </button>
+                      <button
+                        type="button"
+                        className="text-xs text-brand-600 hover:text-brand-800 font-semibold"
+                        onClick={() => {
+                          setGestionando((actual) =>
+                            actual === cat ? null : cat,
+                          );
+                          setEditando(null);
+                          setBorrando(null);
+                          setCapacidadSeleccionada("");
+                        }}
+                      >
+                        Gestionar capacidades
+                      </button>
+                      <button
+                        type="button"
+                        className="text-xs text-red-400 hover:text-red-600"
+                        onClick={() => {
+                          setBorrando(cat);
+                          setEditando(null);
+                          setGestionando(null);
+                        }}
+                        title="Eliminar categoría"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {gestionando === cat && (
+                      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+                            Capacidades actuales
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {capacidadesCategoria.map((skill) => (
+                              <span
+                                key={skill.id}
+                                className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700"
+                              >
+                                {skill.nombre}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="border-t border-slate-200 pt-4">
+                          <label className="form-label">
+                            Agregar una capacidad existente
+                          </label>
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <select
+                              className="input flex-1"
+                              value={capacidadSeleccionada}
+                              onChange={(e) =>
+                                setCapacidadSeleccionada(e.target.value)
+                              }
+                            >
+                              <option value="">Seleccionar capacidad…</option>
+                              {capacidadesDisponibles.map((skill) => (
+                                <option key={skill.id} value={skill.id}>
+                                  {skill.nombre}
+                                  {skill.categoria
+                                    ? ` — ${skill.categoria}`
+                                    : ` — ${SIN_CATEGORIA}`}
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              className="btn-primary whitespace-nowrap"
+                              disabled={
+                                !capacidadSeleccionada ||
+                                moverCapacidad.isPending
+                              }
+                              onClick={() => {
+                                const skill = skills.find(
+                                  (item) => item.id === capacidadSeleccionada,
+                                );
+                                if (skill) {
+                                  moverCapacidad.mutate({
+                                    skill,
+                                    categoria: cat,
+                                  });
+                                }
+                              }}
+                            >
+                              {moverCapacidad.isPending
+                                ? "Agregando…"
+                                : "Agregar"}
+                            </button>
+                          </div>
+                          <p className="mt-1.5 text-[11px] text-slate-400">
+                            Si la capacidad ya pertenece a otra categoría, se
+                            moverá a «{cat}».
+                          </p>
+                        </div>
+
+                        <div className="border-t border-slate-200 pt-4">
+                          {creandoCapacidadEn === cat ? (
+                            <div className="space-y-3">
+                              <div>
+                                <label className="form-label">Nombre *</label>
+                                <input
+                                  className="input"
+                                  value={nuevaCapacidad.nombre}
+                                  onChange={(e) =>
+                                    setNuevaCapacidad((actual) => ({
+                                      ...actual,
+                                      nombre: e.target.value,
+                                    }))
+                                  }
+                                  placeholder="Nombre de la nueva capacidad"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">
+                                  Descripción
+                                </label>
+                                <textarea
+                                  rows={2}
+                                  className="input resize-none"
+                                  value={nuevaCapacidad.descripcion}
+                                  onChange={(e) =>
+                                    setNuevaCapacidad((actual) => ({
+                                      ...actual,
+                                      descripcion: e.target.value,
+                                    }))
+                                  }
+                                  placeholder="Opcional"
+                                />
+                              </div>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={nuevaCapacidad.activa}
+                                  onChange={(e) =>
+                                    setNuevaCapacidad((actual) => ({
+                                      ...actual,
+                                      activa: e.target.checked,
+                                    }))
+                                  }
+                                  className="w-4 h-4 accent-brand-500"
+                                />
+                                <span className="text-sm text-gray-700">
+                                  Activa
+                                </span>
+                              </label>
+                              <div className="flex justify-end gap-2">
+                                <button
+                                  type="button"
+                                  className="btn-secondary"
+                                  onClick={() => {
+                                    setCreandoCapacidadEn(null);
+                                    setNuevaCapacidad({
+                                      nombre: "",
+                                      descripcion: "",
+                                      activa: true,
+                                    });
+                                  }}
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn-primary"
+                                  disabled={
+                                    !nuevaCapacidad.nombre.trim() ||
+                                    crearCapacidad.isPending
+                                  }
+                                  onClick={() =>
+                                    crearCapacidad.mutate({
+                                      categoria: cat,
+                                      capacidad: nuevaCapacidad,
+                                    })
+                                  }
+                                >
+                                  {crearCapacidad.isPending
+                                    ? "Creando…"
+                                    : "Crear capacidad"}
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              className="btn-secondary"
+                              onClick={() => {
+                                setCreandoCapacidadEn(cat);
+                                setNuevaCapacidad({
+                                  nombre: "",
+                                  descripcion: "",
+                                  activa: true,
+                                });
+                              }}
+                            >
+                              + Crear capacidad en esta categoría
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {(rename.error || remove.error) && (
+      {errorGeneral && (
         <p className="text-xs text-red-500">
-          Error:{" "}
-          {(rename.error || remove.error).response?.data?.detail ||
-            (rename.error || remove.error).message}
+          Error: {errorGeneral.response?.data?.detail || errorGeneral.message}
         </p>
       )}
 
@@ -387,11 +801,11 @@ export default function Skills() {
     mutationFn: (id) => skillsApi.delete(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["skills"] });
+      qc.invalidateQueries({ queryKey: ["skills-categorias"] });
       setConfirmingDelete(null);
     },
   });
 
-  // Filtrado
   const filtered = skills.filter((s) => {
     if (search && !s.nombre.toLowerCase().includes(search.toLowerCase()))
       return false;
@@ -401,7 +815,6 @@ export default function Skills() {
     return true;
   });
 
-  // Agrupar por categoría
   const byCategoria = useMemo(() => {
     const grupos = {};
     for (const s of filtered) {
@@ -409,7 +822,6 @@ export default function Skills() {
       if (!grupos[cat]) grupos[cat] = [];
       grupos[cat].push(s);
     }
-    // Orden definido para el nuevo catálogo; solo se consideran grupos existentes.
     const sortedKeys = ordenarCategorias(Object.keys(grupos));
     return sortedKeys.map((k) => [k, grupos[k]]);
   }, [filtered]);
@@ -438,22 +850,21 @@ export default function Skills() {
             Somos DX
           </p>
           <h2 className="text-2xl font-bold tracking-tight">
-            Catálogo de Skills
+            Mantenedor capacidades
           </h2>
           <p className="text-sm text-white/60 mt-1 font-medium">
-            {skills.length} skill{skills.length !== 1 ? "s" : ""}
+            {skills.length} {skills.length === 1 ? "capacidad" : "capacidades"}
             {totalSinCat > 0 && ` · ${totalSinCat} sin categoría`}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center justify-end">
           <button
+            type="button"
             onClick={() => setManagingCats(true)}
-            className="btn-secondary"
+            className="btn-primary"
           >
-            ⚙️ Gestionar categorías
-          </button>
-          <button onClick={() => setCreating(true)} className="btn-primary">
-            + Nueva skill
+            Gestionar Categorías
           </button>
         </div>
       </div>
@@ -464,7 +875,7 @@ export default function Skills() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar skill…"
+            placeholder="Buscar capacidad…"
             className="input text-sm max-w-64"
           />
           <select
@@ -496,7 +907,7 @@ export default function Skills() {
               onClick={() => setCreating(true)}
               className="btn-primary text-sm"
             >
-              + Crear primera skill
+              + Crear primera capacidad
             </button>
           </div>
         ) : filtered.length === 0 ? (
@@ -573,7 +984,7 @@ export default function Skills() {
                         {items.length}
                       </p>
                       <p className="text-[10px] uppercase tracking-wider text-gray-400">
-                        skills
+                        capacidades
                       </p>
                     </div>
                   </button>
@@ -657,7 +1068,7 @@ export default function Skills() {
                                     onClick={() => setEditing(s)}
                                     className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-800"
                                     aria-label={`Editar ${s.nombre}`}
-                                    title="Editar skill"
+                                    title="Editar capacidad"
                                   >
                                     ✏️
                                   </button>
@@ -666,7 +1077,7 @@ export default function Skills() {
                                     onClick={() => setConfirmingDelete(s.id)}
                                     className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-red-50 hover:text-red-600"
                                     aria-label={`Eliminar ${s.nombre}`}
-                                    title="Eliminar skill"
+                                    title="Eliminar capacidad"
                                   >
                                     ×
                                   </button>
@@ -697,7 +1108,7 @@ export default function Skills() {
         )}
 
         {creating && (
-          <Panel title="Nueva skill" onClose={() => setCreating(false)}>
+          <Panel title="Nueva capacidad" onClose={() => setCreating(false)}>
             <SkillForm
               onClose={() => setCreating(false)}
               categoriasExistentes={categoriasExistentes}

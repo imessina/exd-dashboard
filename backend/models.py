@@ -34,6 +34,7 @@ class Persona(Base):
 
     numero_empleado = Column(String, unique=True, nullable=True)
     responsable = Column(String, nullable=True)
+    oferta_valor = Column(String, nullable=True)
     empresa_actual = Column(String)
     area = Column(String)
 
@@ -97,10 +98,7 @@ class PersonaSkill(Base):
     __tablename__ = "persona_skills"
     __table_args__ = (
         UniqueConstraint("persona_id", "skill_id", name="persona_skills_persona_skill_unique"),
-        CheckConstraint(
-    "orden >= 1",
-    name="curriculum_experiencias_orden_check",
-),
+        CheckConstraint("nivel BETWEEN 1 AND 5", name="persona_skills_nivel_check"),
     )
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -160,7 +158,7 @@ class Curriculum(Base):
 class CurriculumExperiencia(Base):
     __tablename__ = "curriculum_experiencias"
     __table_args__ = (
-        CheckConstraint("orden BETWEEN 1 AND 3", name="curriculum_experiencias_orden_check"),
+        CheckConstraint("orden >= 1", name="curriculum_experiencias_orden_check"),
         UniqueConstraint(
             "curriculum_id",
             "orden",

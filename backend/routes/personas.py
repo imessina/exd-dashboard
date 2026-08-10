@@ -13,6 +13,7 @@ router = APIRouter(prefix="/personas", tags=["personas"])
 def list_personas(
     nivel: Optional[str] = Query(None, description="Nivel de pirámide"),
     habilidad: Optional[str] = Query(None),
+    oferta_valor: Optional[str] = Query(None, description="Oferta de valor; __sin_asignar__ para valores nulos"),
     db: Session = Depends(get_db),
 ):
     q = db.query(models.Persona)
@@ -26,6 +27,11 @@ def list_personas(
                 models.Persona.nivel_seniority == nivel,
             )
         )
+
+    if oferta_valor == "__sin_asignar__":
+        q = q.filter(models.Persona.oferta_valor.is_(None))
+    elif oferta_valor:
+        q = q.filter(models.Persona.oferta_valor == oferta_valor)
 
     personas = q.order_by(models.Persona.nombre).all()
 
@@ -154,7 +160,7 @@ def replace_persona_skills(
 
     skill_ids = [item.skill_id for item in data.skills]
     if len(skill_ids) != len(set(skill_ids)):
-        raise HTTPException(status_code=400, detail="No se permiten skills duplicadas")
+        raise HTTPException(status_code=400, detail="No se permiten capacidades duplicadas")
 
     skills = db.query(models.Skill).filter(models.Skill.id.in_(skill_ids)).all() if skill_ids else []
     skills_by_id = {skill.id: skill for skill in skills}
@@ -162,7 +168,7 @@ def replace_persona_skills(
     if faltantes:
         raise HTTPException(
             status_code=400,
-            detail=f"Skills inexistentes: {', '.join(faltantes)}",
+            detail=f"Capacidades inexistentes: {', '.join(faltantes)}",
         )
 
     db.query(models.PersonaSkill).filter(
@@ -204,5 +210,33 @@ def delete_persona(persona_id: str, db: Session = Depends(get_db)):
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada")
 
-    db.delete(persona)
-    db.commit()
+    try:
+        curriculum_ids = [
+            curriculum_id
+            for (curriculum_id,) in (
+                db.query(models.Curriculum.id)
+                .filter(models.Curriculum.persona_id == persona_id)
+                .all()
+            )
+        ]
+
+        if curriculum_ids:
+            (
+                db.query(models.CurriculumExperiencia)
+                .filter(
+                    models.CurriculumExperiencia.curriculum_id.in_(curriculum_ids)
+                )
+                .delete(synchronize_session=False)
+            )
+
+            (
+                db.query(models.Curriculum)
+                .filter(models.Curriculum.id.in_(curriculum_ids))
+                .delete(synchronize_session=False)
+            )
+
+        db.delete(persona)
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise

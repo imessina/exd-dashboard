@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { skillMatrixApi } from "../services/api";
+import { OFERTAS_VALOR, OFERTA_SIN_ASIGNAR } from "../utils/constants";
 import clsx from "clsx";
 
 const TODAS_TAB = "__todas__";
@@ -168,7 +170,7 @@ function HuerfanasTable({ huerfanas }) {
   if (huerfanas.length === 0) {
     return (
       <p className="text-sm text-gray-400 py-8 text-center">
-        No hay skills huérfanas.
+        No hay capacidades huérfanas.
       </p>
     );
   }
@@ -179,7 +181,7 @@ function HuerfanasTable({ huerfanas }) {
         <thead className="bg-amber-50/70">
           <tr className="border-b border-amber-100 text-left">
             <th className="px-4 py-3 text-xs font-semibold text-amber-900">
-              Skill
+              Capacidad
             </th>
             <th className="px-4 py-3 text-xs font-semibold text-amber-900">
               Personas
@@ -228,13 +230,18 @@ function HuerfanasTable({ huerfanas }) {
 //  PÁGINA
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function SkillMatrix() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState(TODAS_TAB);
   const [personaSearch, setPersonaSearch] = useState("");
   const [skillSearch, setSkillSearch] = useState("");
+  const [ofertaFilter, setOfertaFilter] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["skill-matrix"],
-    queryFn: () => skillMatrixApi.get(),
+    queryKey: ["skill-matrix", ofertaFilter],
+    queryFn: () =>
+      skillMatrixApi.get(
+        ofertaFilter ? { oferta_valor: ofertaFilter } : undefined,
+      ),
   });
 
   useEffect(() => {
@@ -302,65 +309,117 @@ export default function SkillMatrix() {
   return (
     <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* Header */}
-      <div
-        className="p-8 text-white flex items-start justify-between gap-4 flex-wrap"
-        style={{
-          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        }}
-      >
-        <div className="max-w-3xl">
-          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-            Somos DX
-          </p>
+      <div className="relative min-h-[170px] overflow-hidden text-white">
+        <img
+          src="/banner-personas.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "center" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,18,40,0.90) 0%, rgba(6,18,40,0.72) 27%, rgba(6,18,40,0.32) 53%, rgba(6,18,40,0.08) 78%, rgba(6,18,40,0.02) 100%)",
+          }}
+        />
 
-          <h2 className="text-2xl font-bold tracking-tight">Skill Matrix</h2>
+        <div className="relative z-10 flex min-h-[170px] items-center justify-between gap-4 px-8 py-6 flex-wrap">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
+              Somos DX
+            </p>
 
-          <p className="text-sm text-white/60 mt-1 font-medium">
-            Inventario de habilidades del equipo organizado por categorías.
-          </p>
-        </div>
+            <h2 className="text-2xl font-bold tracking-tight">Capacidades</h2>
 
-        <div className="flex flex-wrap gap-3 text-xs">
-          <Stat label="Skills" value={data.total_skills_catalogo} dark />
-          <Stat label="Personas" value={data.total_personas} dark />
-          {huerfanasCount > 0 && (
-            <Stat label="Huérfanas" value={huerfanasCount} tone="warn" dark />
-          )}
+            <p className="text-sm text-white/70 mt-1 font-medium">
+              Matriz de capacidades y niveles del equipo organizada por
+              categorías.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/skills")}
+              className="btn-primary"
+            >
+              Mantenedor capacidades
+            </button>
+
+            <div className="flex flex-wrap gap-3 text-xs">
+              <Stat
+                label="Capacidades"
+                value={data.total_skills_catalogo}
+                dark
+              />
+              <Stat label="Personas" value={data.total_personas} dark />
+              {huerfanasCount > 0 && (
+                <Stat
+                  label="Sin asignar"
+                  value={huerfanasCount}
+                  tone="warn"
+                  dark
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="px-4 sm:px-6 lg:px-8 space-y-5">
-        {/* Tabs por categoría */}
-        <div className="flex flex-wrap gap-1 border-b border-gray-200">
-          <CategoryTab
-            label="Ver todas"
-            active={tab === TODAS_TAB}
-            onClick={() => setTab(TODAS_TAB)}
-          />
-
-          {categorias.map((categoria) => {
-            return (
-              <CategoryTab
-                key={categoria}
-                label={categoria}
-                active={tab === categoria}
-                onClick={() => setTab(categoria)}
-              />
-            );
-          })}
-
-          {huerfanasCount > 0 && (
-            <CategoryTab
-              label="Huérfanas"
-              active={isHuerfanas}
-              warning
-              onClick={() => setTab(HUERFANAS_TAB)}
+        {/* Ofertas de valor visibles */}
+        <div className="border-b border-gray-200 overflow-x-auto">
+          <div className="flex min-w-max gap-1">
+            <OfferTab
+              label="Todas las ofertas"
+              active={ofertaFilter === ""}
+              onClick={() => setOfertaFilter("")}
             />
-          )}
+
+            {OFERTAS_VALOR.map((oferta) => (
+              <OfferTab
+                key={oferta}
+                label={oferta}
+                active={ofertaFilter === oferta}
+                onClick={() => setOfertaFilter(oferta)}
+              />
+            ))}
+
+            <OfferTab
+              label="Sin asignar"
+              active={ofertaFilter === OFERTA_SIN_ASIGNAR}
+              warning
+              onClick={() => setOfertaFilter(OFERTA_SIN_ASIGNAR)}
+            />
+          </div>
         </div>
 
-        {/* Búsquedas separadas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
+        {/* Filtros de categoría y búsqueda */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl">
+          <div>
+            <label className="block mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Categoría
+            </label>
+            <select
+              value={tab}
+              onChange={(event) => setTab(event.target.value)}
+              className="input text-sm w-full"
+            >
+              <option value={TODAS_TAB}>Ver todas</option>
+              {categorias.map((categoria) => (
+                <option key={categoria} value={categoria}>
+                  {categoria}
+                </option>
+              ))}
+              {huerfanasCount > 0 && (
+                <option value={HUERFANAS_TAB}>Huérfanas</option>
+              )}
+            </select>
+          </div>
+
           <div>
             <label className="block mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
               Buscar persona
@@ -375,7 +434,7 @@ export default function SkillMatrix() {
 
           <div>
             <label className="block mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-              Buscar skill
+              Buscar capacidad
             </label>
             <input
               value={skillSearch}
@@ -386,9 +445,10 @@ export default function SkillMatrix() {
           </div>
 
           {!isHuerfanas && (
-            <p className="md:col-span-2 text-xs text-gray-400">
-              {skillsToShow.length} skill
-              {skillsToShow.length !== 1 ? "s" : ""} en la tabla
+            <p className="md:col-span-3 text-xs text-gray-400">
+              {skillsToShow.length}{" "}
+              {skillsToShow.length === 1 ? "capacidad" : "capacidades"} en la
+              tabla
             </p>
           )}
         </div>
@@ -421,8 +481,8 @@ export default function SkillMatrix() {
         ) : skillsToShow.length === 0 ? (
           <p className="text-sm text-gray-400 py-10 text-center">
             {skillSearch.trim()
-              ? "Sin resultados para la búsqueda de skills."
-              : "Esta categoría no tiene skills disponibles."}
+              ? "Sin resultados para la búsqueda de capacidades."
+              : "Esta categoría no tiene capacidades disponibles."}
           </p>
         ) : (
           <HeatmapTable
@@ -435,7 +495,7 @@ export default function SkillMatrix() {
   );
 }
 
-function CategoryTab({ label, active, warning = false, onClick }) {
+function OfferTab({ label, active, warning = false, onClick }) {
   return (
     <button
       type="button"

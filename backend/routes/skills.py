@@ -79,7 +79,7 @@ def rename_categoria(data: schemas.CategoriaRename, db: Session = Depends(get_db
 
     afectadas = db.query(models.Skill).filter(models.Skill.categoria == actual).all()
     if not afectadas:
-        raise HTTPException(status_code=404, detail=f"No hay skills en la categoría '{actual}'")
+        raise HTTPException(status_code=404, detail=f"No hay capacidades en la categoría '{actual}'")
 
     # ¿`nuevo` ya tenía skills? entonces es una fusión.
     fusion = db.query(models.Skill).filter(models.Skill.categoria == nuevo).count() > 0
@@ -91,16 +91,67 @@ def rename_categoria(data: schemas.CategoriaRename, db: Session = Depends(get_db
 
 
 @router.delete("/categorias", status_code=200)
-def delete_categoria(nombre: str = Query(..., description="Categoría a eliminar"), db: Session = Depends(get_db)):
-    """Elimina una categoría: las skills que la tenían quedan sin categoría (null)."""
+def delete_categoria(
+    nombre: str = Query(..., description="Categoría a eliminar"),
+    db: Session = Depends(get_db),
+):
+    """
+    Elimina una categoría y todas las capacidades que pertenecen a ella.
+
+    Antes de borrar las capacidades:
+    - elimina sus relaciones en `persona_skills`;
+    - limpia sus nombres del campo histórico `personas.habilidades`.
+
+    La operación se ejecuta en una sola transacción.
+    """
     nombre = (nombre or "").strip()
-    afectadas = db.query(models.Skill).filter(models.Skill.categoria == nombre).all()
+
+    afectadas = (
+        db.query(models.Skill)
+        .filter(models.Skill.categoria == nombre)
+        .all()
+    )
     if not afectadas:
-        raise HTTPException(status_code=404, detail=f"No hay skills en la categoría '{nombre}'")
-    for s in afectadas:
-        s.categoria = None
-    db.commit()
-    return {"actualizadas": len(afectadas)}
+        raise HTTPException(
+            status_code=404,
+            detail=f"No hay capacidades en la categoría '{nombre}'",
+        )
+
+    skill_ids = [s.id for s in afectadas]
+    skill_nombres = {s.nombre for s in afectadas}
+
+    try:
+        # Limpiar relaciones normalizadas persona <-> capacidad.
+        db.query(models.PersonaSkill).filter(
+            models.PersonaSkill.skill_id.in_(skill_ids)
+        ).delete(synchronize_session=False)
+
+        # Limpiar el campo histórico JSON de capacidades en personas.
+        personas = db.query(models.Persona).all()
+        for persona in personas:
+            habilidades = persona.habilidades or []
+            nuevas_habilidades = [
+                habilidad
+                for habilidad in habilidades
+                if habilidad not in skill_nombres
+            ]
+            if nuevas_habilidades != habilidades:
+                persona.habilidades = nuevas_habilidades
+
+        # Borrar todas las capacidades de la categoría.
+        db.query(models.Skill).filter(
+            models.Skill.id.in_(skill_ids)
+        ).delete(synchronize_session=False)
+
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return {
+        "categoria": nombre,
+        "capacidades_eliminadas": len(afectadas),
+    }
 
 
 @router.post("/", response_model=schemas.SkillOut, status_code=201)
@@ -112,10 +163,10 @@ def create_skill(data: schemas.SkillCreate, db: Session = Depends(get_db)):
 
     # ID único
     if db.query(models.Skill).filter(models.Skill.id == skill_id).first():
-        raise HTTPException(status_code=400, detail=f"Ya existe una skill con id '{skill_id}'")
+        raise HTTPException(status_code=400, detail=f"Ya existe una capacidad con id '{skill_id}'")
     # Nombre único
     if db.query(models.Skill).filter(models.Skill.nombre == data.nombre).first():
-        raise HTTPException(status_code=400, detail=f"Ya existe una skill con nombre '{data.nombre}'")
+        raise HTTPException(status_code=400, detail=f"Ya existe una capacidad con nombre '{data.nombre}'")
 
     skill = models.Skill(
         id=skill_id,
@@ -138,7 +189,7 @@ def update_skill(skill_id: str, data: schemas.SkillUpdate, db: Session = Depends
     """
     skill = db.query(models.Skill).filter(models.Skill.id == skill_id).first()
     if not skill:
-        raise HTTPException(status_code=404, detail="Skill no encontrada")
+        raise HTTPException(status_code=404, detail="Capacidad no encontrada")
 
     payload = data.model_dump(exclude_unset=True)
 
@@ -149,7 +200,7 @@ def update_skill(skill_id: str, data: schemas.SkillUpdate, db: Session = Depends
             models.Skill.nombre == nuevo, models.Skill.id != skill.id
         ).first()
         if existe:
-            raise HTTPException(status_code=400, detail=f"Ya existe una skill con nombre '{nuevo}'")
+            raise HTTPException(status_code=400, detail=f"Ya existe una capacidad con nombre '{nuevo}'")
         # Propagar a personas
         viejo = skill.nombre
         personas = db.query(models.Persona).all()
@@ -174,13 +225,13 @@ def delete_skill(skill_id: str, db: Session = Depends(get_db)):
     """
     skill = db.query(models.Skill).filter(models.Skill.id == skill_id).first()
     if not skill:
-        raise HTTPException(status_code=404, detail="Skill no encontrada")
+        raise HTTPException(status_code=404, detail="Capacidad no encontrada")
 
     count = _personas_count(db, skill.nombre)
     if count > 0:
         raise HTTPException(
             status_code=409,
-            detail=f"La skill está en uso por {count} persona(s). Quítala de sus perfiles, o desactívala en lugar de borrarla.",
+            detail=f"La capacidad está en uso por {count} persona(s). Quítala de sus perfiles, o desactívala en lugar de borrarla.",
         )
     db.delete(skill)
     db.commit()

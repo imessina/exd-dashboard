@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink,
+  Navigate,
+} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Personas from "./pages/Personas";
 import Asignaciones from "./pages/Asignaciones";
@@ -141,27 +147,34 @@ const Icon = {
 };
 
 const NAV = [
-  { to: "/", label: "Vista Ejecutiva", icon: Icon.dashboard },
-  { to: "/asignaciones", label: "Asignaciones", icon: Icon.calendar },
   { to: "/personas", label: "Equipo", icon: Icon.users },
   { to: "/piramide", label: "Pirámide", icon: Icon.pyramid },
-  //{ to: "/carrera", label: "Carrera", icon: Icon.chart },
-  { to: "/skill-matrix", label: "Skill Matrix", icon: Icon.grid },
-  { to: "/skills", label: "Skills", icon: Icon.tag },
+  { to: "/skill-matrix", label: "Capacidades", icon: Icon.grid },
   { to: "/curriculums", label: "Currículums", icon: Icon.document },
-  { to: "/proyectos", label: "Proyectos", icon: Icon.refresh },
-  { to: "/oportunidades", label: "Oportunidades", icon: Icon.rocket },
 ];
 
 function Sidebar() {
   return (
     <aside
-      className="w-60 shrink-0 flex flex-col h-screen sticky top-0 z-20 relative"
+      className="w-60 shrink-0 flex flex-col h-screen sticky top-0 z-20 relative overflow-hidden"
       style={{
-        background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        boxShadow: "1px 0 0 rgba(255,255,255,0.05)",
+        background: "#051128",
       }}
     >
+      <style>{`
+        @keyframes dxBotFloat {
+          0% { transform: translateY(0px) rotate(-1deg); }
+          50% { transform: translateY(-8px) rotate(1deg); }
+          100% { transform: translateY(0px) rotate(-1deg); }
+        }
+
+        @keyframes dxBotGlow {
+          0% { filter: drop-shadow(0 6px 16px rgba(14, 165, 233, 0.12)); }
+          50% { filter: drop-shadow(0 10px 24px rgba(14, 165, 233, 0.24)); }
+          100% { filter: drop-shadow(0 6px 16px rgba(14, 165, 233, 0.12)); }
+        }
+      `}</style>
+
       {/* Logo */}
       <div className="px-6 pt-6 pb-5">
         <img
@@ -196,6 +209,24 @@ function Sidebar() {
         ))}
       </nav>
 
+      {/* Robot DX */}
+      <div className="px-3 pb-3">
+        <div className="mx-1 rounded-2xl bg-transparent">
+          <div className="flex min-h-[250px] items-end justify-center px-2 py-2">
+            <img
+              src="/robot-dx.png"
+              alt="Robot DX NTT DATA"
+              className="w-full max-w-[190px] h-auto object-contain select-none pointer-events-none"
+              style={{
+                animation:
+                  "dxBotFloat 4.6s ease-in-out infinite, dxBotGlow 4.6s ease-in-out infinite",
+                transformOrigin: "center bottom",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="mx-5 h-px bg-white/10" />
 
       {/* Footer */}
@@ -214,9 +245,10 @@ export default function App() {
     >
       <div className="flex min-h-screen w-full bg-surface">
         <Sidebar />
-        <main className="flex-1 overflow-auto min-w-0 w-full">
+        <main className="flex-1 overflow-auto min-w-0 w-full -ml-px">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/personas" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/asignaciones" element={<Asignaciones />} />
             <Route path="/personas" element={<Personas />} />
             <Route path="/skill-matrix" element={<SkillMatrix />} />

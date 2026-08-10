@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import Panel from "../components/Panel";
-import { curriculumsApi } from "../services/api";
+import { curriculumsApi, personasApi } from "../services/api";
+import { OFERTAS_VALOR, OFERTA_SIN_ASIGNAR } from "../utils/constants";
 
 function normalizar(valor = "") {
   return String(valor)
@@ -12,7 +13,7 @@ function normalizar(valor = "") {
     .trim();
 }
 
-function tieneContenidoCurriculum(curriculum) {
+export function tieneContenidoCurriculum(curriculum) {
   return Boolean(
     String(curriculum?.resumen_profesional ?? "").trim() ||
     (curriculum?.areas_especializacion ?? []).length ||
@@ -187,7 +188,12 @@ function CampoTexto({
   );
 }
 
-function EditorCurriculum({ curriculum, onClose, onSaved }) {
+export function EditorCurriculum({
+  curriculum,
+  onClose,
+  onSaved,
+  centered = false,
+}) {
   const [form, setForm] = useState(() => crearFormulario(curriculum));
   const [mensaje, setMensaje] = useState("");
 
@@ -204,6 +210,23 @@ function EditorCurriculum({ curriculum, onClose, onSaved }) {
       onSaved(actualizado);
     },
   });
+
+  useEffect(() => {
+    if (!centered) return undefined;
+
+    const cerrarConEscape = (event) => {
+      if (event.key === "Escape" && !mutation.isPending) onClose();
+    };
+
+    const overflowAnterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", cerrarConEscape);
+
+    return () => {
+      document.body.style.overflow = overflowAnterior;
+      window.removeEventListener("keydown", cerrarConEscape);
+    };
+  }, [centered, mutation.isPending, onClose]);
 
   const actualizarCampo = (campo, valor) => {
     setForm((actual) => ({ ...actual, [campo]: valor }));
@@ -288,347 +311,501 @@ function EditorCurriculum({ curriculum, onClose, onSaved }) {
     mutation.error?.message ||
     "No fue posible guardar los cambios.";
 
+  const formulario = (
+    <form onSubmit={guardar} className="space-y-7">
+      <div className="rounded-xl border border-sky-100 bg-sky-50 p-4 text-sm text-sky-900">
+        Nombre, rol y capacidades se administran en sus mantenedores
+        correspondientes. Aquí se edita solamente la información propia del
+        currículum.
+      </div>
+
+      <CampoTexto
+        label="Resumen profesional"
+        value={form.resumen_profesional}
+        onChange={(valor) => actualizarCampo("resumen_profesional", valor)}
+        multiline
+        rows={7}
+      />
+
+      <div className="grid gap-5 md:grid-cols-2">
+        <CampoTexto
+          label="Áreas de especialización"
+          value={form.areas_especializacion}
+          onChange={(valor) => actualizarCampo("areas_especializacion", valor)}
+          multiline
+          rows={7}
+          placeholder="Una por línea"
+        />
+        <CampoTexto
+          label="Herramientas y tecnologías"
+          value={form.herramientas_tecnologias}
+          onChange={(valor) =>
+            actualizarCampo("herramientas_tecnologias", valor)
+          }
+          multiline
+          rows={7}
+          placeholder="Una por línea"
+        />
+        <CampoTexto
+          label="Clientes asesorados"
+          value={form.clientes_asesorados}
+          onChange={(valor) => actualizarCampo("clientes_asesorados", valor)}
+          multiline
+          rows={7}
+          placeholder="Uno por línea"
+        />
+        <CampoTexto
+          label="Estudios y posgrados"
+          value={form.estudios_posgrados}
+          onChange={(valor) => actualizarCampo("estudios_posgrados", valor)}
+          multiline
+          rows={7}
+          placeholder="Uno por línea"
+        />
+        <CampoTexto
+          label="Idiomas"
+          value={form.idiomas}
+          onChange={(valor) => actualizarCampo("idiomas", valor)}
+          multiline
+          rows={5}
+          placeholder="Uno por línea"
+        />
+        <CampoTexto
+          label="Certificaciones"
+          value={form.certificaciones}
+          onChange={(valor) => actualizarCampo("certificaciones", valor)}
+          multiline
+          rows={5}
+          placeholder="Una por línea"
+        />
+      </div>
+
+      <section>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+          Experiencias seleccionadas
+        </h3>
+
+        <div className="space-y-5">
+          {form.experiencias.map((experiencia, indice) => (
+            <div
+              key={indice}
+              className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <p className="text-sm font-bold text-slate-900">
+                  Experiencia {indice + 1}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => eliminarExperiencia(indice)}
+                  className="btn-secondary !px-3 !py-1.5 !text-xs"
+                >
+                  Eliminar
+                </button>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <CampoTexto
+                    label="Título"
+                    value={experiencia.titulo}
+                    onChange={(valor) =>
+                      actualizarExperiencia(indice, "titulo", valor)
+                    }
+                  />
+                </div>
+                <CampoTexto
+                  label="Cliente"
+                  value={experiencia.cliente}
+                  onChange={(valor) =>
+                    actualizarExperiencia(indice, "cliente", valor)
+                  }
+                />
+                <CampoTexto
+                  label="Proyecto"
+                  value={experiencia.proyecto}
+                  onChange={(valor) =>
+                    actualizarExperiencia(indice, "proyecto", valor)
+                  }
+                />
+                <CampoTexto
+                  label="Rol"
+                  value={experiencia.rol}
+                  onChange={(valor) =>
+                    actualizarExperiencia(indice, "rol", valor)
+                  }
+                />
+                <CampoTexto
+                  label="Periodo"
+                  value={experiencia.periodo}
+                  onChange={(valor) =>
+                    actualizarExperiencia(indice, "periodo", valor)
+                  }
+                />
+                <div className="md:col-span-2">
+                  <CampoTexto
+                    label="Descripción"
+                    value={experiencia.descripcion}
+                    onChange={(valor) =>
+                      actualizarExperiencia(indice, "descripcion", valor)
+                    }
+                    multiline
+                    rows={5}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={agregarExperiencia}
+          className="btn-secondary mt-4"
+        >
+          Agregar experiencia
+        </button>
+      </section>
+
+      <div className="flex flex-wrap gap-5 rounded-xl border border-slate-200 p-4">
+        <div className="w-full rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          Al guardar, el currículum pasará automáticamente a estado
+          <strong> Actualizado</strong>.
+        </div>
+
+        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <input
+            type="checkbox"
+            checked={form.activo}
+            onChange={(event) =>
+              actualizarCampo("activo", event.target.checked)
+            }
+          />
+          Currículum activo
+        </label>
+      </div>
+
+      {mutation.isError && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {mensaje && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+          {mensaje}
+        </div>
+      )}
+
+      <div className="sticky bottom-0 flex justify-end gap-3 border-t border-slate-100 bg-white py-4">
+        <button type="button" onClick={onClose} className="btn-secondary">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {mutation.isPending ? "Guardando…" : "Guardar cambios"}
+        </button>
+      </div>
+    </form>
+  );
+
+  if (centered) {
+    return (
+      <div
+        className="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-[2px] sm:p-6"
+        role="presentation"
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget && !mutation.isPending) {
+            onClose();
+          }
+        }}
+      >
+        <section
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="curriculum-editor-modal-title"
+          className="flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+          onMouseDown={(event) => event.stopPropagation()}
+        >
+          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
+            <h2
+              id="curriculum-editor-modal-title"
+              className="min-w-0 truncate text-base font-bold text-slate-900"
+            >
+              Editar currículum — {curriculum.persona?.nombre || "Sin nombre"}
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={mutation.isPending}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Cerrar editor de currículum"
+              title="Cerrar"
+            >
+              ×
+            </button>
+          </header>
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-7">
+            {formulario}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <Panel
       title={`Editar currículum — ${curriculum.persona?.nombre || "Sin nombre"}`}
       onClose={onClose}
       width="xl"
     >
-      <form onSubmit={guardar} className="space-y-7">
-        <div className="rounded-xl border border-sky-100 bg-sky-50 p-4 text-sm text-sky-900">
-          Nombre, rol y skills se administran en sus mantenedores
-          correspondientes. Aquí se edita solamente la información propia del
-          currículum.
-        </div>
-
-        <CampoTexto
-          label="Resumen profesional"
-          value={form.resumen_profesional}
-          onChange={(valor) => actualizarCampo("resumen_profesional", valor)}
-          multiline
-          rows={7}
-        />
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <CampoTexto
-            label="Áreas de especialización"
-            value={form.areas_especializacion}
-            onChange={(valor) =>
-              actualizarCampo("areas_especializacion", valor)
-            }
-            multiline
-            rows={7}
-            placeholder="Una por línea"
-          />
-          <CampoTexto
-            label="Herramientas y tecnologías"
-            value={form.herramientas_tecnologias}
-            onChange={(valor) =>
-              actualizarCampo("herramientas_tecnologias", valor)
-            }
-            multiline
-            rows={7}
-            placeholder="Una por línea"
-          />
-          <CampoTexto
-            label="Clientes asesorados"
-            value={form.clientes_asesorados}
-            onChange={(valor) => actualizarCampo("clientes_asesorados", valor)}
-            multiline
-            rows={7}
-            placeholder="Uno por línea"
-          />
-          <CampoTexto
-            label="Estudios y posgrados"
-            value={form.estudios_posgrados}
-            onChange={(valor) => actualizarCampo("estudios_posgrados", valor)}
-            multiline
-            rows={7}
-            placeholder="Uno por línea"
-          />
-          <CampoTexto
-            label="Idiomas"
-            value={form.idiomas}
-            onChange={(valor) => actualizarCampo("idiomas", valor)}
-            multiline
-            rows={5}
-            placeholder="Uno por línea"
-          />
-          <CampoTexto
-            label="Certificaciones"
-            value={form.certificaciones}
-            onChange={(valor) => actualizarCampo("certificaciones", valor)}
-            multiline
-            rows={5}
-            placeholder="Una por línea"
-          />
-        </div>
-
-        <section>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-            Experiencias seleccionadas
-          </h3>
-
-          <div className="space-y-5">
-            {form.experiencias.map((experiencia, indice) => (
-              <div
-                key={indice}
-                className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4"
-              >
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <p className="text-sm font-bold text-slate-900">
-                    Experiencia {indice + 1}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => eliminarExperiencia(indice)}
-                    className="btn-secondary !px-3 !py-1.5 !text-xs"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="md:col-span-2">
-                    <CampoTexto
-                      label="Título"
-                      value={experiencia.titulo}
-                      onChange={(valor) =>
-                        actualizarExperiencia(indice, "titulo", valor)
-                      }
-                    />
-                  </div>
-                  <CampoTexto
-                    label="Cliente"
-                    value={experiencia.cliente}
-                    onChange={(valor) =>
-                      actualizarExperiencia(indice, "cliente", valor)
-                    }
-                  />
-                  <CampoTexto
-                    label="Proyecto"
-                    value={experiencia.proyecto}
-                    onChange={(valor) =>
-                      actualizarExperiencia(indice, "proyecto", valor)
-                    }
-                  />
-                  <CampoTexto
-                    label="Rol"
-                    value={experiencia.rol}
-                    onChange={(valor) =>
-                      actualizarExperiencia(indice, "rol", valor)
-                    }
-                  />
-                  <CampoTexto
-                    label="Periodo"
-                    value={experiencia.periodo}
-                    onChange={(valor) =>
-                      actualizarExperiencia(indice, "periodo", valor)
-                    }
-                  />
-                  <div className="md:col-span-2">
-                    <CampoTexto
-                      label="Descripción"
-                      value={experiencia.descripcion}
-                      onChange={(valor) =>
-                        actualizarExperiencia(indice, "descripcion", valor)
-                      }
-                      multiline
-                      rows={5}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={agregarExperiencia}
-            className="btn-secondary mt-4"
-          >
-            Agregar experiencia
-          </button>
-        </section>
-
-        <div className="flex flex-wrap gap-5 rounded-xl border border-slate-200 p-4">
-          <div className="w-full rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-            Al guardar, el currículum pasará automáticamente a estado
-            <strong> Actualizado</strong>.
-          </div>
-
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-            <input
-              type="checkbox"
-              checked={form.activo}
-              onChange={(event) =>
-                actualizarCampo("activo", event.target.checked)
-              }
-            />
-            Currículum activo
-          </label>
-        </div>
-
-        {mutation.isError && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {mensaje && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
-            {mensaje}
-          </div>
-        )}
-
-        <div className="sticky bottom-0 flex justify-end gap-3 border-t border-slate-100 bg-white py-4">
-          <button type="button" onClick={onClose} className="btn-secondary">
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {mutation.isPending ? "Guardando…" : "Guardar cambios"}
-          </button>
-        </div>
-      </form>
+      {formulario}
     </Panel>
   );
 }
 
-function DetalleCurriculum({ curriculum, onClose }) {
+export function DetalleCurriculum({
+  curriculum,
+  onClose,
+  onEdit,
+  onDownload,
+  downloading = false,
+  centered = false,
+}) {
   const persona = curriculum.persona ?? {};
   const experiencias = [...(curriculum.experiencias ?? [])].sort(
     (a, b) => (a.orden ?? 99) - (b.orden ?? 99),
   );
+
+  useEffect(() => {
+    if (!centered) return undefined;
+
+    const cerrarConEscape = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    const overflowAnterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", cerrarConEscape);
+
+    return () => {
+      document.body.style.overflow = overflowAnterior;
+      window.removeEventListener("keydown", cerrarConEscape);
+    };
+  }, [centered, onClose]);
+
+  const contenido = (
+    <div className="space-y-7">
+      <div className="rounded-2xl bg-slate-900 p-5 text-white">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-sm font-bold">
+            {iniciales(persona.nombre)}
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-lg font-bold">
+              {persona.nombre || "Sin nombre"}
+            </h2>
+            <p className="mt-1 text-sm font-semibold text-sky-300">
+              {persona.rol || "Sin rol registrado"}
+            </p>
+            <p className="mt-1 text-xs text-white/55">
+              N° {persona.numero_empleado || "—"}
+              {persona.area ? ` · ${persona.area}` : ""}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <SeccionDetalle titulo="Resumen profesional">
+        <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+          {curriculum.resumen_profesional || "Sin información registrada."}
+        </p>
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Áreas de especialización">
+        <ListaEtiquetas valores={curriculum.areas_especializacion} />
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Experiencias seleccionadas">
+        {experiencias.length === 0 ? (
+          <p className="text-sm text-slate-400">
+            Sin experiencias registradas.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {experiencias.map((experiencia) => (
+              <article
+                key={experiencia.id || experiencia.orden}
+                className="rounded-xl border border-slate-200 p-4"
+              >
+                <p className="font-semibold text-slate-900">
+                  {experiencia.titulo || "Experiencia sin título"}
+                </p>
+
+                {[
+                  experiencia.cliente,
+                  experiencia.proyecto,
+                  experiencia.rol,
+                  experiencia.periodo,
+                ].filter(Boolean).length > 0 && (
+                  <p className="mt-1 text-xs text-slate-500">
+                    {[
+                      experiencia.cliente,
+                      experiencia.proyecto,
+                      experiencia.rol,
+                      experiencia.periodo,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                )}
+
+                {experiencia.descripcion && (
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">
+                    {experiencia.descripcion}
+                  </p>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Capacidades">
+        {(curriculum.skills ?? []).length === 0 ? (
+          <p className="text-sm text-slate-400">Sin capacidades registradas.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {curriculum.skills.map((skill) => (
+              <span
+                key={`${skill.skill_id}-${skill.nivel}`}
+                className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-900"
+              >
+                {skill.nombre}
+                {skill.nivel != null ? ` · Nivel ${skill.nivel}` : ""}
+              </span>
+            ))}
+          </div>
+        )}
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Herramientas y tecnologías">
+        <ListaEtiquetas valores={curriculum.herramientas_tecnologias} />
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Clientes asesorados">
+        <ListaEtiquetas valores={curriculum.clientes_asesorados} />
+      </SeccionDetalle>
+
+      <SeccionDetalle titulo="Estudios y posgrados">
+        <ListaEtiquetas valores={curriculum.estudios_posgrados} />
+      </SeccionDetalle>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <SeccionDetalle titulo="Idiomas">
+          <ListaEtiquetas valores={curriculum.idiomas} />
+        </SeccionDetalle>
+
+        <SeccionDetalle titulo="Certificaciones">
+          <ListaEtiquetas valores={curriculum.certificaciones} />
+        </SeccionDetalle>
+      </div>
+
+      <div className="border-t border-slate-100 pt-4 text-xs text-slate-400">
+        Última actualización: {fechaLegible(curriculum.updated_at)}
+      </div>
+    </div>
+  );
+
+  const acciones = (onEdit || onDownload) && (
+    <div className="flex flex-wrap justify-end gap-3">
+      {onDownload && (
+        <button
+          type="button"
+          onClick={onDownload}
+          disabled={downloading || !tieneContenidoCurriculum(curriculum)}
+          className="btn-secondary disabled:cursor-not-allowed disabled:opacity-40"
+          title={
+            tieneContenidoCurriculum(curriculum)
+              ? "Descargar currículum en PDF"
+              : "Completa el CV antes de descargarlo"
+          }
+        >
+          {downloading ? "Generando…" : "Descargar PDF"}
+        </button>
+      )}
+
+      {onEdit && (
+        <button type="button" onClick={onEdit} className="btn-primary">
+          {tieneContenidoCurriculum(curriculum) ? "Editar CV" : "Completar CV"}
+        </button>
+      )}
+    </div>
+  );
+
+  if (centered) {
+    return (
+      <div
+        className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-[2px] sm:p-6"
+        role="presentation"
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
+        <section
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="curriculum-modal-title"
+          className="flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+          onMouseDown={(event) => event.stopPropagation()}
+        >
+          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
+            <h2
+              id="curriculum-modal-title"
+              className="min-w-0 truncate text-base font-bold text-slate-900"
+            >
+              Currículum — {persona.nombre || "Sin nombre"}
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+              aria-label="Cerrar currículum"
+              title="Cerrar"
+            >
+              ×
+            </button>
+          </header>
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-7">
+            {contenido}
+          </div>
+
+          {acciones && (
+            <footer className="shrink-0 border-t border-slate-200 bg-white px-5 py-4 sm:px-7">
+              {acciones}
+            </footer>
+          )}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <Panel
       title={`Currículum — ${persona.nombre || "Sin nombre"}`}
       onClose={onClose}
     >
-      <div className="space-y-7">
-        <div className="rounded-2xl bg-slate-900 p-5 text-white">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-sm font-bold">
-              {iniciales(persona.nombre)}
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-lg font-bold">
-                {persona.nombre || "Sin nombre"}
-              </h2>
-              <p className="mt-1 text-sm font-semibold text-sky-300">
-                {persona.rol || "Sin rol registrado"}
-              </p>
-              <p className="mt-1 text-xs text-white/55">
-                N° {persona.numero_empleado || "—"}
-                {persona.area ? ` · ${persona.area}` : ""}
-              </p>
-            </div>
-          </div>
+      {contenido}
+      {acciones && (
+        <div className="sticky bottom-0 mt-7 border-t border-slate-100 bg-white py-4">
+          {acciones}
         </div>
-
-        <SeccionDetalle titulo="Resumen profesional">
-          <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
-            {curriculum.resumen_profesional || "Sin información registrada."}
-          </p>
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Áreas de especialización">
-          <ListaEtiquetas valores={curriculum.areas_especializacion} />
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Experiencias seleccionadas">
-          {experiencias.length === 0 ? (
-            <p className="text-sm text-slate-400">
-              Sin experiencias registradas.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {experiencias.map((experiencia) => (
-                <article
-                  key={experiencia.id || experiencia.orden}
-                  className="rounded-xl border border-slate-200 p-4"
-                >
-                  <p className="font-semibold text-slate-900">
-                    {experiencia.titulo || "Experiencia sin título"}
-                  </p>
-
-                  {[
-                    experiencia.cliente,
-                    experiencia.proyecto,
-                    experiencia.rol,
-                    experiencia.periodo,
-                  ].filter(Boolean).length > 0 && (
-                    <p className="mt-1 text-xs text-slate-500">
-                      {[
-                        experiencia.cliente,
-                        experiencia.proyecto,
-                        experiencia.rol,
-                        experiencia.periodo,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
-                  )}
-
-                  {experiencia.descripcion && (
-                    <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">
-                      {experiencia.descripcion}
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
-          )}
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Skills">
-          {(curriculum.skills ?? []).length === 0 ? (
-            <p className="text-sm text-slate-400">Sin skills registradas.</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {curriculum.skills.map((skill) => (
-                <span
-                  key={`${skill.skill_id}-${skill.nivel}`}
-                  className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-900"
-                >
-                  {skill.nombre}
-                  {skill.nivel != null ? ` · Nivel ${skill.nivel}` : ""}
-                </span>
-              ))}
-            </div>
-          )}
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Herramientas y tecnologías">
-          <ListaEtiquetas valores={curriculum.herramientas_tecnologias} />
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Clientes asesorados">
-          <ListaEtiquetas valores={curriculum.clientes_asesorados} />
-        </SeccionDetalle>
-
-        <SeccionDetalle titulo="Estudios y posgrados">
-          <ListaEtiquetas valores={curriculum.estudios_posgrados} />
-        </SeccionDetalle>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <SeccionDetalle titulo="Idiomas">
-            <ListaEtiquetas valores={curriculum.idiomas} />
-          </SeccionDetalle>
-
-          <SeccionDetalle titulo="Certificaciones">
-            <ListaEtiquetas valores={curriculum.certificaciones} />
-          </SeccionDetalle>
-        </div>
-
-        <div className="border-t border-slate-100 pt-4 text-xs text-slate-400">
-          Última actualización: {fechaLegible(curriculum.updated_at)}
-        </div>
-      </div>
+      )}
     </Panel>
   );
 }
@@ -637,6 +814,7 @@ export default function Curriculums() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
+  const [filtroOferta, setFiltroOferta] = useState("");
   const [mensajeGlobal, setMensajeGlobal] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
   const [detalle, setDetalle] = useState(null);
@@ -646,14 +824,54 @@ export default function Curriculums() {
 
   const {
     data: curriculums = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
+    isLoading: cargandoCurriculums,
+    isError: errorCurriculums,
+    error: detalleErrorCurriculums,
+    refetch: recargarCurriculums,
   } = useQuery({
     queryKey: ["curriculums"],
     queryFn: () => curriculumsApi.list(),
   });
+
+  const {
+    data: personasEquipo = [],
+    isLoading: cargandoPersonas,
+    isError: errorPersonas,
+    error: detalleErrorPersonas,
+    refetch: recargarPersonas,
+  } = useQuery({
+    queryKey: ["personas"],
+    queryFn: () => personasApi.list(),
+  });
+
+  const ofertasPorPersonaId = useMemo(
+    () =>
+      new Map(
+        personasEquipo.map((persona) => [
+          String(persona.id),
+          String(persona.oferta_valor ?? "").trim(),
+        ]),
+      ),
+    [personasEquipo],
+  );
+
+  const obtenerOfertaReal = (curriculum) => {
+    const personaId = String(
+      curriculum?.persona_id ?? curriculum?.persona?.id ?? "",
+    );
+
+    if (ofertasPorPersonaId.has(personaId)) {
+      return ofertasPorPersonaId.get(personaId) || "";
+    }
+
+    return String(curriculum?.persona?.oferta_valor ?? "").trim();
+  };
+
+  const isLoading = cargandoCurriculums || cargandoPersonas;
+  const isError = errorCurriculums || errorPersonas;
+  const error = detalleErrorCurriculums || detalleErrorPersonas;
+  const refetch = () =>
+    Promise.all([recargarCurriculums(), recargarPersonas()]);
 
   const curriculumsOrdenados = useMemo(() => {
     const terminos = normalizar(search).split(/\s+/).filter(Boolean);
@@ -661,10 +879,12 @@ export default function Curriculums() {
     return [...curriculums]
       .filter((curriculum) => {
         const persona = curriculum.persona ?? {};
+        const ofertaValorReal = obtenerOfertaReal(curriculum);
         const contenido = normalizar(
           [
             persona.nombre,
             persona.rol,
+            ofertaValorReal,
             persona.area,
             persona.numero_empleado,
             curriculum.resumen_profesional,
@@ -686,8 +906,15 @@ export default function Curriculums() {
             ? "requiere_revision"
             : "actualizado";
 
+        const coincideOferta =
+          !filtroOferta ||
+          (filtroOferta === OFERTA_SIN_ASIGNAR
+            ? !ofertaValorReal
+            : ofertaValorReal === filtroOferta);
+
         return (
           coincideBusqueda &&
+          coincideOferta &&
           (filtroEstado === "todos" || filtroEstado === estado)
         );
       })
@@ -698,7 +925,7 @@ export default function Curriculums() {
           { sensitivity: "base" },
         ),
       );
-  }, [curriculums, search, filtroEstado]);
+  }, [curriculums, search, filtroEstado, filtroOferta, ofertasPorPersonaId]);
 
   const curriculumsVisiblesConContenido = curriculumsOrdenados.filter(
     tieneContenidoCurriculum,
@@ -815,37 +1042,51 @@ export default function Curriculums() {
 
   return (
     <div className="w-full space-y-8 pb-8 pl-[1px] pr-[2px] pt-0">
-      <div
-        className="flex flex-wrap items-center justify-between gap-4 p-8 text-white"
-        style={{
-          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        }}
-      >
-        <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/70">
-            Somos DX
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight">Currículums</h2>
-          <p className="mt-1 text-sm font-medium text-white/60">
-            {curriculums.length} personas disponibles · incluye usuarios sin CV
-          </p>
-        </div>
+      <div className="relative min-h-[170px] overflow-hidden text-white">
+        <img
+          src="/banner-personas.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "center" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,18,40,0.90) 0%, rgba(6,18,40,0.72) 27%, rgba(6,18,40,0.32) 53%, rgba(6,18,40,0.08) 78%, rgba(6,18,40,0.02) 100%)",
+          }}
+        />
 
-        <button
-          type="button"
-          disabled={selectedIds.length === 0 || descargandoZip}
-          onClick={descargarSeleccionados}
-          className="btn-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-50"
-          title={
-            selectedIds.length === 0
-              ? "Selecciona uno o más currículums."
-              : "Descargar PDFs individuales dentro de un ZIP."
-          }
-        >
-          {descargandoZip
-            ? "Generando ZIP…"
-            : `Descargar seleccionados (${selectedIds.length})`}
-        </button>
+        <div className="relative z-10 flex min-h-[170px] flex-wrap items-center justify-between gap-4 px-8 py-6">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/70">
+              Somos DX
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight">Currículums</h2>
+            <p className="mt-1 text-sm font-medium text-white/70">
+              {curriculums.length} personas disponibles · incluye usuarios sin
+              CV
+            </p>
+          </div>
+
+          <button
+            type="button"
+            disabled={selectedIds.length === 0 || descargandoZip}
+            onClick={descargarSeleccionados}
+            className="btn-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-50"
+            title={
+              selectedIds.length === 0
+                ? "Selecciona uno o más currículums."
+                : "Descargar PDFs individuales dentro de un ZIP."
+            }
+          >
+            {descargandoZip
+              ? "Generando ZIP…"
+              : `Descargar seleccionados (${selectedIds.length})`}
+          </button>
+        </div>
       </div>
 
       {mensajeGlobal && (
@@ -860,7 +1101,7 @@ export default function Curriculums() {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por nombre, rol, área, N° empleado, skill o herramienta..."
+              placeholder="Buscar por nombre o N° de empleado.... "
               className="input min-w-64 max-w-xl flex-1"
             />
 
@@ -874,6 +1115,21 @@ export default function Curriculums() {
               <option value="requiere_revision">Requiere revisión</option>
               <option value="actualizado">Actualizado</option>
               <option value="sin_cv">Sin CV</option>
+            </select>
+
+            <select
+              value={filtroOferta}
+              onChange={(event) => setFiltroOferta(event.target.value)}
+              className="input w-64 shrink-0 py-2 pr-8 text-sm"
+              aria-label="Filtrar currículums por oferta de valor"
+            >
+              <option value="">Todas las ofertas de valor</option>
+              {OFERTAS_VALOR.map((oferta) => (
+                <option key={oferta} value={oferta}>
+                  {oferta}
+                </option>
+              ))}
+              <option value={OFERTA_SIN_ASIGNAR}>Sin asignar</option>
             </select>
           </div>
 
@@ -927,7 +1183,7 @@ export default function Curriculums() {
                     </th>
                     <th className="px-4 py-3">Persona</th>
                     <th className="px-4 py-3">Rol</th>
-                    <th className="px-4 py-3">Área</th>
+                    <th className="px-4 py-3">Oferta de Valor</th>
                     <th className="px-4 py-3">Experiencias</th>
                     <th className="px-4 py-3">Actualización</th>
                     <th className="px-4 py-3">Estado</th>
@@ -984,7 +1240,7 @@ export default function Curriculums() {
                         </td>
 
                         <td className="px-4 py-3 text-slate-600">
-                          {persona.area || "—"}
+                          {obtenerOfertaReal(curriculum) || "Sin asignar"}
                         </td>
 
                         <td className="px-4 py-3 text-slate-600">
@@ -1015,36 +1271,13 @@ export default function Curriculums() {
                         </td>
 
                         <td className="px-4 py-3">
-                          <div className="flex justify-end gap-2 whitespace-nowrap">
+                          <div className="flex justify-end whitespace-nowrap">
                             <button
                               type="button"
-                              disabled={!tieneContenido}
-                              className="btn-secondary !py-1.5 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                              className="btn-secondary !py-1.5 !text-xs"
                               onClick={() => setDetalle(curriculum)}
                             >
-                              Ver detalle
-                            </button>
-
-                            <button
-                              type="button"
-                              disabled={
-                                !tieneContenido ||
-                                descargandoPdfId === curriculum.id
-                              }
-                              className="btn-secondary !py-1.5 !text-xs disabled:cursor-not-allowed disabled:opacity-40"
-                              onClick={() => descargarPdf(curriculum)}
-                            >
-                              {descargandoPdfId === curriculum.id
-                                ? "Generando…"
-                                : "PDF"}
-                            </button>
-
-                            <button
-                              type="button"
-                              className="btn-primary !py-1.5 !text-xs"
-                              onClick={() => setEditando(curriculum)}
-                            >
-                              {tieneContenido ? "Editar" : "Completar"}
+                              Ver CV
                             </button>
                           </div>
                         </td>
@@ -1067,24 +1300,26 @@ export default function Curriculums() {
             </div>
           )}
         </div>
-
-        <div className="rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3 text-xs leading-5 text-blue-900">
-          Se muestran todas las personas registradas. Puedes filtrar por estado:
-          Requiere revisión, Actualizado o Sin CV. Al guardar cambios, el CV
-          pasa automáticamente a estado Actualizado.
-        </div>
       </div>
 
       {detalle && (
         <DetalleCurriculum
           curriculum={detalle}
+          centered
           onClose={() => setDetalle(null)}
+          onEdit={() => {
+            setEditando(detalle);
+            setDetalle(null);
+          }}
+          onDownload={() => descargarPdf(detalle)}
+          downloading={descargandoPdfId === detalle.id}
         />
       )}
 
       {editando && (
         <EditorCurriculum
           curriculum={editando}
+          centered
           onClose={() => setEditando(null)}
           onSaved={(actualizado) => {
             queryClient.setQueryData(["curriculums"], (actuales = []) =>

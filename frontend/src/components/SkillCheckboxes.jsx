@@ -124,7 +124,7 @@ export default function SkillCheckboxes({ value = [], onChange }) {
   if (isLoading) {
     return (
       <p className="text-xs text-gray-400 py-3">
-        Cargando catálogo de skills...
+        Cargando catálogo de capacidades...
       </p>
     );
   }
@@ -133,7 +133,7 @@ export default function SkillCheckboxes({ value = [], onChange }) {
     return (
       <div className="rounded-xl border-2 border-dashed border-gray-200 p-4 text-center">
         <p className="text-xs text-gray-500">
-          No hay skills activas en el catálogo.
+          No hay capacidades activas en el catálogo.
         </p>
       </div>
     );
@@ -177,7 +177,7 @@ export default function SkillCheckboxes({ value = [], onChange }) {
 
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-800">
-              Categorías Skills
+              Categorías de capacidades
             </p>
             <p className="text-xs text-gray-400 mt-0.5">
               {value.length} seleccionada{value.length !== 1 ? "s" : ""}
@@ -199,7 +199,7 @@ export default function SkillCheckboxes({ value = [], onChange }) {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar una skill..."
+              placeholder="Buscar una capacidad..."
               className="input text-sm flex-1 min-w-48"
             />
 
@@ -326,7 +326,7 @@ export default function SkillCheckboxes({ value = [], onChange }) {
 
             {gruposFiltrados.length === 0 && (
               <p className="text-sm text-gray-400 text-center py-6">
-                No hay skills que coincidan con la búsqueda.
+                No hay capacidades que coincidan con la búsqueda.
               </p>
             )}
           </div>
