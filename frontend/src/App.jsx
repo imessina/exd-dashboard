@@ -5,6 +5,7 @@ import {
   NavLink,
   Navigate,
 } from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
 import Personas from "./pages/Personas";
 import Asignaciones from "./pages/Asignaciones";
@@ -15,6 +16,8 @@ import Piramide from "./pages/Piramide";
 //import Carrera from "./pages/Carrera";
 import Skills from "./pages/Skills";
 import Curriculums from "./pages/Curriculums";
+
+import DxAiChat from "./components/DxAiChat";
 
 // Iconos de línea minimalistas (stroke, sin relleno) — look ejecutivo/corporativo
 const Icon = {
@@ -32,6 +35,7 @@ const Icon = {
       <rect x="3" y="16" width="7" height="5" rx="1.5" />
     </svg>
   ),
+
   calendar: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -44,6 +48,7 @@ const Icon = {
       <path d="M3 10h18M8 3v4M16 3v4" />
     </svg>
   ),
+
   users: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -57,6 +62,7 @@ const Icon = {
       <path d="M16 4.8c1.6.3 2.8 1.7 2.8 3.4 0 1.7-1.2 3.1-2.8 3.4M19 14c2 .5 3.5 2.3 3.5 4.5" />
     </svg>
   ),
+
   pyramid: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -69,6 +75,7 @@ const Icon = {
       <path d="M7.5 13.5h9M9.2 10.2h5.6" />
     </svg>
   ),
+
   chart: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -81,6 +88,7 @@ const Icon = {
       <path d="M21 4v6h-6" />
     </svg>
   ),
+
   grid: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -95,6 +103,7 @@ const Icon = {
       <rect x="14" y="14" width="7" height="7" rx="1.2" />
     </svg>
   ),
+
   tag: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -107,6 +116,7 @@ const Icon = {
       <circle cx="16.5" cy="7.5" r="1.3" />
     </svg>
   ),
+
   refresh: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -119,6 +129,7 @@ const Icon = {
       <path d="M4 13a8 8 0 0 0 14.6 4.4M20 20v-5h-5" />
     </svg>
   ),
+
   document: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -131,6 +142,7 @@ const Icon = {
       <path d="M14 3v5h5M9 12h6M9 16h6" />
     </svg>
   ),
+
   rocket: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -163,15 +175,37 @@ function Sidebar() {
     >
       <style>{`
         @keyframes dxBotFloat {
-          0% { transform: translateY(0px) rotate(-1deg); }
-          50% { transform: translateY(-8px) rotate(1deg); }
-          100% { transform: translateY(0px) rotate(-1deg); }
+          0% {
+            transform: translateY(0px) rotate(-1deg);
+          }
+
+          50% {
+            transform: translateY(-8px) rotate(1deg);
+          }
+
+          100% {
+            transform: translateY(0px) rotate(-1deg);
+          }
         }
 
         @keyframes dxBotGlow {
-          0% { filter: drop-shadow(0 6px 16px rgba(14, 165, 233, 0.12)); }
-          50% { filter: drop-shadow(0 10px 24px rgba(14, 165, 233, 0.24)); }
-          100% { filter: drop-shadow(0 6px 16px rgba(14, 165, 233, 0.12)); }
+          0% {
+            filter: drop-shadow(
+              0 6px 16px rgba(14, 165, 233, 0.12)
+            );
+          }
+
+          50% {
+            filter: drop-shadow(
+              0 10px 24px rgba(14, 165, 233, 0.24)
+            );
+          }
+
+          100% {
+            filter: drop-shadow(
+              0 6px 16px rgba(14, 165, 233, 0.12)
+            );
+          }
         }
       `}</style>
 
@@ -190,7 +224,7 @@ function Sidebar() {
 
       <div className="mx-5 h-px bg-white/10" />
 
-      {/* Nav */}
+      {/* Navegación */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {NAV.map(({ to, label, icon: IconComp }) => (
           <NavLink
@@ -204,6 +238,7 @@ function Sidebar() {
             }
           >
             <IconComp className="w-[18px] h-[18px] shrink-0" />
+
             <span>{label}</span>
           </NavLink>
         ))}
@@ -232,6 +267,7 @@ function Sidebar() {
       {/* Footer */}
       <div className="px-5 py-4">
         <p className="text-[11px] text-slate-400 font-medium">NTT DATA · DX</p>
+
         <p className="text-[10px] text-slate-500 mt-0.5">2026</p>
       </div>
     </aside>
@@ -241,26 +277,42 @@ function Sidebar() {
 export default function App() {
   return (
     <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
     >
       <div className="flex min-h-screen w-full bg-surface">
         <Sidebar />
+
         <main className="flex-1 overflow-auto min-w-0 w-full -ml-px">
           <Routes>
             <Route path="/" element={<Navigate to="/personas" replace />} />
+
             <Route path="/dashboard" element={<Dashboard />} />
+
             <Route path="/asignaciones" element={<Asignaciones />} />
+
             <Route path="/personas" element={<Personas />} />
+
             <Route path="/skill-matrix" element={<SkillMatrix />} />
+
             <Route path="/proyectos" element={<Proyectos />} />
+
             <Route path="/oportunidades" element={<Oportunidades />} />
+
             <Route path="/piramide" element={<Piramide />} />
+
             {/* <Route path="/carrera" element={<Carrera />} /> */}
+
             <Route path="/skills" element={<Skills />} />
+
             <Route path="/curriculums" element={<Curriculums />} />
           </Routes>
         </main>
       </div>
+
+      <DxAiChat />
     </BrowserRouter>
   );
 }

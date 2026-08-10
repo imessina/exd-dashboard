@@ -6,7 +6,16 @@ from contextlib import asynccontextmanager
 from auth import require_admin_key, require_api_key
 from config import settings
 from database import Base, engine
-from routes import personas, asignaciones, proyectos, oportunidades, skill_matrix, skills, curriculums
+from routes import (
+    personas,
+    asignaciones,
+    proyectos,
+    oportunidades,
+    skill_matrix,
+    skills,
+    curriculums,
+    ai,
+)
 import models  # noqa: F401  -- needed by /api/admin/* endpoints
 
 logger = logging.getLogger("uvicorn.error")
@@ -43,7 +52,11 @@ app.include_router(oportunidades.router, prefix="/api", dependencies=_protegido)
 app.include_router(skill_matrix.router, prefix="/api", dependencies=_protegido)
 app.include_router(skills.router, prefix="/api", dependencies=_protegido)
 app.include_router(curriculums.router, prefix="/api", dependencies=_protegido)
-
+app.include_router(
+    ai.router,
+    prefix="/api",
+    dependencies=_protegido,
+)
 
 @app.get("/")
 def root():
