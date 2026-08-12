@@ -191,25 +191,67 @@ export default function DxAiChat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [loading, setLoading] = useState(false);
+  const [streamingStarted, setStreamingStarted] = useState(false);
+  const [activeAssistantId, setActiveAssistantId] = useState(null);
 
   const endRef = useRef(null);
   const inputRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const messageRefs = useRef({});
 
+  // Solo enfoca el input al abrir el chat.
+  // Ya no hacemos scroll por cada cambio en "messages".
   useEffect(() => {
     if (!isOpen) {
       return;
     }
-
-    endRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
 
     const timer = setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [isOpen, messages, loading]);
+  }, [isOpen]);
+
+  // Al enviar una pregunta, lleva la vista al bloque "Analizando..."
+  // mientras esperamos el primer fragmento.
+  useEffect(() => {
+    if (!isOpen || !loading || streamingStarted) {
+      return;
+    }
+
+    endRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [isOpen, loading, streamingStarted]);
+
+  // Cuando llega el PRIMER fragmento de la respuesta,
+  // posiciona el chat al comienzo de la respuesta de TalentIA.
+  //
+  // Después de esto NO seguimos empujando el scroll hacia abajo.
+  useEffect(() => {
+    if (!streamingStarted || !activeAssistantId) {
+      return;
+    }
+
+    const element = messageRefs.current[activeAssistantId];
+
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [streamingStarted, activeAssistantId]);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const sendMessage = async () => {
     const cleanMessage = message.trim();
@@ -218,44 +260,117 @@ export default function DxAiChat() {
       return;
     }
 
+    const timestamp = Date.now();
+
     const userMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${timestamp}`,
       role: "user",
       content: cleanMessage,
     };
 
-    setMessages((current) => [...current, userMessage]);
+    const assistantMessageId = `assistant-${timestamp}`;
+
+    const assistantMessage = {
+      id: assistantMessageId,
+      role: "assistant",
+      content: "",
+    };
+
+    setMessages((current) => [...current, userMessage, assistantMessage]);
+
+    setActiveAssistantId(assistantMessageId);
 
     setMessage("");
     setLoading(true);
+    setStreamingStarted(false);
+
+    const controller = new AbortController();
+
+    abortControllerRef.current = controller;
+
+    let receivedText = false;
 
     try {
-      const data = await aiApi.chat(cleanMessage);
+      const data = await aiApi.chatStream(cleanMessage, {
+        signal: controller.signal,
 
-      const assistantMessage = {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content: data?.response || "TalentIA no entregó una respuesta.",
-      };
+        onDelta: (delta, fullText) => {
+          if (!delta) {
+            return;
+          }
 
-      setMessages((current) => [...current, assistantMessage]);
+          receivedText = true;
+
+          setMessages((current) =>
+            current.map((item) =>
+              item.id === assistantMessageId
+                ? {
+                    ...item,
+                    content: fullText,
+                  }
+                : item,
+            ),
+          );
+
+          // Solo cambia de false → true
+          // cuando empieza realmente la respuesta.
+          setStreamingStarted(true);
+        },
+      });
+
+      if (!receivedText) {
+        setMessages((current) =>
+          current.map((item) =>
+            item.id === assistantMessageId
+              ? {
+                  ...item,
+                  content:
+                    data?.response || "TalentIA no entregó una respuesta.",
+                }
+              : item,
+          ),
+        );
+      }
     } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
+
       console.error("Error consultando TalentIA:", error);
 
       const detail =
-        error?.response?.data?.detail ||
-        "No fue posible comunicarse con TalentIA.";
+        error?.message || "No fue posible comunicarse con TalentIA.";
 
-      setMessages((current) => [
-        ...current,
-        {
-          id: `error-${Date.now()}`,
-          role: "error",
-          content: detail,
-        },
-      ]);
+      if (receivedText) {
+        setMessages((current) => [
+          ...current,
+          {
+            id: `error-${Date.now()}`,
+            role: "error",
+            content: detail,
+          },
+        ]);
+      } else {
+        setMessages((current) =>
+          current.map((item) =>
+            item.id === assistantMessageId
+              ? {
+                  ...item,
+                  role: "error",
+                  content: detail,
+                }
+              : item,
+          ),
+        );
+      }
     } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
+
       setLoading(false);
+      setStreamingStarted(false);
+      setActiveAssistantId(null);
     }
   };
 
@@ -276,34 +391,37 @@ export default function DxAiChat() {
       {isOpen && (
         <div
           className="
-            fixed
-            right-6
-            bottom-24
-            z-50
-            flex
-            h-[620px]
-            max-h-[calc(100vh-8rem)]
-            w-[410px]
-            max-w-[calc(100vw-2rem)]
-            flex-col
-            overflow-hidden
-            rounded-2xl
-            border
-            border-slate-200
-            bg-white
-            shadow-2xl
-          "
+  fixed
+  right-6
+  bottom-24
+  z-50
+  flex
+  h-[470px]
+  w-[340px]
+  max-h-[62vh]
+  max-w-[calc(100vw-2rem)]
+  flex-col
+  overflow-hidden
+  rounded-2xl
+  border
+  border-slate-200
+  bg-white
+  shadow-2xl
+"
         >
           <div
-            className="flex items-center justify-between px-5 py-4 text-white"
+            className="flex items-center justify-between px-4 py-2.5 text-white"
             style={{
               background: "linear-gradient(135deg, #051128 0%, #08274d 100%)",
             }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10">
-                <BotIcon className="h-5 w-5" />
-              </div>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/talentia-chat.png"
+                alt=""
+                aria-hidden="true"
+                className="h-10 w-10 shrink-0 scale-[1.5] object-contain"
+              />
 
               <div>
                 <h2 className="text-sm font-semibold">TalentIA</h2>
@@ -328,16 +446,27 @@ export default function DxAiChat() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto bg-slate-50 px-4 py-5">
+          <div className="flex-1 overflow-y-auto bg-slate-50 px-3.5 py-3.5">
             <div className="space-y-4">
               {messages.map((item) => {
                 const isUser = item.role === "user";
 
                 const isError = item.role === "error";
 
+                if (item.role === "assistant" && !item.content) {
+                  return null;
+                }
+
                 return (
                   <div
                     key={item.id}
+                    ref={(element) => {
+                      if (element) {
+                        messageRefs.current[item.id] = element;
+                      } else {
+                        delete messageRefs.current[item.id];
+                      }
+                    }}
                     className={`flex ${
                       isUser ? "justify-end" : "justify-start"
                     }`}
@@ -347,10 +476,10 @@ export default function DxAiChat() {
                         "max-w-[92%]",
                         "min-w-0",
                         "rounded-2xl",
-                        "px-4",
-                        "py-3",
-                        "text-sm",
-                        "leading-6",
+                        "px-3",
+                        "py-2.5",
+                        "text-[12.5px]",
+                        "leading-5",
                         "break-words",
                         isUser
                           ? "rounded-br-md bg-brand-500 text-white"
@@ -371,7 +500,7 @@ export default function DxAiChat() {
                 );
               })}
 
-              {loading && (
+              {loading && !streamingStarted && (
                 <div className="flex justify-start">
                   <div className="rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-3 shadow-sm">
                     <div className="flex items-center gap-2">
@@ -407,9 +536,9 @@ export default function DxAiChat() {
 
           <form
             onSubmit={handleSubmit}
-            className="border-t border-slate-200 bg-white p-4"
+            className="border-t border-slate-200 bg-white p-3"
           >
-            <div className="flex items-end gap-2 rounded-xl border border-slate-300 bg-white p-2 transition focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/10">
+            <div className="flex items-end gap-2 rounded-xl border border-slate-300 bg-white p-1.5 transition focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/10">
               <textarea
                 ref={inputRef}
                 rows={1}
@@ -418,39 +547,68 @@ export default function DxAiChat() {
                 onKeyDown={handleKeyDown}
                 disabled={loading}
                 placeholder="Pregunta sobre el equipo DX..."
-                className="max-h-28 min-h-[42px] flex-1 resize-none border-0 bg-transparent px-2 py-2.5 text-sm text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
+                className="max-h-24 min-h-[36px] flex-1 resize-none border-0 bg-transparent px-1.5 py-1.5 text-[13px] text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
               />
 
               <button
                 type="submit"
                 disabled={loading || !message.trim()}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Enviar mensaje"
               >
                 <SendIcon className="h-[18px] w-[18px]" />
               </button>
             </div>
 
-            <p className="mt-2 text-center text-[10px] leading-4 text-slate-400">
-              Las respuestas se generan a partir de la información disponible en
-              Dashboard DX.
-            </p>
+            <p className="mt-2 text-center text-[10px] leading-4 text-slate-400"></p>
           </form>
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setIsOpen((current) => !current)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500 text-white shadow-xl transition duration-200 hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-2xl"
-        aria-label={isOpen ? "Cerrar TalentIA" : "Abrir TalentIA"}
-      >
-        {isOpen ? (
+      {isOpen ? (
+        <button
+          key="talentia-close"
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="
+            fixed bottom-6 right-6 z-50
+            flex h-14 w-14 items-center justify-center
+            rounded-full
+            bg-brand-500 text-white
+            shadow-xl
+            transition-transform duration-200
+            hover:-translate-y-0.5
+            hover:scale-105
+          "
+          aria-label="Cerrar TalentIA"
+        >
           <CloseIcon className="h-6 w-6" />
-        ) : (
-          <BotIcon className="h-6 w-6" />
-        )}
-      </button>
+        </button>
+      ) : (
+        <button
+          key="talentia-open"
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="
+            fixed bottom-6 right-6 z-50
+            flex h-24 w-24 items-center justify-center
+            overflow-visible
+            border-0 bg-transparent p-0
+            shadow-none
+            transition-transform duration-200
+            hover:-translate-y-0.5
+            hover:scale-105
+          "
+          aria-label="Abrir TalentIA"
+        >
+          <img
+            src="/talentia-chat.png"
+            alt=""
+            aria-hidden="true"
+            className="h-24 w-24 max-w-none scale-125 object-contain drop-shadow-[0_8px_20px_rgba(14,165,233,0.35)]"
+          />
+        </button>
+      )}
     </>
   );
 }

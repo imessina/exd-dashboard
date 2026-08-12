@@ -154,6 +154,41 @@ class PersonaOut(PersonaBase):
 
 
 
+# ── Ofertas de Valor Schemas ─────────────────────────────────────────────────
+
+class OfertaValorCreate(BaseModel):
+    nombre: str
+    responsable_persona_id: Optional[str] = None
+    descripcion: Optional[str] = None
+    activa: bool = True
+
+
+class OfertaValorUpdate(BaseModel):
+    nombre: Optional[str] = None
+    responsable_persona_id: Optional[str] = None
+    descripcion: Optional[str] = None
+    activa: Optional[bool] = None
+
+
+class OfertaValorResponsableOut(BaseModel):
+    id: str
+    nombre: str
+    rol: Optional[str] = None
+    nivel_piramide: Optional[str] = None
+
+
+class OfertaValorOut(BaseModel):
+    id: str
+    nombre: str
+    responsable_persona_id: Optional[str] = None
+    responsable: Optional[OfertaValorResponsableOut] = None
+    descripcion: Optional[str] = None
+    activa: bool = True
+    personas_count: int = 0
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+
 # ── Persona Skill Schemas ────────────────────────────────────────────────────
 
 class PersonaSkillInput(BaseModel):

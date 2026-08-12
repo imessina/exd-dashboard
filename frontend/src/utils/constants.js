@@ -12,13 +12,16 @@ export const NIVELES_PIRAMIDE = [
 ];
 
 
+// Fallback temporal. La fuente oficial es /api/ofertas-valor/.
+// "Todas" NO es una oferta de valor; es solo una opción de filtro.
 export const OFERTAS_VALOR = [
   "Conversational AI & VoiceBot",
   "Experience Design & Research",
-  "Experience Optimizatión & Martech",
+  "Experience Optimization & Martech",
   "Creative Design",
   "X-Reality",
-  "Todas",
+  "Digital Experiences Platforms",
+  "Mobile Platforms",
 ];
 
 export const OFERTA_SIN_ASIGNAR = "__sin_asignar__";

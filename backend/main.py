@@ -14,6 +14,7 @@ from routes import (
     skill_matrix,
     skills,
     curriculums,
+    ofertas_valor,
     ai,
 )
 import models  # noqa: F401  -- needed by /api/admin/* endpoints
@@ -52,6 +53,7 @@ app.include_router(oportunidades.router, prefix="/api", dependencies=_protegido)
 app.include_router(skill_matrix.router, prefix="/api", dependencies=_protegido)
 app.include_router(skills.router, prefix="/api", dependencies=_protegido)
 app.include_router(curriculums.router, prefix="/api", dependencies=_protegido)
+app.include_router(ofertas_valor.router, prefix="/api", dependencies=_protegido)
 app.include_router(
     ai.router,
     prefix="/api",
@@ -362,6 +364,221 @@ def migrate_hitos_log():
         return {"status": "error", "message": "Error interno; revisa los logs del servidor"}
     finally:
         temp_engine.dispose()
+
+
+@app.post("/api/admin/migrate-ofertas-valor", dependencies=[Depends(require_admin_key)])
+def migrate_ofertas_valor():
+    """Crea y siembra el catálogo de ofertas sin perder asignaciones existentes.
+
+    Reglas:
+    - Conserva todas las ofertas reales ya asignadas a personas.
+    - Corrige únicamente aliases/typos conocidos.
+    - "Todas" no es una oferta: se convierte en NULL.
+    - Crea las 7 ofertas oficiales si faltan.
+    - Las ofertas reales adicionales encontradas en personas también se preservan.
+    - No sobreescribe ofertas ya existentes al volver a ejecutar la migración.
+    """
+    import re
+    import unicodedata
+    from sqlalchemy import func
+    from database import SessionLocal
+
+    def _slugify(texto: str) -> str:
+        nfkd = unicodedata.normalize("NFKD", texto or "")
+        ascii_only = "".join(
+            c for c in nfkd if not unicodedata.combining(c)
+        )
+        slug = re.sub(r"[^a-z0-9]+", "-", ascii_only.lower()).strip("-")
+        return slug or "oferta"
+
+    def _id_unico(db, nombre: str) -> str:
+        base_id = _slugify(nombre)
+        oferta_id = base_id
+        suffix = 2
+
+        while db.query(models.OfertaValor).filter(
+            models.OfertaValor.id == oferta_id
+        ).first():
+            oferta_id = f"{base_id}-{suffix}"
+            suffix += 1
+
+        return oferta_id
+
+    db = None
+
+    responsables_oficiales = {
+        "Creative Design": "emp-259091",
+        "Experience Optimization & Martech": "emp-259091",
+        "Experience Design & Research": "emp-172741",
+        "X-Reality": "emp-114556",
+        "Conversational AI & VoiceBot": "emp-229913",
+        "Digital Experiences Platforms": "emp-125193",
+        "Mobile Platforms": "emp-125193",
+    }
+
+    aliases = {
+        "Experience Optimizatión & Martech": "Experience Optimization & Martech",
+        "Digital Experiences Plataforms": "Digital Experiences Platforms",
+        "Mobile Plataform": "Mobile Platforms",
+        "Mobile Platform": "Mobile Platforms",
+    }
+
+    try:
+        # Usa exactamente el mismo engine configurado que ya utiliza FastAPI.
+        # Así respetamos DATABASE_URL/.env y evitamos caer en localhost.
+        Base.metadata.create_all(
+            bind=engine,
+            tables=[models.OfertaValor.__table__],
+        )
+
+        db = SessionLocal()
+
+        # 1) Verifica que existan los responsables oficiales.
+        ids_requeridos = set(responsables_oficiales.values())
+        ids_existentes = {
+            persona.id
+            for persona in db.query(models.Persona).filter(
+                models.Persona.id.in_(ids_requeridos)
+            ).all()
+        }
+
+        faltantes = sorted(ids_requeridos - ids_existentes)
+
+        if faltantes:
+            return {
+                "status": "error",
+                "message": "Faltan responsables requeridos para crear el catálogo.",
+                "persona_ids_faltantes": faltantes,
+            }
+
+        # 2) Corrige solo aliases conocidos, preservando las asignaciones.
+        correcciones_alias = 0
+
+        for anterior, correcto in aliases.items():
+            correcciones_alias += (
+                db.query(models.Persona)
+                .filter(models.Persona.oferta_valor == anterior)
+                .update(
+                    {models.Persona.oferta_valor: correcto},
+                    synchronize_session=False,
+                )
+            )
+
+        # 3) "Todas" deja de existir como dato real.
+        todas_limpiadas = (
+            db.query(models.Persona)
+            .filter(func.lower(models.Persona.oferta_valor) == "todas")
+            .update(
+                {models.Persona.oferta_valor: None},
+                synchronize_session=False,
+            )
+        )
+
+        db.flush()
+
+        # 4) Descubre todas las ofertas reales que YA existen en personas.
+        nombres_existentes = {
+            nombre.strip()
+            for (nombre,) in db.query(models.Persona.oferta_valor)
+            .filter(models.Persona.oferta_valor.isnot(None))
+            .distinct()
+            .all()
+            if nombre and nombre.strip()
+        }
+
+        # 5) Asegura además las 7 ofertas oficiales, aunque hoy no tengan personas.
+        nombres_catalogo = nombres_existentes | set(responsables_oficiales.keys())
+
+        agregadas = []
+
+        for nombre in sorted(nombres_catalogo):
+            existente = (
+                db.query(models.OfertaValor)
+                .filter(func.lower(models.OfertaValor.nombre) == nombre.lower())
+                .first()
+            )
+
+            if existente:
+                continue
+
+            responsable_id = responsables_oficiales.get(nombre)
+
+            nueva = models.OfertaValor(
+                id=_id_unico(db, nombre),
+                nombre=nombre,
+                responsable_persona_id=responsable_id,
+                activa=True,
+            )
+            db.add(nueva)
+            agregadas.append(nombre)
+
+        db.flush()
+
+        # 6) Para ofertas oficiales ya existentes pero todavía sin responsable,
+        # completa el responsable una sola vez. No pisa futuras ediciones.
+        responsables_completados = []
+
+        for nombre, responsable_id in responsables_oficiales.items():
+            oferta = (
+                db.query(models.OfertaValor)
+                .filter(func.lower(models.OfertaValor.nombre) == nombre.lower())
+                .first()
+            )
+
+            if oferta and not oferta.responsable_persona_id:
+                oferta.responsable_persona_id = responsable_id
+                responsables_completados.append(nombre)
+
+        db.flush()
+
+        # 7) Sincroniza el campo histórico Persona.responsable solamente para
+        # ofertas que tengan un responsable oficial/configurado.
+        personas_responsable_sincronizado = 0
+
+        for oferta in db.query(models.OfertaValor).all():
+            if not oferta.responsable_persona_id:
+                continue
+
+            responsable = (
+                db.query(models.Persona)
+                .filter(models.Persona.id == oferta.responsable_persona_id)
+                .first()
+            )
+
+            if not responsable:
+                continue
+
+            personas_responsable_sincronizado += (
+                db.query(models.Persona)
+                .filter(models.Persona.oferta_valor == oferta.nombre)
+                .update(
+                    {models.Persona.responsable: responsable.nombre},
+                    synchronize_session=False,
+                )
+            )
+
+        db.commit()
+
+        return {
+            "status": "success",
+            "total_ofertas": db.query(models.OfertaValor).count(),
+            "ofertas_agregadas": agregadas,
+            "responsables_completados": responsables_completados,
+            "personas_alias_corregido": correcciones_alias,
+            "personas_todas_convertidas_a_sin_asignar": todas_limpiadas,
+            "personas_responsable_sincronizado": personas_responsable_sincronizado,
+        }
+    except Exception:
+        if db is not None:
+            db.rollback()
+        logger.exception("migrate-ofertas-valor falló")
+        return {
+            "status": "error",
+            "message": "Error interno; revisa los logs del servidor",
+        }
+    finally:
+        if db is not None:
+            db.close()
 
 
 @app.get("/api/dashboard/summary", dependencies=[Depends(require_api_key)])

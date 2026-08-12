@@ -1,10 +1,11 @@
 import json
 import logging
 import os
-from typing import Any
+from typing import Any, AsyncGenerator
 
 import httpx
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 
@@ -23,26 +24,14 @@ class AiChatRequest(BaseModel):
     message: str = Field(min_length=1)
 
 
-class AiChatResponse(BaseModel):
-    response: str
-
-
 def _extract_text(value: Any) -> list[str]:
     """
-    Busca fragmentos de texto dentro de la estructura de eventos
-    que devuelve AgentCore / Strands.
+    Extrae únicamente fragmentos de texto útiles desde eventos
+    de AgentCore / Strands.
     """
     result: list[str] = []
 
     if isinstance(value, dict):
-        # Evento típico de Bedrock:
-        # {
-        #   "event": {
-        #       "contentBlockDelta": {
-        #           "delta": {"text": "..."}
-        #       }
-        #   }
-        # }
         content_block_delta = value.get("contentBlockDelta")
 
         if isinstance(content_block_delta, dict):
@@ -54,13 +43,11 @@ def _extract_text(value: Any) -> list[str]:
                 if isinstance(text, str):
                     result.append(text)
 
-        # Respuesta simple JSON.
         direct_response = value.get("response")
 
         if isinstance(direct_response, str):
             result.append(direct_response)
 
-        # Algunos payloads pueden traer text directamente.
         direct_text = value.get("text")
 
         if isinstance(direct_text, str):
@@ -83,51 +70,255 @@ def _extract_text(value: Any) -> list[str]:
     return result
 
 
-def _parse_json_response(response: httpx.Response) -> str:
+def _encode_sse(payload: dict) -> str:
+    """
+    Convierte un payload Python a un evento SSE.
+    """
+    return (
+        "data: "
+        + json.dumps(
+            payload,
+            ensure_ascii=False,
+        )
+        + "\n\n"
+    )
+
+
+def _extract_text_from_raw_json(raw: bytes) -> str:
+    """
+    Fallback para runtimes que respondan JSON completo
+    en lugar de SSE.
+    """
+    if not raw:
+        return ""
+
     try:
-        payload = response.json()
-    except ValueError as exc:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise RuntimeError(
             "AgentCore respondió con JSON inválido."
         ) from exc
 
-    fragments = _extract_text(payload)
-
-    return "".join(fragments).strip()
-
-
-def _parse_sse_response(response: httpx.Response) -> str:
-    fragments: list[str] = []
-
-    for raw_line in response.text.splitlines():
-        line = raw_line.strip()
-
-        if not line or not line.startswith("data:"):
-            continue
-
-        data = line[5:].strip()
-
-        if not data or data == "[DONE]":
-            continue
-
-        try:
-            payload = json.loads(data)
-        except json.JSONDecodeError:
-            # Si AgentCore entrega texto plano en una línea SSE,
-            # lo conservamos.
-            fragments.append(data)
-            continue
-
-        fragments.extend(_extract_text(payload))
-
-    return "".join(fragments).strip()
+    return "".join(
+        _extract_text(payload)
+    ).strip()
 
 
-@router.post(
-    "/chat",
-    response_model=AiChatResponse,
-)
-async def chat_with_dx_talent_ai(
+async def _stream_agentcore(
+    message: str,
+) -> AsyncGenerator[str, None]:
+    """
+    Consume AgentCore mediante streaming y retransmite
+    solamente los fragmentos de texto necesarios al frontend.
+    """
+
+    timeout = httpx.Timeout(
+        connect=10.0,
+        read=120.0,
+        write=30.0,
+        pool=10.0,
+    )
+
+    sent_text = False
+
+    try:
+        async with httpx.AsyncClient(
+            timeout=timeout,
+        ) as client:
+            async with client.stream(
+                "POST",
+                AGENTCORE_URL,
+                json={
+                    "prompt": message,
+                },
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "text/event-stream",
+                },
+            ) as response:
+                response.raise_for_status()
+
+                content_type = response.headers.get(
+                    "content-type",
+                    "",
+                ).lower()
+
+                # ---------------------------------------------------------
+                # AgentCore SSE
+                # ---------------------------------------------------------
+                if "text/event-stream" in content_type:
+                    async for raw_line in response.aiter_lines():
+                        line = raw_line.strip()
+
+                        if not line:
+                            continue
+
+                        if not line.startswith("data:"):
+                            continue
+
+                        data = line[5:].strip()
+
+                        if not data or data == "[DONE]":
+                            continue
+
+                        try:
+                            payload = json.loads(data)
+                        except json.JSONDecodeError:
+                            logger.warning(
+                                "Evento SSE no JSON recibido desde AgentCore: %r",
+                                data[:500],
+                            )
+                            continue
+
+                        fragments = _extract_text(payload)
+
+                        for fragment in fragments:
+                            if not fragment:
+                                continue
+
+                            sent_text = True
+
+                            yield _encode_sse(
+                                {
+                                    "type": "delta",
+                                    "text": fragment,
+                                }
+                            )
+
+                # ---------------------------------------------------------
+                # Fallback JSON
+                # ---------------------------------------------------------
+                else:
+                    raw = await response.aread()
+
+                    text = _extract_text_from_raw_json(
+                        raw
+                    )
+
+                    if text:
+                        sent_text = True
+
+                        yield _encode_sse(
+                            {
+                                "type": "delta",
+                                "text": text,
+                            }
+                        )
+
+        if not sent_text:
+            logger.error(
+                "AgentCore terminó sin entregar texto."
+            )
+
+            yield _encode_sse(
+                {
+                    "type": "error",
+                    "detail": (
+                        "TalentIA respondió sin contenido."
+                    ),
+                }
+            )
+
+            return
+
+        yield _encode_sse(
+            {
+                "type": "done",
+            }
+        )
+
+    except httpx.ConnectError:
+        logger.exception(
+            "No fue posible conectar con AgentCore en %s",
+            AGENTCORE_URL,
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "TalentIA no está disponible. "
+                    "Verifica que AgentCore esté iniciado."
+                ),
+            }
+        )
+
+    except httpx.TimeoutException:
+        logger.exception(
+            "Timeout esperando respuesta de AgentCore"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "TalentIA demoró demasiado en responder."
+                ),
+            }
+        )
+
+    except httpx.HTTPStatusError as exc:
+        logger.exception(
+            "AgentCore respondió con HTTP %s",
+            exc.response.status_code,
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "TalentIA respondió con un error."
+                ),
+            }
+        )
+
+    except httpx.RequestError:
+        logger.exception(
+            "Error comunicándose con AgentCore"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "No fue posible comunicarse con TalentIA."
+                ),
+            }
+        )
+
+    except RuntimeError:
+        logger.exception(
+            "No fue posible interpretar la respuesta de AgentCore"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "La respuesta de TalentIA "
+                    "no pudo ser interpretada."
+                ),
+            }
+        )
+
+    except Exception:
+        logger.exception(
+            "Error inesperado procesando el stream de TalentIA"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "Ocurrió un error inesperado "
+                    "al consultar TalentIA."
+                ),
+            }
+        )
+
+
+@router.post("/chat")
+async def chat_with_talentia(
     data: AiChatRequest,
 ):
     message = data.message.strip()
@@ -138,113 +329,12 @@ async def chat_with_dx_talent_ai(
             detail="El mensaje no puede estar vacío.",
         )
 
-    try:
-        async with httpx.AsyncClient(
-            timeout=httpx.Timeout(120.0)
-        ) as client:
-            response = await client.post(
-                AGENTCORE_URL,
-                json={
-                    "prompt": message,
-                },
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-            )
-
-        response.raise_for_status()
-
-    except httpx.ConnectError as exc:
-        logger.exception(
-            "No fue posible conectar con AgentCore en %s",
-            AGENTCORE_URL,
-        )
-
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "DX Talent AI no está disponible. "
-                "Verifica que AgentCore esté iniciado."
-            ),
-        ) from exc
-
-    except httpx.TimeoutException as exc:
-        logger.exception(
-            "Timeout esperando respuesta de AgentCore"
-        )
-
-        raise HTTPException(
-            status_code=504,
-            detail="DX Talent AI demoró demasiado en responder.",
-        ) from exc
-
-    except httpx.HTTPStatusError as exc:
-        logger.exception(
-            "AgentCore respondió con HTTP %s",
-            exc.response.status_code,
-        )
-
-        raise HTTPException(
-            status_code=502,
-            detail="DX Talent AI respondió con un error.",
-        ) from exc
-
-    except httpx.RequestError as exc:
-        logger.exception(
-            "Error comunicándose con AgentCore"
-        )
-
-        raise HTTPException(
-            status_code=503,
-            detail="No fue posible comunicarse con DX Talent AI.",
-        ) from exc
-
-    content_type = response.headers.get(
-        "content-type",
-        "",
-    ).lower()
-
-    try:
-        if "text/event-stream" in content_type:
-            text = _parse_sse_response(response)
-        elif "application/json" in content_type:
-            text = _parse_json_response(response)
-        else:
-            # Fallback útil para el runtime local.
-            raw = response.text.strip()
-
-            try:
-                payload = json.loads(raw)
-            except json.JSONDecodeError:
-                text = raw
-            else:
-                text = "".join(
-                    _extract_text(payload)
-                ).strip()
-
-    except RuntimeError as exc:
-        logger.exception(
-            "No fue posible interpretar la respuesta de AgentCore"
-        )
-
-        raise HTTPException(
-            status_code=502,
-            detail="La respuesta de DX Talent AI no pudo ser interpretada.",
-        ) from exc
-
-    if not text:
-        logger.error(
-            "AgentCore respondió sin texto. Content-Type=%s Body=%r",
-            content_type,
-            response.text[:1000],
-        )
-
-        raise HTTPException(
-            status_code=502,
-            detail="DX Talent AI respondió sin contenido.",
-        )
-
-    return {
-        "response": text,
-    }
+    return StreamingResponse(
+        _stream_agentcore(message),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

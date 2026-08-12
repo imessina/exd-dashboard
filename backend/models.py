@@ -92,6 +92,30 @@ class Persona(Base):
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
 
+class OfertaValor(Base):
+    """Catálogo oficial y administrable de ofertas de valor."""
+
+    __tablename__ = "ofertas_valor"
+
+    id = Column(String(100), primary_key=True)
+    nombre = Column(String(150), nullable=False, unique=True)
+    responsable_persona_id = Column(
+        String,
+        ForeignKey("personas.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    descripcion = Column(Text, nullable=True)
+    activa = Column(Boolean, default=True, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+
+    responsable_persona = relationship(
+        "Persona",
+        foreign_keys=[responsable_persona_id],
+    )
+
+
 class PersonaSkill(Base):
     """Nivel de dominio (1–5) de una skill para una persona."""
 

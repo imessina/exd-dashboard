@@ -101,9 +101,13 @@ def listar_personas(
     nivel: Optional[str] = None,
     habilidad: Optional[str] = None,
     oferta_valor: Optional[str] = None,
-) -> list[dict]:
+) -> dict:
     """
     Lista personas reales registradas en Dashboard DX.
+
+    Devuelve explícitamente el total exacto calculado por Python
+    junto con la lista de personas, para evitar que el modelo tenga
+    que contar manualmente los elementos recibidos.
 
     Puede filtrar opcionalmente por nivel de pirámide,
     habilidad histórica y oferta de valor.
@@ -131,10 +135,15 @@ def listar_personas(
         params=params,
     )
 
-    return [
+    personas_limpias = [
         _clean_persona(persona)
         for persona in personas
     ]
+
+    return {
+        "total": len(personas_limpias),
+        "personas": personas_limpias,
+    }
 
 
 @tool
@@ -190,6 +199,7 @@ def buscar_personas_por_capacidad(
     No uses recuerdos de consultas anteriores para afirmar que la lista
     está completa. Para búsquedas globales por capacidad, utiliza siempre
     esta herramienta.
+
     """
 
     capacidad = capacidad.strip()

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { curriculumsApi, personasApi } from "../services/api";
+import { curriculumsApi, ofertasValorApi, personasApi } from "../services/api";
 import {
   NIVELES_PIRAMIDE,
   NIVEL_COLOR,
-  OFERTAS_VALOR,
   OFERTA_SIN_ASIGNAR,
 } from "../utils/constants";
 import clsx from "clsx";
@@ -68,7 +67,7 @@ function avatarGradient(name) {
 }
 
 // ── Formulario ───────────────────────────────────────────────────────────────
-function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
+function PersonaForm({ initial, onClose, ofertasValor = [] }) {
   const qc = useQueryClient();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [form, setForm] = useState(
@@ -94,25 +93,46 @@ function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
       : { ...EMPTY },
   );
 
-  const { data: nivelesIniciales = [], isLoading: cargandoNiveles } = useQuery({
+  const { data: nivelesIniciales, isLoading: cargandoNiveles } = useQuery({
     queryKey: ["persona-skills", initial?.id],
     queryFn: () => personasApi.skills(initial.id),
     enabled: Boolean(initial?.id),
   });
 
   useEffect(() => {
-    if (initial?.id) {
-      setForm((actual) => ({ ...actual, skillLevels: nivelesIniciales }));
+    if (!initial?.id || !Array.isArray(nivelesIniciales)) {
+      return;
     }
+
+    setForm((actual) => {
+      const actuales = JSON.stringify(actual.skillLevels ?? []);
+      const nuevos = JSON.stringify(nivelesIniciales);
+
+      if (actuales === nuevos) {
+        return actual;
+      }
+
+      return {
+        ...actual,
+        skillLevels: nivelesIniciales,
+      };
+    });
   }, [initial?.id, nivelesIniciales]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const done = () => {
+  const done = (persona) => {
     qc.invalidateQueries({ queryKey: ["personas"] });
     qc.invalidateQueries({ queryKey: ["curriculums"] });
     qc.invalidateQueries({ queryKey: ["skill-matrix"] });
     qc.invalidateQueries({ queryKey: ["skill-gaps"] });
+
+    if (persona?.id) {
+      qc.invalidateQueries({
+        queryKey: ["persona-skills", persona.id],
+      });
+    }
+
     onClose();
   };
 
@@ -130,10 +150,18 @@ function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
   const save = useMutation({
     mutationFn: async () => {
       const { skillLevels, ...personFields } = form;
+      const ofertaSeleccionada = ofertasValor.find(
+        (oferta) => oferta.nombre === form.oferta_valor,
+      );
+
       const data = {
         ...personFields,
         oferta_valor: form.oferta_valor || null,
-        responsable: form.responsable.trim() || null,
+        responsable: form.oferta_valor
+          ? ofertaSeleccionada?.responsable?.nombre ||
+            form.responsable.trim() ||
+            null
+          : null,
         habilidades: skillLevels.map((item) => item.nombre),
         anos_experiencia:
           form.anos_experiencia !== "" ? Number(form.anos_experiencia) : null,
@@ -172,6 +200,16 @@ function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
     event.preventDefault();
     save.mutate();
   };
+
+  const ofertaActual = ofertasValor.find(
+    (oferta) => oferta.nombre === form.oferta_valor,
+  );
+
+  const ofertaActualExisteEnCatalogo = Boolean(ofertaActual);
+
+  const ofertasFormulario = ofertasValor.filter(
+    (oferta) => oferta.activa || oferta.nombre === form.oferta_valor,
+  );
 
   return (
     <form onSubmit={submit} className="space-y-4">
@@ -260,33 +298,51 @@ function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
           <select
             className="input"
             value={form.oferta_valor}
-            onChange={(e) => set("oferta_valor", e.target.value)}
+            onChange={(e) => {
+              const nombre = e.target.value;
+              const oferta = ofertasValor.find(
+                (item) => item.nombre === nombre,
+              );
+
+              setForm((actual) => ({
+                ...actual,
+                oferta_valor: nombre,
+                responsable: nombre
+                  ? oferta?.responsable?.nombre || actual.responsable
+                  : "",
+              }));
+            }}
           >
             <option value="">Sin asignar</option>
-            {OFERTAS_VALOR.map((oferta) => (
-              <option key={oferta} value={oferta}>
-                {oferta}
+
+            {!ofertaActualExisteEnCatalogo && form.oferta_valor && (
+              <option value={form.oferta_valor}>
+                {form.oferta_valor} (valor actual)
+              </option>
+            )}
+
+            {ofertasFormulario.map((oferta) => (
+              <option key={oferta.id} value={oferta.nombre}>
+                {oferta.nombre}
+                {!oferta.activa ? " (inactiva)" : ""}
               </option>
             ))}
           </select>
         </div>
+
         <div>
           <label className="form-label">Responsable de Oferta</label>
           <input
-            className="input"
-            list="responsables-oferta"
-            value={form.responsable}
-            onChange={(e) => set("responsable", e.target.value)}
-            placeholder="Selecciona o escribe un responsable"
-            autoComplete="off"
+            className="input bg-slate-50"
+            value={
+              ofertaActual?.responsable?.nombre ||
+              form.responsable ||
+              "Sin responsable"
+            }
+            readOnly
           />
-          <datalist id="responsables-oferta">
-            {responsablesDisponibles.map((responsable) => (
-              <option key={responsable} value={responsable} />
-            ))}
-          </datalist>
           <p className="mt-1 text-[11px] text-gray-400">
-            Puedes seleccionar un responsable existente o escribir uno nuevo.
+            Se administra desde “Gestionar ofertas de valor”.
           </p>
         </div>
       </div>
@@ -393,6 +449,298 @@ function PersonaForm({ initial, onClose, responsablesDisponibles = [] }) {
         </div>
       </div>
     </form>
+  );
+}
+
+// ── Gestión de ofertas de valor ──────────────────────────────────────────────
+function OfertaValorForm({ initial, personas, onCancel, onSaved }) {
+  const qc = useQueryClient();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [form, setForm] = useState({
+    nombre: initial?.nombre ?? "",
+    responsable_persona_id: initial?.responsable_persona_id ?? "",
+    descripcion: initial?.descripcion ?? "",
+    activa: initial?.activa ?? true,
+  });
+
+  const set = (key, value) =>
+    setForm((actual) => ({ ...actual, [key]: value }));
+
+  const save = useMutation({
+    mutationFn: () => {
+      const payload = {
+        nombre: form.nombre.trim(),
+        responsable_persona_id: form.responsable_persona_id || null,
+        descripcion: form.descripcion.trim() || null,
+        activa: Boolean(form.activa),
+      };
+
+      return initial
+        ? ofertasValorApi.update(initial.id, payload)
+        : ofertasValorApi.create(payload);
+    },
+    onSuccess: (oferta) => {
+      qc.invalidateQueries({ queryKey: ["ofertas-valor"] });
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      onSaved(oferta);
+    },
+  });
+
+  const remove = useMutation({
+    mutationFn: () => ofertasValorApi.delete(initial.id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["ofertas-valor"] });
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      onSaved(null);
+    },
+  });
+
+  const error = save.error || remove.error;
+  const detalleError = error?.response?.data?.detail || error?.message || null;
+
+  const personasOrdenadas = [...personas].sort((a, b) =>
+    a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }),
+  );
+
+  const busy = save.isPending || remove.isPending;
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        save.mutate();
+      }}
+      className="space-y-5"
+    >
+      <div>
+        <label className="form-label">Nombre de la oferta *</label>
+        <input
+          required
+          className="input"
+          value={form.nombre}
+          onChange={(e) => set("nombre", e.target.value)}
+          placeholder="Ej: Mobile Platforms"
+        />
+      </div>
+
+      <div>
+        <label className="form-label">Responsable</label>
+        <select
+          className="input"
+          value={form.responsable_persona_id}
+          onChange={(e) => set("responsable_persona_id", e.target.value)}
+        >
+          <option value="">Sin responsable</option>
+          {personasOrdenadas.map((persona) => (
+            <option key={persona.id} value={persona.id}>
+              {persona.nombre}
+              {persona.rol ? ` — ${persona.rol}` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="form-label">Descripción</label>
+        <textarea
+          className="input min-h-[100px] resize-y"
+          value={form.descripcion}
+          onChange={(e) => set("descripcion", e.target.value)}
+          placeholder="Descripción opcional"
+        />
+      </div>
+
+      <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={form.activa}
+          onChange={(e) => set("activa", e.target.checked)}
+          className="rounded"
+        />
+        Oferta activa
+      </label>
+
+      {initial && initial.personas_count > 0 && (
+        <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-700">
+          Esta oferta tiene {initial.personas_count}{" "}
+          {initial.personas_count === 1
+            ? "persona asociada"
+            : "personas asociadas"}
+          . Puedes editarla o desactivarla, pero no eliminarla mientras tenga
+          personas.
+        </p>
+      )}
+
+      {detalleError && (
+        <p className="text-xs text-red-500">Error: {detalleError}</p>
+      )}
+
+      <div className="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+        <div>
+          {initial &&
+            initial.personas_count === 0 &&
+            (confirmingDelete ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-red-600">
+                  ¿Eliminar esta oferta?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => remove.mutate()}
+                  disabled={busy}
+                  className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                >
+                  {remove.isPending ? "Eliminando..." : "Sí"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingDelete(false)}
+                  disabled={busy}
+                  className="text-xs text-gray-500 hover:underline disabled:opacity-50"
+                >
+                  No
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmingDelete(true)}
+                disabled={busy}
+                className="text-xs font-medium text-red-500 hover:text-red-700 disabled:opacity-50"
+              >
+                Eliminar oferta
+              </button>
+            ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={busy}
+            className="btn-secondary"
+          >
+            Volver
+          </button>
+          <button
+            type="submit"
+            disabled={busy || !form.nombre.trim()}
+            className="btn-primary"
+          >
+            {save.isPending
+              ? "Guardando..."
+              : initial
+                ? "Guardar cambios"
+                : "Crear oferta"}
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
+function GestionOfertasPanel({ ofertas, personas, onClose }) {
+  const [editingOferta, setEditingOferta] = useState(null);
+  const [creatingOferta, setCreatingOferta] = useState(false);
+
+  const volverListado = () => {
+    setEditingOferta(null);
+    setCreatingOferta(false);
+  };
+
+  return (
+    <Panel title="Gestionar ofertas de valor" onClose={onClose}>
+      {editingOferta || creatingOferta ? (
+        <OfertaValorForm
+          initial={editingOferta}
+          personas={personas}
+          onCancel={volverListado}
+          onSaved={volverListado}
+        />
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">
+                Ofertas de valor
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                Administra las ofertas de valor y sus responsables.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setCreatingOferta(true)}
+              className="btn-primary !text-xs !py-2 shrink-0"
+            >
+              + Nueva oferta
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {ofertas.map((oferta) => (
+              <div
+                key={oferta.id}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-3"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-semibold text-slate-800">
+                        {oferta.nombre}
+                      </p>
+                      <span
+                        className={clsx(
+                          "badge",
+                          oferta.activa
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-slate-100 text-slate-500",
+                        )}
+                      >
+                        {oferta.activa ? "Activa" : "Inactiva"}
+                      </span>
+                    </div>
+
+                    <p className="mt-1 text-xs text-slate-500">
+                      <span className="font-semibold text-slate-600">
+                        Responsable:
+                      </span>{" "}
+                      {oferta.responsable?.nombre || "Sin responsable"}
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      {oferta.personas_count}{" "}
+                      {oferta.personas_count === 1 ? "persona" : "personas"}
+                    </p>
+
+                    {oferta.descripcion && (
+                      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                        {oferta.descripcion}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditingOferta(oferta)}
+                    className="btn-secondary !text-xs !py-1.5 shrink-0"
+                  >
+                    Editar
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {ofertas.length === 0 && (
+              <p className="py-8 text-center text-sm text-slate-400">
+                No hay ofertas configuradas todavía.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </Panel>
   );
 }
 
@@ -765,6 +1113,7 @@ export default function Personas() {
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [gestionandoOfertas, setGestionandoOfertas] = useState(false);
   const [vista, setVista] = useState("list");
   const [cvDetalle, setCvDetalle] = useState(null);
   const [cvEditando, setCvEditando] = useState(null);
@@ -775,6 +1124,17 @@ export default function Personas() {
     queryKey: ["personas"],
     queryFn: () => personasApi.list(),
   });
+
+  const { data: ofertasValor = [] } = useQuery({
+    queryKey: ["ofertas-valor"],
+    queryFn: () => ofertasValorApi.list(),
+  });
+
+  const ofertasActivas = ofertasValor.filter((oferta) => oferta.activa);
+
+  const ofertasPorNombre = new Map(
+    ofertasValor.map((oferta) => [oferta.nombre, oferta]),
+  );
 
   const { data: curriculums = [] } = useQuery({
     queryKey: ["curriculums"],
@@ -823,10 +1183,14 @@ export default function Personas() {
   };
 
   const responsablesDisponibles = Array.from(
-    new Set(
-      personas.map((persona) => persona.responsable?.trim()).filter(Boolean),
-    ),
-  ).sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+    new Map(
+      ofertasValor
+        .filter((oferta) => oferta.responsable)
+        .map((oferta) => [oferta.responsable.id, oferta.responsable]),
+    ).values(),
+  ).sort((a, b) =>
+    a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }),
+  );
 
   const filtered = personas.filter((p) => {
     const terminosBusqueda = normalizarTexto(search)
@@ -858,11 +1222,13 @@ export default function Personas() {
         ? !p.oferta_valor
         : p.oferta_valor === ofertaFilter);
 
+    const ofertaCatalogo = ofertasPorNombre.get(p.oferta_valor);
+
     const coincideResponsable =
       !responsableFilter ||
       (responsableFilter === OFERTA_SIN_ASIGNAR
-        ? !p.responsable
-        : p.responsable === responsableFilter);
+        ? !ofertaCatalogo?.responsable
+        : ofertaCatalogo?.responsable?.id === responsableFilter);
 
     return (
       coincideBusqueda &&
@@ -893,18 +1259,14 @@ export default function Personas() {
       (persona) => persona.oferta_valor === ofertaFilter,
     );
 
-    const responsables = Array.from(
-      new Set(
-        personasOferta
-          .map((persona) => persona.responsable?.trim())
-          .filter(Boolean),
-      ),
-    ).sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+    const ofertaCatalogo = ofertasPorNombre.get(ofertaFilter);
 
     return {
       cantidad: personasOferta.length,
       etiqueta: ofertaFilter,
-      responsables,
+      responsables: ofertaCatalogo?.responsable?.nombre
+        ? [ofertaCatalogo.responsable.nombre]
+        : [],
     };
   })();
 
@@ -953,12 +1315,22 @@ export default function Personas() {
             </p>
           </div>
 
-          <button
-            onClick={() => setCreating(true)}
-            className="btn-primary shrink-0 shadow-[0_8px_24px_rgba(14,165,233,0.22)]"
-          >
-            + Nueva persona
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setGestionandoOfertas(true)}
+              className="btn-primary !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20"
+            >
+              Gestionar ofertas de valor
+            </button>
+
+            <button
+              onClick={() => setCreating(true)}
+              className="btn-primary shrink-0 shadow-[0_8px_24px_rgba(14,165,233,0.22)]"
+            >
+              + Nueva persona
+            </button>
+          </div>
         </div>
       </div>
 
@@ -994,9 +1366,9 @@ export default function Personas() {
                 title="Filtrar por oferta de valor"
               >
                 <option value="">Todas las ofertas de valor</option>
-                {OFERTAS_VALOR.map((oferta) => (
-                  <option key={oferta} value={oferta}>
-                    {oferta}
+                {ofertasActivas.map((oferta) => (
+                  <option key={oferta.id} value={oferta.nombre}>
+                    {oferta.nombre}
                   </option>
                 ))}
                 <option value={OFERTA_SIN_ASIGNAR}>Sin asignar</option>
@@ -1010,8 +1382,8 @@ export default function Personas() {
               >
                 <option value="">Todos los responsables</option>
                 {responsablesDisponibles.map((responsable) => (
-                  <option key={responsable} value={responsable}>
-                    {responsable}
+                  <option key={responsable.id} value={responsable.id}>
+                    {responsable.nombre}
                   </option>
                 ))}
                 <option value={OFERTA_SIN_ASIGNAR}>Sin asignar</option>
@@ -1227,6 +1599,14 @@ export default function Personas() {
           </div>
         )}
 
+        {gestionandoOfertas && (
+          <GestionOfertasPanel
+            ofertas={ofertasValor}
+            personas={personas}
+            onClose={() => setGestionandoOfertas(false)}
+          />
+        )}
+
         {cvDetalle && !cvEditando && (
           <DetalleCurriculum
             curriculum={cvDetalle}
@@ -1280,7 +1660,7 @@ export default function Personas() {
           >
             <PersonaForm
               initial={editing ?? null}
-              responsablesDisponibles={responsablesDisponibles}
+              ofertasValor={ofertasValor}
               onClose={() => {
                 setCreating(false);
                 setEditing(null);

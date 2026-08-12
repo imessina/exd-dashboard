@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -7,6 +9,8 @@ from database import get_db
 import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
+
+logger = logging.getLogger("uvicorn.error")
 
 
 @router.get("/", response_model=List[schemas.PersonaOut])
@@ -154,8 +158,29 @@ def replace_persona_skills(
     data: schemas.PersonaSkillsReplace,
     db: Session = Depends(get_db),
 ):
+    logger.info(
+        "[SKILLS] Inicio guardado | persona_id=%s | cantidad=%s",
+        persona_id,
+        len(data.skills),
+    )
+    logger.info(
+        "[SKILLS] Payload recibido | persona_id=%s | skills=%s",
+        persona_id,
+        [
+            {
+                "skill_id": item.skill_id,
+                "nivel": item.nivel,
+            }
+            for item in data.skills
+        ],
+    )
+
     persona = db.query(models.Persona).filter(models.Persona.id == persona_id).first()
     if not persona:
+        logger.warning(
+            "[SKILLS] Persona no encontrada | persona_id=%s",
+            persona_id,
+        )
         raise HTTPException(status_code=404, detail="Persona no encontrada")
 
     skill_ids = [item.skill_id for item in data.skills]
@@ -187,7 +212,34 @@ def replace_persona_skills(
     # Compatibilidad temporal con vistas antiguas: conservar también los nombres.
     persona.habilidades = [skills_by_id[item.skill_id].nombre for item in data.skills]
 
-    db.commit()
+    try:
+        db.commit()
+
+        guardadas = (
+            db.query(models.PersonaSkill)
+            .filter(models.PersonaSkill.persona_id == persona_id)
+            .all()
+        )
+
+        logger.info(
+            "[SKILLS] Guardado OK | persona_id=%s | cantidad_bd=%s | skills_bd=%s",
+            persona_id,
+            len(guardadas),
+            [
+                {
+                    "skill_id": item.skill_id,
+                    "nivel": item.nivel,
+                }
+                for item in guardadas
+            ],
+        )
+    except Exception:
+        db.rollback()
+        logger.exception(
+            "[SKILLS] Error guardando skills | persona_id=%s",
+            persona_id,
+        )
+        raise
 
     return [
         {

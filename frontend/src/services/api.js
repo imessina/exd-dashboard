@@ -142,19 +142,159 @@ export const curriculumsApi = {
     ),
 };
 
+// ── Ofertas de Valor ────────────────────────────────────────
+export const ofertasValorApi = {
+  list: (params) => api.get("/ofertas-valor/", { params }).then((r) => r.data),
+
+  get: (id) => api.get(`/ofertas-valor/${id}`).then((r) => r.data),
+
+  create: (data) => api.post("/ofertas-valor/", data).then((r) => r.data),
+
+  update: (id, data) =>
+    api.put(`/ofertas-valor/${id}`, data).then((r) => r.data),
+
+  delete: (id) =>
+    api.delete(`/ofertas-valor/${id}`).then((r) => r.data),
+};
+
 // ── Dashboard ───────────────────────────────────────────────
 export const dashboardApi = {
   summary: () => api.get("/dashboard/summary").then((r) => r.data),
 };
 
-// ── DX Talent AI ────────────────────────────────────────────
+// ── TalentIA ────────────────────────────────────────────────
 export const aiApi = {
-  chat: (message) =>
-    api
-      .post("/ai/chat", {
+  chatStream: async (message, { onDelta, signal } = {}) => {
+    const response = await fetch(`${baseURL}/ai/chat`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+        "X-API-Key": import.meta.env.VITE_API_KEY || "",
+      },
+
+      body: JSON.stringify({
         message,
-      })
-      .then((r) => r.data),
+      }),
+
+      signal,
+    });
+
+    if (!response.ok) {
+      let detail = "No fue posible comunicarse con TalentIA.";
+
+      try {
+        const payload = await response.json();
+
+        if (payload?.detail) {
+          detail = payload.detail;
+        }
+      } catch {
+        // Conserva el mensaje genérico.
+      }
+
+      throw new Error(detail);
+    }
+
+    if (!response.body) {
+      throw new Error("El navegador no pudo iniciar el stream de TalentIA.");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let buffer = "";
+    let fullText = "";
+    let streamError = null;
+
+    const processEvent = (rawEvent) => {
+      const dataLines = rawEvent
+        .split(/\r?\n/)
+        .filter((line) => line.startsWith("data:"))
+        .map((line) => line.slice(5).trim());
+
+      if (dataLines.length === 0) {
+        return;
+      }
+
+      const data = dataLines.join("\n");
+
+      if (!data || data === "[DONE]") {
+        return;
+      }
+
+      let payload;
+
+      try {
+        payload = JSON.parse(data);
+      } catch {
+        return;
+      }
+
+      if (payload.type === "delta") {
+        const text = payload.text || "";
+
+        if (!text) {
+          return;
+        }
+
+        fullText += text;
+
+        onDelta?.(text, fullText);
+
+        return;
+      }
+
+      if (payload.type === "error") {
+        streamError = new Error(
+          payload.detail || "TalentIA respondió con un error.",
+        );
+      }
+    };
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, {
+          stream: true,
+        });
+
+        const events = buffer.split(/\r?\n\r?\n/);
+
+        buffer = events.pop() ?? "";
+
+        for (const event of events) {
+          processEvent(event);
+
+          if (streamError) {
+            throw streamError;
+          }
+        }
+      }
+
+      buffer += decoder.decode();
+
+      if (buffer.trim()) {
+        processEvent(buffer);
+      }
+
+      if (streamError) {
+        throw streamError;
+      }
+
+      return {
+        response: fullText,
+      };
+    } finally {
+      reader.releaseLock();
+    }
+  },
 };
 
 export default api;
