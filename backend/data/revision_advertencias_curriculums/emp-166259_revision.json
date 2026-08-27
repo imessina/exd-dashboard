@@ -1,0 +1,188 @@
+{
+  "persona_id": "emp-166259",
+  "persona_nombre": "Nadia Veronica Quezada Navarrete",
+  "archivo": "NadiaQuezada_DX_20250217.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 44,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Experiencia Seleccionadas\nTelecomunicaciones | Telefonica – Desarrolladora (07/2019 – 01/2025) \nComo desarrolladora front-end en la Sucursal Virtual Respuesta (SVR), he tenido la responsabilidad de crear y optimizar interfaces de usuario para plataformas web utilizando HTML y CSS, implementando tecnologías como Angular y otras herramientas para asegurar que las aplicaciones sean modernas, accesibles y altamente responsivas. He trabajado en la adaptación y consumo de APIs desarrolladas por nuestro equipo de backend, lo que me ha permitido integrar funcionalidades de manera eficiente y mantener la fluidez de la experiencia del usuario. He colaborado estrechamente con equipos de UX/UI para el desarrollo de estas interfaces, llevando a cabo proyectos bajo la metodología Agile Scrum que promueve la cooperación eficaz y la entrega continua de valor. He trabajado junto con el equipo de control de calidad (QA) para asegurar que todos los entregables cumplan con los estándares más altos. Además, mantuve un diálogo constante con el cliente, lo que garantizó que las soluciones desarrolladas se alinearan con sus expectativas y necesidades. Como parte de un esfuerzo por modernizar nuestra infraestructura, estuve involucrada en la migración de aplicaciones legadas, enfocándome en mejorar la usabilidad y experiencia del usuario final.\n\nBancario | Transbank– Prototyper (08/2018 – 06/2019) \nEn mi rol como prototyper, mi enfoque estuvo en desarrollar interfaces intuitivas y funcionales para la aplicación Mi Pyme, trabajando en sinergia con el equipo de UX/UI para asegurar que el diseño final fuese no solo atractivo, sino también alineado con la identidad del cliente. Participé activamente en un ambiente de trabajo Agile Scrum y colaboré con QA para garantizar la calidad de cada entrega. Mantuve comunicación constante con el cliente, lo que facilitó un desarrollo ágil y efectivo, ajustando las soluciones a sus requerimientos específicos."
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Nadia Quezada\nDeveloper FrontEnd"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Áreas de Especialización\nDesarrolladora Web/Mobile\n\nEstudios y Postgrados\nIngeniería en Informática\nUniversidad Mayor 2021-2025"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Git"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "Otras Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Typescript\nFlutter\nNativescript\nPython"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "HTML"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "CSS y SCSS"
+    },
+    {
+      "diapositiva_o_bloque": 21,
+      "texto": "Angular"
+    },
+    {
+      "diapositiva_o_bloque": 22,
+      "texto": "React Native"
+    },
+    {
+      "diapositiva_o_bloque": 23,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 24,
+      "texto": "Experiencia Seleccionadas\nPython– Desarrolladora (07/2023) \nDurante mi experiencia en la universidad, desarrollé un proyecto utilizando Python que se enfocó en la creación de un sistema de venta de pasajes aéreos para una aerolínea. Este proyecto surgió por la necesidad de optimizar el proceso de venta de boletos, dado el alto volumen de demanda, lo que hacía inviable el uso de métodos manuales.\nEl objetivo fue implementar un programa que gestionara los pasajes de manera eficiente, considerando diferentes clases de asientos (Primera Clase, Clase Ejecutiva y Clase Turística) y los precios correspondientes. Utilicé matrices para representar los asientos del avión, así como para almacenar los datos de los pasajeros.\nEl sistema permitía registrar información del pasajero, como el RUN, nombre, apellidos y forma de pago, validando la información para evitar errores. Implementé la opción de aplicar descuentos a clientes frecuentes, ofreciendo un 20% de descuento en el total a pagar, lo que demostró la versatilidad de Python para manejar lógicas de negocio como esta.\nEl desarrollo de este proyecto no solo me permitió adquirir conocimientos técnicos sobre Python, sino que también mejoró mis habilidades en la resolución de problemas y en la implementación de soluciones prácticas para necesidades reales en la industria del turismo."
+    },
+    {
+      "diapositiva_o_bloque": 25,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 26,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 27,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 28,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 29,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 30,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 31,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 32,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 33,
+      "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+    },
+    {
+      "diapositiva_o_bloque": 34,
+      "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+    },
+    {
+      "diapositiva_o_bloque": 35,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 36,
+      "texto": "Nadia Quezada\nEngineer"
+    },
+    {
+      "diapositiva_o_bloque": 37,
+      "texto": "Áreas de Especialización\nDesarrolladora Web/Mobile\n\nEstudios y Postgrados\nIngeniería en Informática\nUniversidad Mayor 2021-2025"
+    },
+    {
+      "diapositiva_o_bloque": 38,
+      "texto": "Python"
+    },
+    {
+      "diapositiva_o_bloque": 39,
+      "texto": "Git"
+    },
+    {
+      "diapositiva_o_bloque": 40,
+      "texto": "Javascript"
+    },
+    {
+      "diapositiva_o_bloque": 41,
+      "texto": "Otras Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 42,
+      "texto": "Typescript\nFlutter\nNativescript\nAngular\nReact Native"
+    },
+    {
+      "diapositiva_o_bloque": 43,
+      "texto": "HTML"
+    },
+    {
+      "diapositiva_o_bloque": 44,
+      "texto": "CSS y SCSS"
+    }
+  ]
+}

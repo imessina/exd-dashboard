@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { personasApi, asignacionesApi } from "../services/api";
-import { NIVELES_PIRAMIDE, NIVEL_COLOR } from "../utils/constants";
+import { curriculumsApi, ofertasValorApi, personasApi } from "../services/api";
+import {
+  NIVELES_PIRAMIDE,
+  NIVEL_COLOR,
+  OFERTA_SIN_ASIGNAR,
+} from "../utils/constants";
 import clsx from "clsx";
 import Panel from "../components/Panel";
 import TagInput from "../components/TagInput";
 import SkillLevelSelector from "../components/SkillLevelSelector";
+import {
+  DetalleCurriculum,
+  EditorCurriculum,
+  tieneContenidoCurriculum,
+} from "./Curriculums";
 
 const CATEGORIAS_NIVEL = NIVELES_PIRAMIDE;
-
-const ESTADOS_LABORALES = ["Disponible", "Staffing", "Inactivo"];
-const ESTADOS_VISIBLES = ["Disponible", "En proyecto", "Staffing", "Inactivo"];
-
-const ESTADO_LABORAL_COLOR = {
-  Disponible: "bg-teal-50 text-teal-800 border border-teal-200",
-  "En proyecto": "bg-slate-800 text-white border border-slate-800",
-  Staffing: "bg-amber-50 text-amber-900 border border-amber-200",
-  Inactivo: "bg-gray-100 text-gray-600 border border-gray-300",
-};
 
 function normalizarTexto(valor = "") {
   return String(valor)
@@ -25,31 +24,6 @@ function normalizarTexto(valor = "") {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
-}
-
-function fechaLocalISO() {
-  const ahora = new Date();
-  const offset = ahora.getTimezoneOffset() * 60 * 1000;
-  return new Date(ahora.getTime() - offset).toISOString().slice(0, 10);
-}
-
-function esAsignacionVigente(asignacion) {
-  if (asignacion.estado !== "active") return false;
-
-  const hoy = fechaLocalISO();
-  const inicio = asignacion.fecha_inicio;
-  const liberacion = asignacion.fecha_liberacion;
-
-  return (!inicio || inicio <= hoy) && (!liberacion || liberacion >= hoy);
-}
-
-function obtenerEstadoVisible(persona, personasEnProyecto) {
-  if (personasEnProyecto.has(persona.id)) return "En proyecto";
-
-  if (persona.estado_laboral === "Staffing") return "Staffing";
-  if (persona.estado_laboral === "Inactivo") return "Inactivo";
-
-  return "Disponible";
 }
 
 function formatearFecha(fecha) {
@@ -64,8 +38,10 @@ const EMPTY = {
   numero_empleado: "",
   fecha_ingreso_compania: "",
   fecha_nacimiento: "",
-  nivel_piramide: "Professional",
+  nivel_piramide: "Contributor",
   estado_laboral: "Disponible",
+  oferta_valor: "",
+  responsable: "",
   anos_experiencia: "",
   habilidades: [],
   skillLevels: [],
@@ -91,8 +67,9 @@ function avatarGradient(name) {
 }
 
 // ── Formulario ───────────────────────────────────────────────────────────────
-function PersonaForm({ initial, onClose }) {
+function PersonaForm({ initial, onClose, ofertasValor = [] }) {
   const qc = useQueryClient();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [form, setForm] = useState(
     initial
       ? {
@@ -101,8 +78,10 @@ function PersonaForm({ initial, onClose }) {
           numero_empleado: initial.numero_empleado ?? "",
           fecha_ingreso_compania: initial.fecha_ingreso_compania ?? "",
           fecha_nacimiento: initial.fecha_nacimiento ?? "",
-          nivel_piramide: initial.nivel_piramide ?? "Professional",
+          nivel_piramide: initial.nivel_piramide ?? "Contributor",
           estado_laboral: initial.estado_laboral ?? "Disponible",
+          oferta_valor: initial.oferta_valor ?? "",
+          responsable: initial.responsable ?? "",
           anos_experiencia: initial.anos_experiencia ?? "",
           habilidades: initial.habilidades ?? [],
           skillLevels: [],
@@ -114,32 +93,75 @@ function PersonaForm({ initial, onClose }) {
       : { ...EMPTY },
   );
 
-  const { data: nivelesIniciales = [], isLoading: cargandoNiveles } = useQuery({
+  const { data: nivelesIniciales, isLoading: cargandoNiveles } = useQuery({
     queryKey: ["persona-skills", initial?.id],
     queryFn: () => personasApi.skills(initial.id),
     enabled: Boolean(initial?.id),
   });
 
   useEffect(() => {
-    if (initial?.id) {
-      setForm((actual) => ({ ...actual, skillLevels: nivelesIniciales }));
+    if (!initial?.id || !Array.isArray(nivelesIniciales)) {
+      return;
     }
+
+    setForm((actual) => {
+      const actuales = JSON.stringify(actual.skillLevels ?? []);
+      const nuevos = JSON.stringify(nivelesIniciales);
+
+      if (actuales === nuevos) {
+        return actual;
+      }
+
+      return {
+        ...actual,
+        skillLevels: nivelesIniciales,
+      };
+    });
   }, [initial?.id, nivelesIniciales]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const done = () => {
+  const done = (persona) => {
     qc.invalidateQueries({ queryKey: ["personas"] });
+    qc.invalidateQueries({ queryKey: ["curriculums"] });
     qc.invalidateQueries({ queryKey: ["skill-matrix"] });
     qc.invalidateQueries({ queryKey: ["skill-gaps"] });
+
+    if (persona?.id) {
+      qc.invalidateQueries({
+        queryKey: ["persona-skills", persona.id],
+      });
+    }
+
     onClose();
   };
+
+  const remove = useMutation({
+    mutationFn: () => personasApi.delete(initial.id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      qc.invalidateQueries({ queryKey: ["curriculums"] });
+      qc.invalidateQueries({ queryKey: ["skill-matrix"] });
+      qc.invalidateQueries({ queryKey: ["skill-gaps"] });
+      onClose();
+    },
+  });
 
   const save = useMutation({
     mutationFn: async () => {
       const { skillLevels, ...personFields } = form;
+      const ofertaSeleccionada = ofertasValor.find(
+        (oferta) => oferta.nombre === form.oferta_valor,
+      );
+
       const data = {
         ...personFields,
+        oferta_valor: form.oferta_valor || null,
+        responsable: form.oferta_valor
+          ? ofertaSeleccionada?.responsable?.nombre ||
+            form.responsable.trim() ||
+            null
+          : null,
         habilidades: skillLevels.map((item) => item.nombre),
         anos_experiencia:
           form.anos_experiencia !== "" ? Number(form.anos_experiencia) : null,
@@ -171,13 +193,23 @@ function PersonaForm({ initial, onClose }) {
     onSuccess: done,
   });
 
-  const busy = save.isPending;
-  const err = save.error;
+  const busy = save.isPending || remove.isPending;
+  const err = save.error || remove.error;
 
   const submit = (event) => {
     event.preventDefault();
     save.mutate();
   };
+
+  const ofertaActual = ofertasValor.find(
+    (oferta) => oferta.nombre === form.oferta_valor,
+  );
+
+  const ofertaActualExisteEnCatalogo = Boolean(ofertaActual);
+
+  const ofertasFormulario = ofertasValor.filter(
+    (oferta) => oferta.activa || oferta.nombre === form.oferta_valor,
+  );
 
   return (
     <form onSubmit={submit} className="space-y-4">
@@ -236,9 +268,9 @@ function PersonaForm({ initial, onClose }) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="form-label">Nivel de pirámide</label>
+          <label className="form-label">Segmento</label>
           <select
             className="input"
             value={form.nivel_piramide}
@@ -259,22 +291,58 @@ function PersonaForm({ initial, onClose }) {
             onChange={(e) => set("anos_experiencia", e.target.value)}
           />
         </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="form-label">Disponibilidad manual</label>
+          <label className="form-label">Oferta de Valor</label>
           <select
             className="input"
-            value={form.estado_laboral}
-            onChange={(e) => set("estado_laboral", e.target.value)}
+            value={form.oferta_valor}
+            onChange={(e) => {
+              const nombre = e.target.value;
+              const oferta = ofertasValor.find(
+                (item) => item.nombre === nombre,
+              );
+
+              setForm((actual) => ({
+                ...actual,
+                oferta_valor: nombre,
+                responsable: nombre
+                  ? oferta?.responsable?.nombre || actual.responsable
+                  : "",
+              }));
+            }}
           >
-            {ESTADOS_LABORALES.map((estado) => (
-              <option key={estado} value={estado}>
-                {estado}
+            <option value="">Sin asignar</option>
+
+            {!ofertaActualExisteEnCatalogo && form.oferta_valor && (
+              <option value={form.oferta_valor}>
+                {form.oferta_valor} (valor actual)
+              </option>
+            )}
+
+            {ofertasFormulario.map((oferta) => (
+              <option key={oferta.id} value={oferta.nombre}>
+                {oferta.nombre}
+                {!oferta.activa ? " (inactiva)" : ""}
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="form-label">Responsable de Oferta</label>
+          <input
+            className="input bg-slate-50"
+            value={
+              ofertaActual?.responsable?.nombre ||
+              form.responsable ||
+              "Sin responsable"
+            }
+            readOnly
+          />
           <p className="mt-1 text-[11px] text-gray-400">
-            “En proyecto” se calcula automáticamente según las asignaciones
-            activas.
+            Se administra desde “Gestionar ofertas de valor”.
           </p>
         </div>
       </div>
@@ -325,24 +393,359 @@ function PersonaForm({ initial, onClose }) {
         Disponible para mentoría
       </label>
       {err && <p className="text-xs text-red-500">Error: {err.message}</p>}
-      <div className="flex justify-end gap-2 pt-3 border-t border-gray-100">
-        <button type="button" onClick={onClose} className="btn-secondary">
-          Cancelar
-        </button>
-        <button type="submit" disabled={busy} className="btn-primary">
-          {busy
-            ? "Guardando..."
-            : initial
-              ? "Guardar cambios"
-              : "Crear persona"}
-        </button>
+      <div className="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+        <div>
+          {initial &&
+            (confirmingDelete ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-red-600">
+                  ¿Eliminar permanentemente?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => remove.mutate()}
+                  disabled={busy}
+                  className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                >
+                  {remove.isPending ? "Eliminando..." : "Sí"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingDelete(false)}
+                  disabled={busy}
+                  className="text-xs text-gray-500 hover:underline disabled:opacity-50"
+                >
+                  No
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmingDelete(true)}
+                disabled={busy}
+                className="text-xs font-medium text-red-500 hover:text-red-700 disabled:opacity-50"
+              >
+                Eliminar persona
+              </button>
+            ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className="btn-secondary"
+          >
+            Cancelar
+          </button>
+          <button type="submit" disabled={busy} className="btn-primary">
+            {save.isPending
+              ? "Guardando..."
+              : initial
+                ? "Guardar cambios"
+                : "Crear persona"}
+          </button>
+        </div>
       </div>
     </form>
   );
 }
 
+// ── Gestión de ofertas de valor ──────────────────────────────────────────────
+function OfertaValorForm({ initial, personas, onCancel, onSaved }) {
+  const qc = useQueryClient();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [form, setForm] = useState({
+    nombre: initial?.nombre ?? "",
+    responsable_persona_id: initial?.responsable_persona_id ?? "",
+    descripcion: initial?.descripcion ?? "",
+    activa: initial?.activa ?? true,
+  });
+
+  const set = (key, value) =>
+    setForm((actual) => ({ ...actual, [key]: value }));
+
+  const save = useMutation({
+    mutationFn: () => {
+      const payload = {
+        nombre: form.nombre.trim(),
+        responsable_persona_id: form.responsable_persona_id || null,
+        descripcion: form.descripcion.trim() || null,
+        activa: Boolean(form.activa),
+      };
+
+      return initial
+        ? ofertasValorApi.update(initial.id, payload)
+        : ofertasValorApi.create(payload);
+    },
+    onSuccess: (oferta) => {
+      qc.invalidateQueries({ queryKey: ["ofertas-valor"] });
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      onSaved(oferta);
+    },
+  });
+
+  const remove = useMutation({
+    mutationFn: () => ofertasValorApi.delete(initial.id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["ofertas-valor"] });
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      onSaved(null);
+    },
+  });
+
+  const error = save.error || remove.error;
+  const detalleError = error?.response?.data?.detail || error?.message || null;
+
+  const personasOrdenadas = [...personas].sort((a, b) =>
+    a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }),
+  );
+
+  const busy = save.isPending || remove.isPending;
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        save.mutate();
+      }}
+      className="space-y-5"
+    >
+      <div>
+        <label className="form-label">Nombre de la oferta *</label>
+        <input
+          required
+          className="input"
+          value={form.nombre}
+          onChange={(e) => set("nombre", e.target.value)}
+          placeholder="Ej: Mobile Platforms"
+        />
+      </div>
+
+      <div>
+        <label className="form-label">Responsable</label>
+        <select
+          className="input"
+          value={form.responsable_persona_id}
+          onChange={(e) => set("responsable_persona_id", e.target.value)}
+        >
+          <option value="">Sin responsable</option>
+          {personasOrdenadas.map((persona) => (
+            <option key={persona.id} value={persona.id}>
+              {persona.nombre}
+              {persona.rol ? ` — ${persona.rol}` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="form-label">Descripción</label>
+        <textarea
+          className="input min-h-[100px] resize-y"
+          value={form.descripcion}
+          onChange={(e) => set("descripcion", e.target.value)}
+          placeholder="Descripción opcional"
+        />
+      </div>
+
+      <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={form.activa}
+          onChange={(e) => set("activa", e.target.checked)}
+          className="rounded"
+        />
+        Oferta activa
+      </label>
+
+      {initial && initial.personas_count > 0 && (
+        <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-700">
+          Esta oferta tiene {initial.personas_count}{" "}
+          {initial.personas_count === 1
+            ? "persona asociada"
+            : "personas asociadas"}
+          . Puedes editarla o desactivarla, pero no eliminarla mientras tenga
+          personas.
+        </p>
+      )}
+
+      {detalleError && (
+        <p className="text-xs text-red-500">Error: {detalleError}</p>
+      )}
+
+      <div className="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+        <div>
+          {initial &&
+            initial.personas_count === 0 &&
+            (confirmingDelete ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-red-600">
+                  ¿Eliminar esta oferta?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => remove.mutate()}
+                  disabled={busy}
+                  className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                >
+                  {remove.isPending ? "Eliminando..." : "Sí"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingDelete(false)}
+                  disabled={busy}
+                  className="text-xs text-gray-500 hover:underline disabled:opacity-50"
+                >
+                  No
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmingDelete(true)}
+                disabled={busy}
+                className="text-xs font-medium text-red-500 hover:text-red-700 disabled:opacity-50"
+              >
+                Eliminar oferta
+              </button>
+            ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={busy}
+            className="btn-secondary"
+          >
+            Volver
+          </button>
+          <button
+            type="submit"
+            disabled={busy || !form.nombre.trim()}
+            className="btn-primary"
+          >
+            {save.isPending
+              ? "Guardando..."
+              : initial
+                ? "Guardar cambios"
+                : "Crear oferta"}
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
+function GestionOfertasPanel({ ofertas, personas, onClose }) {
+  const [editingOferta, setEditingOferta] = useState(null);
+  const [creatingOferta, setCreatingOferta] = useState(false);
+
+  const volverListado = () => {
+    setEditingOferta(null);
+    setCreatingOferta(false);
+  };
+
+  return (
+    <Panel title="Gestionar ofertas de valor" onClose={onClose}>
+      {editingOferta || creatingOferta ? (
+        <OfertaValorForm
+          initial={editingOferta}
+          personas={personas}
+          onCancel={volverListado}
+          onSaved={volverListado}
+        />
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">
+                Ofertas de valor
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                Administra las ofertas de valor y sus responsables.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setCreatingOferta(true)}
+              className="btn-primary !text-xs !py-2 shrink-0"
+            >
+              + Nueva oferta
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {ofertas.map((oferta) => (
+              <div
+                key={oferta.id}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-3"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-semibold text-slate-800">
+                        {oferta.nombre}
+                      </p>
+                      <span
+                        className={clsx(
+                          "badge",
+                          oferta.activa
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-slate-100 text-slate-500",
+                        )}
+                      >
+                        {oferta.activa ? "Activa" : "Inactiva"}
+                      </span>
+                    </div>
+
+                    <p className="mt-1 text-xs text-slate-500">
+                      <span className="font-semibold text-slate-600">
+                        Responsable:
+                      </span>{" "}
+                      {oferta.responsable?.nombre || "Sin responsable"}
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      {oferta.personas_count}{" "}
+                      {oferta.personas_count === 1 ? "persona" : "personas"}
+                    </p>
+
+                    {oferta.descripcion && (
+                      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                        {oferta.descripcion}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditingOferta(oferta)}
+                    className="btn-secondary !text-xs !py-1.5 shrink-0"
+                  >
+                    Editar
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {ofertas.length === 0 && (
+              <p className="py-8 text-center text-sm text-slate-400">
+                No hay ofertas configuradas todavía.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
 // ── Perfil completo ──────────────────────────────────────────────────────────
-function PersonaPanel({ persona, estadoVisible, onClose, onEdit }) {
+function PersonaPanel({ persona, onClose, onEdit }) {
   const qc = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const { data: skillsEvaluadas = [] } = useQuery({
@@ -379,15 +782,6 @@ function PersonaPanel({ persona, estadoVisible, onClose, onEdit }) {
                 className={clsx("badge", NIVEL_COLOR[persona.nivel_piramide])}
               >
                 {persona.nivel_piramide ?? "Sin clasificar"}
-              </span>
-              <span
-                className={clsx(
-                  "badge",
-                  ESTADO_LABORAL_COLOR[estadoVisible] ??
-                    "bg-slate-100 text-slate-700 border border-slate-200",
-                )}
-              >
-                {estadoVisible}
               </span>
               {persona.anos_experiencia && (
                 <span className="text-xs text-gray-400 font-medium">
@@ -428,7 +822,7 @@ function PersonaPanel({ persona, estadoVisible, onClose, onEdit }) {
 
         {skillsEvaluadas.length > 0 && (
           <div>
-            <p className="section-label mb-2">Skills evaluadas</p>
+            <p className="section-label mb-2">Capacidades evaluadas</p>
             <div className="space-y-1.5">
               {skillsEvaluadas.map((skill) => (
                 <div
@@ -667,7 +1061,7 @@ function PersonaCard({ persona, onClick }) {
         </div>
       </div>
 
-      {/* Categoría: fila propia, claramente legible */}
+      {/* Segmento: fila propia, claramente legible */}
       <div className="mt-3">
         <span
           className={clsx(
@@ -683,7 +1077,7 @@ function PersonaCard({ persona, onClick }) {
       {skills.length > 0 && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1.5">
-            Skills
+            Capacidades
           </p>
           <div className="flex flex-wrap gap-1.5">
             {skills.slice(0, 4).map((h) => (
@@ -714,45 +1108,88 @@ function PersonaCard({ persona, onClick }) {
 export default function Personas() {
   const [search, setSearch] = useState("");
   const [nivelFilter, setNivelFilter] = useState("");
-  const [estadoFilter, setEstadoFilter] = useState("");
+  const [ofertaFilter, setOfertaFilter] = useState("");
+  const [responsableFilter, setResponsableFilter] = useState("");
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [gestionandoOfertas, setGestionandoOfertas] = useState(false);
   const [vista, setVista] = useState("list");
+  const [cvDetalle, setCvDetalle] = useState(null);
+  const [cvEditando, setCvEditando] = useState(null);
+  const [descargandoPdfId, setDescargandoPdfId] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: personas = [], isLoading } = useQuery({
     queryKey: ["personas"],
     queryFn: () => personasApi.list(),
   });
 
-  const { data: asignaciones = [], isLoading: isLoadingAsignaciones } =
-    useQuery({
-      queryKey: ["asignaciones"],
-      queryFn: () => asignacionesApi.list(),
-    });
+  const { data: ofertasValor = [] } = useQuery({
+    queryKey: ["ofertas-valor"],
+    queryFn: () => ofertasValorApi.list(),
+  });
 
-  const personasEnProyecto = new Set(
-    asignaciones
-      .filter(esAsignacionVigente)
-      .map((asignacion) => asignacion.persona_id),
+  const ofertasActivas = ofertasValor.filter((oferta) => oferta.activa);
+
+  const ofertasPorNombre = new Map(
+    ofertasValor.map((oferta) => [oferta.nombre, oferta]),
   );
 
-  const estadoVisiblePorPersona = Object.fromEntries(
-    personas.map((persona) => [
-      persona.id,
-      obtenerEstadoVisible(persona, personasEnProyecto),
+  const { data: curriculums = [] } = useQuery({
+    queryKey: ["curriculums"],
+    queryFn: () => curriculumsApi.list(),
+  });
+
+  const curriculumPorPersona = new Map(
+    curriculums.map((curriculum) => [
+      String(curriculum.persona_id),
+      curriculum,
     ]),
   );
 
-  const resumenEstados = personas.reduce(
-    (acc, persona) => {
-      const estado = estadoVisiblePorPersona[persona.id] ?? "Disponible";
-      if (estado === "En proyecto") acc.enProyecto += 1;
-      else if (estado === "Staffing") acc.staffing += 1;
-      else if (estado === "Disponible") acc.disponibles += 1;
-      return acc;
-    },
-    { enProyecto: 0, disponibles: 0, staffing: 0 },
+  const descargarPdf = async (curriculum) => {
+    if (!curriculum || !tieneContenidoCurriculum(curriculum)) return;
+
+    try {
+      setDescargandoPdfId(curriculum.id);
+      const response = await curriculumsApi.downloadPdf(curriculum.persona_id);
+      const disposition = response.headers?.["content-disposition"] || "";
+      const coincidencia = disposition.match(/filename="?([^"]+)"?/i);
+      const nombrePersona = curriculum.persona?.nombre || "persona";
+      const nombreDefecto = `CV_${nombrePersona
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_|_$/g, "")}.pdf`;
+
+      const url = window.URL.createObjectURL(response.data);
+      const enlace = document.createElement("a");
+      enlace.href = url;
+      enlace.download = coincidencia?.[1] || nombreDefecto;
+      document.body.appendChild(enlace);
+      enlace.click();
+      enlace.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      const detalle =
+        error?.response?.data?.detail ||
+        error?.message ||
+        "No fue posible descargar el PDF.";
+      window.alert(detalle);
+    } finally {
+      setDescargandoPdfId(null);
+    }
+  };
+
+  const responsablesDisponibles = Array.from(
+    new Map(
+      ofertasValor
+        .filter((oferta) => oferta.responsable)
+        .map((oferta) => [oferta.responsable.id, oferta.responsable]),
+    ).values(),
+  ).sort((a, b) =>
+    a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }),
   );
 
   const filtered = personas.filter((p) => {
@@ -761,7 +1198,14 @@ export default function Personas() {
       .filter(Boolean);
 
     const contenidoPersona = normalizarTexto(
-      [p.nombre, p.rol, p.nivel_piramide, p.numero_empleado]
+      [
+        p.nombre,
+        p.rol,
+        p.nivel_piramide,
+        p.oferta_valor,
+        p.responsable,
+        p.numero_empleado,
+      ]
         .filter(Boolean)
         .join(" "),
     );
@@ -772,57 +1216,142 @@ export default function Personas() {
 
     const coincideCategoria = !nivelFilter || p.nivel_piramide === nivelFilter;
 
-    const coincideEstado =
-      !estadoFilter || estadoVisiblePorPersona[p.id] === estadoFilter;
+    const coincideOferta =
+      !ofertaFilter ||
+      (ofertaFilter === OFERTA_SIN_ASIGNAR
+        ? !p.oferta_valor
+        : p.oferta_valor === ofertaFilter);
 
-    return coincideBusqueda && coincideCategoria && coincideEstado;
+    const ofertaCatalogo = ofertasPorNombre.get(p.oferta_valor);
+
+    const coincideResponsable =
+      !responsableFilter ||
+      (responsableFilter === OFERTA_SIN_ASIGNAR
+        ? !ofertaCatalogo?.responsable
+        : ofertaCatalogo?.responsable?.id === responsableFilter);
+
+    return (
+      coincideBusqueda &&
+      coincideCategoria &&
+      coincideOferta &&
+      coincideResponsable
+    );
   });
+
+  const resumenOferta = (() => {
+    if (!ofertaFilter) {
+      return {
+        cantidad: personas.length,
+        etiqueta: "Todas las ofertas de valor",
+        responsables: [],
+      };
+    }
+
+    if (ofertaFilter === OFERTA_SIN_ASIGNAR) {
+      return {
+        cantidad: personas.filter((persona) => !persona.oferta_valor).length,
+        etiqueta: "Sin asignar",
+        responsables: [],
+      };
+    }
+
+    const personasOferta = personas.filter(
+      (persona) => persona.oferta_valor === ofertaFilter,
+    );
+
+    const ofertaCatalogo = ofertasPorNombre.get(ofertaFilter);
+
+    return {
+      cantidad: personasOferta.length,
+      etiqueta: ofertaFilter,
+      responsables: ofertaCatalogo?.responsable?.nombre
+        ? [ofertaCatalogo.responsable.nombre]
+        : [],
+    };
+  })();
 
   return (
     <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* Header */}
-      <div
-        className="p-8 text-white flex items-center justify-between gap-4"
-        style={{
-          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        }}
-      >
-        <div>
-          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-            Somos DX
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight">Equipo DX</h2>
-          <p className="text-sm text-white/60 mt-1 font-medium">
-            {personas.length} personas
-          </p>
+      <div className="relative min-h-[170px] overflow-hidden text-white">
+        {/* Banner */}
+        <img
+          src="/banner-personas.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "center" }}
+        />
+
+        {/* Overlay para mantener legibilidad sin ocultar la imagen */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,18,40,0.88) 0%, rgba(6,18,40,0.72) 24%, rgba(6,18,40,0.34) 50%, rgba(6,18,40,0.10) 72%, rgba(6,18,40,0.03) 100%)",
+          }}
+        />
+
+        {/* Profundidad inferior suave */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            boxShadow:
+              "inset 0 -1px 0 rgba(125,211,252,0.10), inset 0 -26px 42px rgba(6,18,40,0.08)",
+          }}
+        />
+
+        {/* Contenido */}
+        <div className="relative z-10 flex min-h-[170px] items-center justify-between gap-4 px-8 py-6">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/70">
+              Somos DX
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight">Equipo DX</h2>
+            <p className="mt-1 text-sm font-medium text-white/70">
+              {filtered.length} personas
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setGestionandoOfertas(true)}
+              className="btn-primary !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20"
+            >
+              Gestionar ofertas de valor
+            </button>
+
+            <button
+              onClick={() => setCreating(true)}
+              className="btn-primary shrink-0 shadow-[0_8px_24px_rgba(14,165,233,0.22)]"
+            >
+              + Nueva persona
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => setCreating(true)}
-          className="btn-primary shrink-0"
-        >
-          + Nueva persona
-        </button>
       </div>
 
       <div className="px-8 space-y-6">
-        {/* Filters + resumen */}
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_420px] gap-5 items-start">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 flex-wrap">
+        {/* Filtros y resumen de oferta */}
+        <div className="space-y-3">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-[300px_190px_270px_220px]">
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar por nombre o rol..."
-                className="input max-w-xs"
+                placeholder="Buscar por nombre o N° de empleado.... "
+                className="input w-full"
               />
 
               <select
                 value={nivelFilter}
                 onChange={(e) => setNivelFilter(e.target.value)}
-                className="input w-44"
+                className="input w-full"
               >
-                <option value="">Todas las categorías</option>
-
+                <option value="">Todos los segmentos</option>
                 {CATEGORIAS_NIVEL.map((categoria) => (
                   <option key={categoria} value={categoria}>
                     {categoria}
@@ -831,91 +1360,102 @@ export default function Personas() {
               </select>
 
               <select
-                value={estadoFilter}
-                onChange={(e) => setEstadoFilter(e.target.value)}
-                className="input w-44"
+                value={ofertaFilter}
+                onChange={(e) => setOfertaFilter(e.target.value)}
+                className="input w-full"
+                title="Filtrar por oferta de valor"
               >
-                <option value="">Todos los estados</option>
-                {ESTADOS_VISIBLES.map((estado) => (
-                  <option key={estado} value={estado}>
-                    {estado}
+                <option value="">Todas las ofertas de valor</option>
+                {ofertasActivas.map((oferta) => (
+                  <option key={oferta.id} value={oferta.nombre}>
+                    {oferta.nombre}
                   </option>
                 ))}
+                <option value={OFERTA_SIN_ASIGNAR}>Sin asignar</option>
+              </select>
+
+              <select
+                value={responsableFilter}
+                onChange={(e) => setResponsableFilter(e.target.value)}
+                className="input w-full"
+                title="Filtrar por responsable de oferta"
+              >
+                <option value="">Todos los responsables</option>
+                {responsablesDisponibles.map((responsable) => (
+                  <option key={responsable.id} value={responsable.id}>
+                    {responsable.nombre}
+                  </option>
+                ))}
+                <option value={OFERTA_SIN_ASIGNAR}>Sin asignar</option>
               </select>
             </div>
 
-            <p className="text-[11px] text-gray-400">
-              “En proyecto” se determina automáticamente por asignaciones
-              activas y vigentes.
-            </p>
-
-            <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white w-fit">
-              <button
-                type="button"
-                onClick={() => setVista("list")}
-                className={clsx(
-                  "px-3 py-2 text-xs font-semibold transition-colors",
-                  vista === "list"
-                    ? "bg-brand-500 text-white"
-                    : "text-gray-500 hover:bg-gray-50",
-                )}
+            <div className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm xl:w-[270px] xl:shrink-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Resumen de oferta
+              </p>
+              <div className="mt-2 flex items-end gap-2">
+                <span className="text-3xl font-bold leading-none text-slate-900">
+                  {resumenOferta.cantidad}
+                </span>
+                <span className="pb-0.5 text-sm font-semibold text-slate-500">
+                  {resumenOferta.cantidad === 1 ? "persona" : "personas"}
+                </span>
+              </div>
+              <p
+                className="mt-2 truncate text-sm font-medium text-slate-600"
+                title={resumenOferta.etiqueta}
               >
-                Lista
-              </button>
+                {resumenOferta.etiqueta}
+              </p>
 
-              <button
-                type="button"
-                onClick={() => setVista("cards")}
-                className={clsx(
-                  "px-3 py-2 text-xs font-semibold transition-colors",
-                  vista === "cards"
-                    ? "bg-brand-500 text-white"
-                    : "text-gray-500 hover:bg-gray-50",
-                )}
-              >
-                Tarjetas
-              </button>
+              {resumenOferta.responsables.length > 0 && (
+                <p
+                  className="mt-1 text-xs text-slate-500"
+                  title={resumenOferta.responsables.join(", ")}
+                >
+                  <span className="font-semibold text-slate-600">
+                    {resumenOferta.responsables.length === 1
+                      ? "Responsable:"
+                      : "Responsables:"}
+                  </span>{" "}
+                  {resumenOferta.responsables.join(", ")}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-300 bg-slate-200/70 p-5 shadow-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Resumen de estado
-            </p>
+          <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white w-fit">
+            <button
+              type="button"
+              onClick={() => setVista("list")}
+              className={clsx(
+                "px-3 py-2 text-xs font-semibold transition-colors",
+                vista === "list"
+                  ? "bg-brand-500 text-white"
+                  : "text-gray-500 hover:bg-gray-50",
+              )}
+            >
+              Lista
+            </button>
 
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="rounded-xl bg-white/70 border border-slate-200 px-4 py-3">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                  En proyecto
-                </p>
-                <p className="mt-2 text-2xl font-bold text-slate-800">
-                  {resumenEstados.enProyecto}
-                </p>
-              </div>
-
-              <div className="rounded-xl bg-white/70 border border-teal-200 px-4 py-3">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-700">
-                  Disponibles
-                </p>
-                <p className="mt-2 text-2xl font-bold text-teal-700">
-                  {resumenEstados.disponibles}
-                </p>
-              </div>
-
-              <div className="rounded-xl bg-white/70 border border-amber-200 px-4 py-3">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700">
-                  Staffing
-                </p>
-                <p className="mt-2 text-2xl font-bold text-amber-700">
-                  {resumenEstados.staffing}
-                </p>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setVista("cards")}
+              className={clsx(
+                "px-3 py-2 text-xs font-semibold transition-colors",
+                vista === "cards"
+                  ? "bg-brand-500 text-white"
+                  : "text-gray-500 hover:bg-gray-50",
+              )}
+            >
+              Tarjetas
+            </button>
           </div>
         </div>
 
         {/* Vista de tarjetas o lista */}
-        {isLoading || isLoadingAsignaciones ? (
+        {isLoading ? (
           <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
         ) : vista === "cards" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -940,11 +1480,18 @@ export default function Personas() {
                 <tr className="text-left text-xs uppercase tracking-wider text-gray-400">
                   <th className="px-4 py-3">Persona</th>
                   <th className="px-4 py-3">Rol</th>
-                  <th className="px-4 py-3">Categoría</th>
+                  <th className="px-4 py-3">Segmento</th>
+                  <th className="px-4 py-3">Oferta de Valor</th>
                   <th className="px-4 py-3">N° empleado</th>
                   <th className="px-4 py-3">Fecha de ingreso</th>
                   <th className="px-4 py-3">Años de experiencia</th>
-                  <th className="px-4 py-3">Estado</th>
+                  <th className="px-4 py-3 text-center">CV</th>
+                  <th
+                    className="px-4 py-3 w-16 text-center"
+                    aria-label="Acciones"
+                  >
+                    <span className="sr-only">Acciones</span>
+                  </th>
                 </tr>
               </thead>
 
@@ -952,8 +1499,9 @@ export default function Personas() {
                 {filtered.map((p) => (
                   <tr
                     key={p.id}
-                    onClick={() => setSelected(p)}
+                    onClick={() => setEditing(p)}
                     className="border-t border-gray-100 hover:bg-brand-50/30 cursor-pointer"
+                    title={`Editar a ${p.nombre}`}
                   >
                     <td className="px-4 py-3 font-semibold text-gray-900">
                       {p.nombre}
@@ -974,6 +1522,10 @@ export default function Personas() {
                     </td>
 
                     <td className="px-4 py-3 text-gray-500">
+                      {p.oferta_valor || "Sin asignar"}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-500">
                       {p.numero_empleado || "—"}
                     </td>
 
@@ -985,16 +1537,49 @@ export default function Personas() {
                       {p.anos_experiencia ?? "—"}
                     </td>
 
-                    <td className="px-4 py-3">
-                      <span
-                        className={clsx(
-                          "badge",
-                          ESTADO_LABORAL_COLOR[estadoVisiblePorPersona[p.id]] ??
-                            "bg-slate-100 text-slate-700 border border-slate-200",
-                        )}
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          const curriculum = curriculumPorPersona.get(
+                            String(p.id),
+                          );
+                          if (curriculum) setCvDetalle(curriculum);
+                        }}
+                        disabled={!curriculumPorPersona.has(String(p.id))}
+                        className="text-xs font-semibold text-brand-600 hover:text-brand-800 hover:underline disabled:cursor-not-allowed disabled:text-gray-300 disabled:no-underline"
+                        title={`Ver currículum de ${p.nombre}`}
                       >
-                        {estadoVisiblePorPersona[p.id]}
-                      </span>
+                        Ver CV
+                      </button>
+                    </td>
+
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setEditing(p);
+                        }}
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+                        title={`Editar a ${p.nombre}`}
+                        aria-label={`Editar a ${p.nombre}`}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-4 w-4"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 20h9" />
+                          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -1002,7 +1587,7 @@ export default function Personas() {
                 {filtered.length === 0 && (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={10}
                       className="px-4 py-8 text-center text-gray-400"
                     >
                       Sin resultados.
@@ -1014,10 +1599,49 @@ export default function Personas() {
           </div>
         )}
 
-        {selected && !editing && (
+        {gestionandoOfertas && (
+          <GestionOfertasPanel
+            ofertas={ofertasValor}
+            personas={personas}
+            onClose={() => setGestionandoOfertas(false)}
+          />
+        )}
+
+        {cvDetalle && !cvEditando && (
+          <DetalleCurriculum
+            curriculum={cvDetalle}
+            onClose={() => setCvDetalle(null)}
+            onEdit={() => {
+              setCvEditando(cvDetalle);
+              setCvDetalle(null);
+            }}
+            onDownload={() => descargarPdf(cvDetalle)}
+            downloading={descargandoPdfId === cvDetalle.id}
+            centered
+          />
+        )}
+
+        {cvEditando && (
+          <EditorCurriculum
+            curriculum={cvEditando}
+            onClose={() => setCvEditando(null)}
+            centered
+            onSaved={(actualizado) => {
+              queryClient.setQueryData(["curriculums"], (actuales = []) =>
+                actuales.map((item) =>
+                  item.id === actualizado.id ? actualizado : item,
+                ),
+              );
+              queryClient.invalidateQueries({ queryKey: ["curriculums"] });
+              setCvEditando(null);
+              setCvDetalle(actualizado);
+            }}
+          />
+        )}
+
+        {selected && !editing && !cvDetalle && !cvEditando && (
           <PersonaPanel
             persona={selected}
-            estadoVisible={estadoVisiblePorPersona[selected.id] ?? "Disponible"}
             onClose={() => setSelected(null)}
             onEdit={() => {
               setEditing(selected);
@@ -1036,6 +1660,7 @@ export default function Personas() {
           >
             <PersonaForm
               initial={editing ?? null}
+              ofertasValor={ofertasValor}
               onClose={() => {
                 setCreating(false);
                 setEditing(null);

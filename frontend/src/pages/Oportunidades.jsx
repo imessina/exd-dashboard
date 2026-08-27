@@ -69,7 +69,7 @@ function MatchPanel({ oportunidad, onClose }) {
               </div>
               <div className="text-right">
                 <p className="text-xs font-bold text-brand-600">
-                  {m.match_score}/{m.max_score} skills
+                  {m.match_score}/{m.max_score} capacidades
                 </p>
                 <div className="flex gap-1 mt-1 justify-end flex-wrap">
                   {m.habilidades?.slice(0, 2).map((h) => (

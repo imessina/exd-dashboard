@@ -1,0 +1,76 @@
+{
+  "persona_id": "emp-217777",
+  "persona_nombre": "Camila Andrea Bravo Navea",
+  "archivo": "CamilaBravoNavea_CROanalyst_20261111.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 16,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Camila Bravo Navea \nAnalyst en NTT DATA"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Experiencia Seleccionadas\n\nAnalyst | Transbank - Equipo Marketing Digital (04/2026 – 07/2026)\nAnalista de Marketing Digital en Transbank, responsable del marcaje y la medición del Portal Privado y sus distintas divisiones, asegurando la correcta implementación de analítica digital para generar información confiable que apoye la toma de decisiones.\nGuías de marcaje y su correcta implementación.\nCreación de dashboard de distintos productos.\n\nAnalyst | Transbank - Productos no presenciales (02/2022 – 01/2026)\nAnalista CRO en Transbank, responsable del monitoreo y análisis del desempeño de productos digitales, identificando oportunidades de optimización para mejorar la conversión y la experiencia de usuario mediante análisis de datos.\nMarcaje de Plataforma web. \nAdministración de herramientas de análisis (Google Analytics y Tag manager, entre otros)\nCreación de diferentes dashboards según la necesidad de cliente. \n\nAnálista digital – Agencia de publicidad | Abastible, Renault, Super Pollo, Carozzi, Coopeuch, Confuturo, Skechers, BYD, Fantasilandia, Citroën, entre otros. (01/2016 - 02/2022) \nCreación de reportes o dashboards mensuales de las marca, con datos especificos de campañas.\nPresentación mensual de resultados y propuestas a cliente. \nMétricas de campañas en RRSS y Mailing.\nCreación de anuncios y campañas digitales en RRSS."
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de Especialización\nCRO\nAnálisis de datos\nCreación de dashboards\nEstrategías de medición digital\n\nEstudios y Posgrados\nPublicista y comunicadora integral Universidad Autonoma de Chile\n\nLicenciada en Comunicaciones Universidad Autonoma de Chile"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Clientes Asesorados​"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Herramientas ​"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Google Tag Manager"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Google Analytics"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Looker \nstudio"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Análisis de datos"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Excel\nPower point\nFacebook Analytics /Business"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Trello"
+    }
+  ]
+}

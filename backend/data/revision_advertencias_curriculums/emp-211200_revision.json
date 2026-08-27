@@ -1,0 +1,120 @@
+{
+  "persona_id": "emp-211200",
+  "persona_nombre": "Francisco Jose Gonzalez Rodriguez",
+  "archivo": "FranciscoGonzalezRodriguez_ExperienceOptimization_20263006.pptx",
+  "advertencias": [
+    "No se detectaron áreas de especialización."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 27,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Overview\nCon más de 10 años de experiencia integrando desarrollo de software, marketing digital y análisis de datos, actualmente enfocado en el diseño e implementación de arquitecturas de Customer Journey Analytics y automatización de marketing sobre Adobe Experience Cloud. Combina competencias consultivas con capacidad técnica para llevar iniciativas end-to-end: desde el levantamiento de casos de uso, la validación de datos y la construcción del modelo analítico, hasta la orquestación de journeys y la generación de dashboards operativos para equipos de negocio.\n\nTrayectoria en clientes de banca, telecomunicaciones y transporte aéreo, con foco reciente en Adobe Experience Platform, Adobe Customer Journey Analytics, Real-Time CDP, Databricks y SQL.\n\nExperiencia Seleccionadas\nBANCA | Santander – Senior MarTech & Customer Journey Analytics Consultant (02/2026 – actual) \nConsultor senior integrado a la célula de datos de Growth del Banco Santander. Aporte técnico-funcional en la migración de journeys de Salesforce Marketing Cloud hacia Adobe Journey Optimizer y en la construcción del modelo de reporting operativo sobre Customer Journey Analytics. Desarrollando las siguientes actividades:\n\nDiseño y construcción de dashboards operativos y ejecutivos en Adobe CJA sobre líneas de negocio críticas: banner de personas en OneApp, monetización Growth, seguros Zurich Santander, contact center y bienvenida.\nImplementación de la capa de medición y optimización de journeys sobre Adobe CJA como parte de la migración corporativa hacia el ecosistema Adobe.\nRol de puente técnico-funcional entre el equipo corporativo del banco (responsable del modelo de datos) y los equipos locales de negocio que consumen los dashboards.\nIdentificación y escalamiento de gaps estructurales del modelo de datos para atribución cruzada entre ofertas y eventos; propuesta de solución adoptada como camino oficial por el corporativo.\nDiseño y construcción de dashboards productivos para medición de performance de journeys, análisis de funnel digital por producto, retención por camada y atribución de derivaciones a canales asistidos.\nValidación de paridad de datos entre fuentes legacy y el nuevo ecosistema Adobe durante la transición, asegurando confiabilidad de las métricas de negocio.\nImplementación de sistemas de alertas tempranas con detección de anomalía estadística sobre canales de derivación, con notificación automática a los responsables de cada journey.\nLevantamiento de paneles analíticos para nuevas líneas de negocio que ingresan al ecosistema Adobe, incluyendo la línea de seguros del banco."
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Otras Experiencias \nTELCO | Telefónica – CRO & Data Analyst (06/2025 – 01/2026) \nApoyo en la consolidación de datos multi-fuente (Excel, SQL Server, Google Analytics y bases de leads) en dashboards únicos sobre Power BI y Looker Studio para el seguimiento comercial. Análisis del rendimiento del funnel con propuestas de optimización por etapa, coordinación transversal con Marketing, Ventas y Tecnología. Durante el proyecto se desarrollaron las siguientes actividades:\nAsegurar la trazabilidad end-to-end del funnel digital B2B y cerrar brechas entre fuentes de datos.\nConsolidar información desde Excel, SQL Server, Google Analytics y Bases de leads en un dashboard único en Power BI.\nAnalizar el rendimiento del funnel y proponer acciones para optimizar la conversión en cada etapa.\nCoordinar la integración de datos con Marketing, Ventas y Tecnología.\nGenerar insights accionables sobre comportamiento de usuarios y eficiencia de canales.\nPromover e implementar metodologías ágiles de experimentación y mejora continua en los distintos equipos. \nAdministrar dashboards en Looker Studio para el seguimiento de KPIs y campañas digitales.\nSupervisar la calidad de datos a lo largo del funnel de ventas.\nBANCA | Transbank – Growth Hacking Developer (04/2022 – 10/2024) \nDesarrollo y ejecución de experimentos estratégicos enfocados en impactar los principales KPI, optimizando cada etapa del funnel para acelerar la adopción de los distintos productos. Durante el proyecto se desarrollaron las siguientes actividades: \nFormular hipótesis y diseñar métodos de experimentación para incrementar la captación de prospectos calificados en los diferentes canales.\nEstablecer las líneas estratégicas de promoción e impulso para la venta de los distintos productos a través de los canales digitales. \nAnalizar el funnel de conversión y desarrollar estrategias para maximizar los resultados en cada etapa. \nObtener Insights de los usuarios y proponer mejoras a los productos a partir de estos. \nAutomatizar procesos de Marketing para recopilar, depurar y centralizar la información de leads desde campañas en los distintos canales."
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Análisis de Datos"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Figma"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "React Native"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "Google Analytics"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Power BI"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Suite Office\nSuite Google\nGoogle Marketing Plataform"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "Trello"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "VWO"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Google Tag Manager"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "Javascript"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Phyton"
+    },
+    {
+      "diapositiva_o_bloque": 21,
+      "texto": "Firebase"
+    },
+    {
+      "diapositiva_o_bloque": 22,
+      "texto": "TensorFlow"
+    },
+    {
+      "diapositiva_o_bloque": 23,
+      "texto": "Zapier"
+    },
+    {
+      "diapositiva_o_bloque": 24,
+      "texto": "React Leaflet"
+    },
+    {
+      "diapositiva_o_bloque": 25,
+      "texto": "Plotly"
+    },
+    {
+      "diapositiva_o_bloque": 26,
+      "texto": "Databricks"
+    },
+    {
+      "diapositiva_o_bloque": 27,
+      "texto": "SQL"
+    }
+  ]
+}

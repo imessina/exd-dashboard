@@ -1,0 +1,21 @@
+{
+  "persona_id": "emp-172962",
+  "persona_nombre": "Luis Flores Zamorano",
+  "archivo": "LuisFloresZamorano_DX_20251002.pptx",
+  "advertencias": [
+    "No se detectaron áreas de especialización.",
+    "El PPTX fue recuperado mediante lectura XML."
+  ],
+  "metodo_lectura": "xml-recuperado",
+  "cantidad_bloques": 2,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Luis Felipe Alberto Flores Zamorano\nOverview\n6 \nAños\n de \nexperiencia\ncomo\ndesarrollador\n web de sitios con \ntecnologia\n FE/CMS AEM, totems de \nautoconsulta\n, \nconfiguración\n de \nservidores\n, \nasi\ncomo\nintegración\n con \nmicroservicos\n. \nTecnologias de \nuso\ndiario\n: SO Linux, JS, CSS, HTML, JAVA, React, Bash, Apache, Apache Sling, \nademas\n de \nuso\nocacional\n de Python, bash script, curl, ssh. \nConocimiento\nen\n .SH .BAT, C/C++, SQL, PLSQL, GLSL, \nGDScript\n, HTL, PHP, etc. Las \nherramientas\nprincipales\nque\nmanejo\n son Postman, Suite Office, Confluence, Jira, Git, Bitbucket, SoapUI, Vim, CRX, VSC, Blender, FileZilla, Godot Engine 4+, Google \nColab\n, entre \notras\n.\nExperiencia \nSeleccionadas\nDX| Latam Airlines– Developer (02/2019 – 12/2021) \nDesarrollo \nen\n AEM\nDesarrollo de \ncomponentes\nen\n AEM\nMigracion\n de \ncomponentes\nMantención\n de CMS\nGestion \nherramientas\n de \nDevOp\nMantención\n de \nservidor\naem\nDX | \nTransbank\n– Developer (12/2021 – 03/22) \nDesarrollo Back End \nen\ntecnologia\n de Java y spring boot\ndesarrollo\n de BE \nen\n Java \nMantención\n de \nfuncionalidades\nÁreas\n de \nEspecialización\nDesarrollo Web Full Stack\nCMS Adobe Experience Manager\nEstudios\n y \nPosgrados\nAnalista\nProgramador\n de Nivel Superior\nCertificación\n Adobe Experience Manager Sites Developer Expert"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Herramientas\nTecnologías\nColaborativas\nOtras\nherramientas\nClientes\nAsesorados\nJira\nConfluence\nLuis Felipe Alberto Flores Zamorano\nÁreas\n de \nEspecialización\nDesarrollo Web Full Stack\nCMS Adobe Experience Manager\nEstudios\n y \nPosgrados\nAnalista\nProgramador\n de Nivel Superior\nCertificación\n Adobe Experience Manager Sites Developer Expert\nFoto \nperfil\nBitBucket\nPostman\nSuite Office\nSuite Google\nVim\nCRX\nGoogle \ncolab\nVSC\nCursor\nSplunk\nBlender\nKrita\nSoapUI\nFileZilla\nSublimeMerge\nDX| Enel – Engineer (03/2022 – Present) \nDesarrollo \nen\n AEM y React para Enel Chile, Colombia y Peru (Latam).\nDesarrollo y \nmantención\n de \ncomponentes\n de AEM\nIntegracion de \nservicios\nMantención\n de ambientes, Author, Publisher, Dispatcher (Apache) \nEstimaciones\n, \ndiagramas\n, etc \ngeneracion\n de \nartefactos\nMantención\n y \ndesarrollo\n de \naplicativo\n para totems de \nautoservicio\nCapacitaciones\nen\n AEM a \nnuevos\nintegrantes"
+    }
+  ]
+}

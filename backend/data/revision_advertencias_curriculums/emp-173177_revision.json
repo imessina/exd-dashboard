@@ -1,0 +1,58 @@
+{
+  "persona_id": "emp-173177",
+  "persona_nombre": "Pablo Ariel Godoy Espinoza",
+  "archivo": "Pablo Godoy_20260708.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional.",
+    "No se detectaron experiencias.",
+    "No se detectaron áreas de especialización."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 11,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Informatico con más de 15 Años de experiencia. Como Lead Engineer en NTT DATA Europe & LATAM, aporto más de 7 años de experiencia liderando el diseño técnico e integración de soluciones en la nube, con un enfoque en experiencias conversacionales impulsadas por inteligencia artificial. Mi trabajo se centra en la implementación de arquitecturas escalables y seguras que combinan procesamiento de lenguaje natural (NLP/NLU) y modelos de lenguaje (LLM), transformando la interacción con usuarios en canales digitales y de voz. \nMi misión es habilitar tecnologías innovadoras que optimicen la experiencia del cliente y cumplan con las expectativas del mercado, apoyándome en habilidades como desarrollo ágil de aplicaciones, inteligencia artificial y Arquitectura Cloud. (AWS, AZURE, GCP)"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Banca | Transbank– Lead Engineer, Arquitecto​\nBanca | Banco ITAU – Lead Engineer, Arquitecto​\nBanca | Banco Chile– Lead Engineer, Arquitecto​\nRetail | Alkosto Colombia - Lead Engineer, Arquitecto​\nMarketing | Indicar USA- Lead Engineer, Arquitecto​\nBanca | Transbank– Lead Engineer, Arquitecto ​\nBanca| Santander Mexico– Lead Engineer ​\nTelecomunicaciones | WOM– Lead Enginner ​\nEnergía | Avangrid USA – Lead Enginner ​\nTelecomunicaciones | Entel Empresas – Lead Enginner\nTelecomunicaciones | Telefonica – Mobile Enginner\nGobierno de chile | Mininsterio de Bienes Nacionales\nSalud | BUPA - Enginner\nBanca | Santander Chile - Enginner"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Cloud: Azure, AWS, GCP\nTecnologias: Python, Javascript, Node, PHP, C#, Java, Typescript\nBBDD: OracleDB, SQL Server, Mongo, Redis, DynamoDB BigQuery\nCICD: Jenkins, Git, GitHub, Argo, Kubernetes\nIA :AWS Bedrock, Agentcore – Novasonic - Google Gemini, Azure AI, OpenAI, NLP-NLU-LLM"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de conocimiento"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Resumen"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "EXPERIENCIA PROFESIONAL"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "CLIENTES ASESORADOS"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Pablo Ariel Godoy Espinoza\n\nLead Engineer"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Estudios​:\nIngeniero Informático \nAnalista de Sistemas\nProgramador Informático\n\nCertificaciones:\nGoogle Cloud Certified Associate Cloud Engineer"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "FORMACIÓN"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Clínica Bupa (Chile)\nBanco ITAU (Chile)\nBanco Chiile (Chile)\nBanco Santander (Chile)\nBanco Santander (Mexico)\nMinisterio de Bienes Nacionales (Chile) \nAvangrid (USA)\nIndicar (USA)\nEntel (Chile)\nMovvistar (Chile)\nWOM (Chile)\nTransbanlk (Chile)\nAlkosto (Colombia)"
+    }
+  ]
+}

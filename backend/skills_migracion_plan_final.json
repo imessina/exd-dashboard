@@ -1,0 +1,6104 @@
+{
+  "source": {
+    "archivo": "Skills(3).xlsx",
+    "hoja": "Nuevas Categorias"
+  },
+  "mode": "DRY_RUN_PLAN_FINAL_V2",
+  "rules": {
+    "replace_all_categories": true,
+    "replace_all_skills": true,
+    "replace_skills_for_listed_people": true,
+    "preserve_people_not_in_excel": false,
+    "people_not_in_excel_note": "Las personas se conservan, pero sus skills actuales pueden desaparecer al reemplazar el catálogo completo. No se modifican otros datos.",
+    "canonical_corrections": [
+      {
+        "origen": ["AWS", "IAM"],
+        "destino": ["AWS", "AWS IAM"]
+      },
+      {
+        "origen": ["Google Cloud", "IAM"],
+        "destino": ["Google Cloud", "GCP IAM"]
+      },
+      {
+        "origen": ["Bases de Datos", "DynamoDB"],
+        "destino": ["AWS", "DynamoDB"]
+      },
+      {
+        "origen": ["Google Cloud", "API Gateway"],
+        "destino": ["AWS", "API Gateway"]
+      },
+      {
+        "origen": ["IA & GenAI", "Dialogflow CX"],
+        "destino": ["Google Cloud", "Dialogflow CX"]
+      },
+      {
+        "origen": ["Azure", "Cosmos DB"],
+        "destino": ["Bases de Datos", "Cosmos DB"]
+      },
+      {
+        "origen": ["Desarrollo", "Kotlin"],
+        "destino": ["Mobile", "Kotlin"]
+      },
+      {
+        "origen": ["Desarrollo", "Swift"],
+        "destino": ["Mobile", "Swift"]
+      }
+    ]
+  },
+  "summary": {
+    "personas": 22,
+    "categorias": 19,
+    "skills_canonicas": 344,
+    "asignaciones": 769,
+    "conflictos_nivel": 0
+  },
+  "person_map": {
+    "Americo Narea D": {
+      "id": "emp-291244",
+      "nombre": "Americo Gonzalo Narea Donoso"
+    },
+    "Daniel Bravo F": {
+      "id": "emp-133135",
+      "nombre": "Daniel Marcelo Bravo Flores"
+    },
+    "Pablo Godoy E": {
+      "id": "emp-173177",
+      "nombre": "Pablo Ariel Godoy Espinoza"
+    },
+    "Claudia Martínez S": {
+      "id": "emp-182058",
+      "nombre": "Claudia Andrea Martinez Sepulveda"
+    },
+    "Yesnia Perez O": {
+      "id": "emp-191476",
+      "nombre": "Yesnia Araceli Perez Ojeda"
+    },
+    "Rebecca Tapia U": {
+      "id": "emp-295869",
+      "nombre": "Rebecca Eloisa Tapia Urbina"
+    },
+    "Samuel Collante M": {
+      "id": "emp-247947",
+      "nombre": "Samuel Francisco Collante Meza"
+    },
+    "Ignacio Messina L": {
+      "id": "emp-284351",
+      "nombre": "Ignacio Alonso Messina Luna"
+    },
+    "Sebastian Muńoz Z": {
+      "id": "emp-284350",
+      "nombre": "Sebastian Alonso Muñoz Zamora"
+    },
+    "Scarlette Villarreal A": {
+      "id": "emp-200559",
+      "nombre": "Scarlette Aracely Villarreal Avila"
+    },
+    "Carolina Muńoz P": {
+      "id": "emp-293412",
+      "nombre": "Carolina Paz Muñoz Peñafiel"
+    },
+    "Camila Bravo N": {
+      "id": "emp-217777",
+      "nombre": "Camila Andrea Bravo Navea"
+    },
+    "Francisco Fuentes O": {
+      "id": "emp-195910",
+      "nombre": "Francisco Javier Fuentes Ortega"
+    },
+    "Aracelis Vivanco M": {
+      "id": "emp-264521",
+      "nombre": "Aracelis Alejandra Vivanco Muñoz"
+    },
+    "Vicente Rodriguez S": {
+      "id": "emp-245078",
+      "nombre": "Vicente Rodriguez Santa Maria"
+    },
+    "Pablo Jofre J": {
+      "id": "emp-284355",
+      "nombre": "Pablo Sebastian Jofre Jara"
+    },
+    "Isidora Perez A": {
+      "id": "emp-297742",
+      "nombre": "Isidora Perez Apparcel"
+    },
+    "Luciano Gomez S": {
+      "id": "emp-215536",
+      "nombre": "Luciano Enrique Gomez Sanchez"
+    },
+    "Carolina Varela B": {
+      "id": "emp-188930",
+      "nombre": "Carolina Andrea Varela Bobadilla"
+    },
+    "Jaime Castillo N": {
+      "id": "emp-203157",
+      "nombre": "Jaime Rodrigo Castillo Navarro"
+    },
+    "John Calderon V": {
+      "id": "emp-294922",
+      "nombre": "John Fernando Calderon Vera"
+    },
+    "Lysset Hernandez H": {
+      "id": "emp-267365",
+      "nombre": "Lysset Alejandra Hernandez Hinojosa"
+    }
+  },
+  "categories": [
+    "Analytics",
+    "Arquitectura",
+    "AWS",
+    "Azure",
+    "Backend",
+    "Bases de Datos",
+    "Ciberseguridad",
+    "Data Engineering",
+    "Delivery",
+    "Desarrollo",
+    "DevOps",
+    "Frontend",
+    "Google Cloud",
+    "IA & GenAI",
+    "Idioma",
+    "Marketing & Creative",
+    "Mobile",
+    "QA & Testing",
+    "UX / UI"
+  ],
+  "skills": [
+    {
+      "id": "adobe-analytics",
+      "nombre": "Adobe Analytics",
+      "categoria": "Analytics",
+      "filas_origen": [286]
+    },
+    {
+      "id": "amazon-quicksight",
+      "nombre": "Amazon QuickSight",
+      "categoria": "Analytics",
+      "filas_origen": [50]
+    },
+    {
+      "id": "amplitude",
+      "nombre": "Amplitude",
+      "categoria": "Analytics",
+      "filas_origen": [288]
+    },
+    {
+      "id": "apache-superset",
+      "nombre": "Apache Superset",
+      "categoria": "Analytics",
+      "filas_origen": [280]
+    },
+    {
+      "id": "dashboards",
+      "nombre": "Dashboards",
+      "categoria": "Analytics",
+      "filas_origen": [80]
+    },
+    {
+      "id": "data-visualization",
+      "nombre": "Data Visualization",
+      "categoria": "Analytics",
+      "filas_origen": [100]
+    },
+    {
+      "id": "fullstory",
+      "nombre": "FullStory",
+      "categoria": "Analytics",
+      "filas_origen": [290]
+    },
+    {
+      "id": "google-analytics",
+      "nombre": "Google Analytics",
+      "categoria": "Analytics",
+      "filas_origen": [141]
+    },
+    {
+      "id": "google-tag-manager",
+      "nombre": "Google Tag Manager",
+      "categoria": "Analytics",
+      "filas_origen": [285]
+    },
+    {
+      "id": "hotjar",
+      "nombre": "Hotjar",
+      "categoria": "Analytics",
+      "filas_origen": [289]
+    },
+    {
+      "id": "kpis",
+      "nombre": "KPIs",
+      "categoria": "Analytics",
+      "filas_origen": [195]
+    },
+    {
+      "id": "looker-studio",
+      "nombre": "Looker Studio",
+      "categoria": "Analytics",
+      "filas_origen": [209]
+    },
+    {
+      "id": "metabase",
+      "nombre": "Metabase",
+      "categoria": "Analytics",
+      "filas_origen": [279]
+    },
+    {
+      "id": "mixpanel",
+      "nombre": "Mixpanel",
+      "categoria": "Analytics",
+      "filas_origen": [287]
+    },
+    {
+      "id": "power-bi",
+      "nombre": "Power BI",
+      "categoria": "Analytics",
+      "filas_origen": [237]
+    },
+    {
+      "id": "qlik-sense",
+      "nombre": "Qlik Sense",
+      "categoria": "Analytics",
+      "filas_origen": [278]
+    },
+    {
+      "id": "tableau",
+      "nombre": "Tableau",
+      "categoria": "Analytics",
+      "filas_origen": [275]
+    },
+    {
+      "id": "activemq",
+      "nombre": "ActiveMQ",
+      "categoria": "Arquitectura",
+      "filas_origen": [252]
+    },
+    {
+      "id": "apache-kafka",
+      "nombre": "Apache Kafka",
+      "categoria": "Arquitectura",
+      "filas_origen": [250]
+    },
+    {
+      "id": "clean-architecture",
+      "nombre": "Clean Architecture",
+      "categoria": "Arquitectura",
+      "filas_origen": [245]
+    },
+    {
+      "id": "event-driven",
+      "nombre": "Event Driven",
+      "categoria": "Arquitectura",
+      "filas_origen": [242]
+    },
+    {
+      "id": "graphql",
+      "nombre": "GraphQL",
+      "categoria": "Arquitectura",
+      "filas_origen": [247]
+    },
+    {
+      "id": "grpc",
+      "nombre": "gRPC",
+      "categoria": "Arquitectura",
+      "filas_origen": [248]
+    },
+    {
+      "id": "hexagonal",
+      "nombre": "Hexagonal",
+      "categoria": "Arquitectura",
+      "filas_origen": [244]
+    },
+    {
+      "id": "microservicios",
+      "nombre": "Microservicios",
+      "categoria": "Arquitectura",
+      "filas_origen": [241]
+    },
+    {
+      "id": "mqtt",
+      "nombre": "MQTT",
+      "categoria": "Arquitectura",
+      "filas_origen": [253]
+    },
+    {
+      "id": "rabbitmq",
+      "nombre": "RabbitMQ",
+      "categoria": "Arquitectura",
+      "filas_origen": [251]
+    },
+    {
+      "id": "rest",
+      "nombre": "REST",
+      "categoria": "Arquitectura",
+      "filas_origen": [284]
+    },
+    {
+      "id": "serverless",
+      "nombre": "Serverless",
+      "categoria": "Arquitectura",
+      "filas_origen": [243]
+    },
+    {
+      "id": "websockets",
+      "nombre": "WebSockets",
+      "categoria": "Arquitectura",
+      "filas_origen": [249]
+    },
+    {
+      "id": "agentcore",
+      "nombre": "AgentCore",
+      "categoria": "AWS",
+      "filas_origen": [20]
+    },
+    {
+      "id": "amazon-s3",
+      "nombre": "Amazon S3",
+      "categoria": "AWS",
+      "filas_origen": [51]
+    },
+    {
+      "id": "api-gateway",
+      "nombre": "API Gateway",
+      "categoria": "AWS",
+      "filas_origen": [89, 129]
+    },
+    {
+      "id": "athena",
+      "nombre": "Athena",
+      "categoria": "AWS",
+      "filas_origen": [95]
+    },
+    {
+      "id": "aurora",
+      "nombre": "Aurora",
+      "categoria": "AWS",
+      "filas_origen": [84]
+    },
+    {
+      "id": "aws-iam",
+      "nombre": "AWS IAM",
+      "categoria": "AWS",
+      "filas_origen": [102]
+    },
+    {
+      "id": "bedrock",
+      "nombre": "Bedrock",
+      "categoria": "AWS",
+      "filas_origen": [61]
+    },
+    {
+      "id": "cloudfront",
+      "nombre": "CloudFront",
+      "categoria": "AWS",
+      "filas_origen": [88]
+    },
+    {
+      "id": "cloudwatch",
+      "nombre": "CloudWatch",
+      "categoria": "AWS",
+      "filas_origen": [78]
+    },
+    {
+      "id": "cognito",
+      "nombre": "Cognito",
+      "categoria": "AWS",
+      "filas_origen": [103]
+    },
+    {
+      "id": "comprehend",
+      "nombre": "Comprehend",
+      "categoria": "AWS",
+      "filas_origen": [111]
+    },
+    {
+      "id": "dynamodb",
+      "nombre": "DynamoDB",
+      "categoria": "AWS",
+      "filas_origen": [85, 262]
+    },
+    {
+      "id": "ec2",
+      "nombre": "EC2",
+      "categoria": "AWS",
+      "filas_origen": [75]
+    },
+    {
+      "id": "ecs",
+      "nombre": "ECS",
+      "categoria": "AWS",
+      "filas_origen": [77]
+    },
+    {
+      "id": "efs",
+      "nombre": "EFS",
+      "categoria": "AWS",
+      "filas_origen": [81]
+    },
+    {
+      "id": "eks",
+      "nombre": "EKS",
+      "categoria": "AWS",
+      "filas_origen": [122]
+    },
+    {
+      "id": "elastic-load-balancer",
+      "nombre": "Elastic Load Balancer",
+      "categoria": "AWS",
+      "filas_origen": [90]
+    },
+    {
+      "id": "emr",
+      "nombre": "EMR",
+      "categoria": "AWS",
+      "filas_origen": [97]
+    },
+    {
+      "id": "eventbridge",
+      "nombre": "EventBridge",
+      "categoria": "AWS",
+      "filas_origen": [91]
+    },
+    {
+      "id": "fargate",
+      "nombre": "Fargate",
+      "categoria": "AWS",
+      "filas_origen": [79]
+    },
+    {
+      "id": "fsx",
+      "nombre": "FSx",
+      "categoria": "AWS",
+      "filas_origen": [82]
+    },
+    {
+      "id": "glue",
+      "nombre": "Glue",
+      "categoria": "AWS",
+      "filas_origen": [96]
+    },
+    {
+      "id": "kinesis",
+      "nombre": "Kinesis",
+      "categoria": "AWS",
+      "filas_origen": [98]
+    },
+    {
+      "id": "kms",
+      "nombre": "KMS",
+      "categoria": "AWS",
+      "filas_origen": [104]
+    },
+    {
+      "id": "lambda",
+      "nombre": "Lambda",
+      "categoria": "AWS",
+      "filas_origen": [197]
+    },
+    {
+      "id": "polly",
+      "nombre": "Polly",
+      "categoria": "AWS",
+      "filas_origen": [235]
+    },
+    {
+      "id": "rds",
+      "nombre": "RDS",
+      "categoria": "AWS",
+      "filas_origen": [83]
+    },
+    {
+      "id": "redshift",
+      "nombre": "Redshift",
+      "categoria": "AWS",
+      "filas_origen": [99]
+    },
+    {
+      "id": "rekognition",
+      "nombre": "Rekognition",
+      "categoria": "AWS",
+      "filas_origen": [112]
+    },
+    {
+      "id": "route53",
+      "nombre": "Route53",
+      "categoria": "AWS",
+      "filas_origen": [87]
+    },
+    {
+      "id": "sagemaker",
+      "nombre": "SageMaker",
+      "categoria": "AWS",
+      "filas_origen": [109]
+    },
+    {
+      "id": "secrets-manager",
+      "nombre": "Secrets Manager",
+      "categoria": "AWS",
+      "filas_origen": [105]
+    },
+    {
+      "id": "shield",
+      "nombre": "Shield",
+      "categoria": "AWS",
+      "filas_origen": [107]
+    },
+    {
+      "id": "sns",
+      "nombre": "SNS",
+      "categoria": "AWS",
+      "filas_origen": [93]
+    },
+    {
+      "id": "sqs",
+      "nombre": "SQS",
+      "categoria": "AWS",
+      "filas_origen": [92]
+    },
+    {
+      "id": "step-functions",
+      "nombre": "Step Functions",
+      "categoria": "AWS",
+      "filas_origen": [94]
+    },
+    {
+      "id": "textract",
+      "nombre": "Textract",
+      "categoria": "AWS",
+      "filas_origen": [110]
+    },
+    {
+      "id": "transcribe",
+      "nombre": "Transcribe",
+      "categoria": "AWS",
+      "filas_origen": [114]
+    },
+    {
+      "id": "translate",
+      "nombre": "Translate",
+      "categoria": "AWS",
+      "filas_origen": [115]
+    },
+    {
+      "id": "vpc",
+      "nombre": "VPC",
+      "categoria": "AWS",
+      "filas_origen": [86]
+    },
+    {
+      "id": "waf",
+      "nombre": "WAF",
+      "categoria": "AWS",
+      "filas_origen": [106]
+    },
+    {
+      "id": "x-ray",
+      "nombre": "X-Ray",
+      "categoria": "AWS",
+      "filas_origen": [101]
+    },
+    {
+      "id": "aks",
+      "nombre": "AKS",
+      "categoria": "Azure",
+      "filas_origen": [144]
+    },
+    {
+      "id": "api-management",
+      "nombre": "API Management",
+      "categoria": "Azure",
+      "filas_origen": [150]
+    },
+    {
+      "id": "app-service",
+      "nombre": "App Service",
+      "categoria": "Azure",
+      "filas_origen": [142]
+    },
+    {
+      "id": "application-gateway",
+      "nombre": "Application Gateway",
+      "categoria": "Azure",
+      "filas_origen": [151]
+    },
+    {
+      "id": "application-insights",
+      "nombre": "Application Insights",
+      "categoria": "Azure",
+      "filas_origen": [156]
+    },
+    {
+      "id": "azure-ai-foundry",
+      "nombre": "Azure AI Foundry",
+      "categoria": "Azure",
+      "filas_origen": [160]
+    },
+    {
+      "id": "azure-ai-search",
+      "nombre": "Azure AI Search",
+      "categoria": "Azure",
+      "filas_origen": [161]
+    },
+    {
+      "id": "azure-devops",
+      "nombre": "Azure DevOps",
+      "categoria": "Azure",
+      "filas_origen": [157]
+    },
+    {
+      "id": "azure-functions",
+      "nombre": "Azure Functions",
+      "categoria": "Azure",
+      "filas_origen": [143]
+    },
+    {
+      "id": "azure-monitor",
+      "nombre": "Azure Monitor",
+      "categoria": "Azure",
+      "filas_origen": [155]
+    },
+    {
+      "id": "azure-openai",
+      "nombre": "Azure OpenAI",
+      "categoria": "Azure",
+      "filas_origen": [159]
+    },
+    {
+      "id": "azure-sql",
+      "nombre": "Azure SQL",
+      "categoria": "Azure",
+      "filas_origen": [148]
+    },
+    {
+      "id": "blob-storage",
+      "nombre": "Blob Storage",
+      "categoria": "Azure",
+      "filas_origen": [146]
+    },
+    {
+      "id": "cognitive-services",
+      "nombre": "Cognitive Services",
+      "categoria": "Azure",
+      "filas_origen": [162]
+    },
+    {
+      "id": "container-registry",
+      "nombre": "Container Registry",
+      "categoria": "Azure",
+      "filas_origen": [158]
+    },
+    {
+      "id": "file-storage",
+      "nombre": "File Storage",
+      "categoria": "Azure",
+      "filas_origen": [147]
+    },
+    {
+      "id": "front-door",
+      "nombre": "Front Door",
+      "categoria": "Azure",
+      "filas_origen": [152]
+    },
+    {
+      "id": "key-vault",
+      "nombre": "Key Vault",
+      "categoria": "Azure",
+      "filas_origen": [153]
+    },
+    {
+      "id": "microsoft-entra-id",
+      "nombre": "Microsoft Entra ID",
+      "categoria": "Azure",
+      "filas_origen": [154]
+    },
+    {
+      "id": "virtual-machines",
+      "nombre": "Virtual Machines",
+      "categoria": "Azure",
+      "filas_origen": [145]
+    },
+    {
+      "id": "asp-net-core",
+      "nombre": "ASP.NET Core",
+      "categoria": "Backend",
+      "filas_origen": [56]
+    },
+    {
+      "id": "django",
+      "nombre": "Django",
+      "categoria": "Backend",
+      "filas_origen": [228]
+    },
+    {
+      "id": "express",
+      "nombre": "Express",
+      "categoria": "Backend",
+      "filas_origen": [224]
+    },
+    {
+      "id": "fastapi",
+      "nombre": "FastAPI",
+      "categoria": "Backend",
+      "filas_origen": [229]
+    },
+    {
+      "id": "flask",
+      "nombre": "Flask",
+      "categoria": "Backend",
+      "filas_origen": [230]
+    },
+    {
+      "id": "laravel",
+      "nombre": "Laravel",
+      "categoria": "Backend",
+      "filas_origen": [198]
+    },
+    {
+      "id": "nestjs",
+      "nombre": "NestJS",
+      "categoria": "Backend",
+      "filas_origen": [225]
+    },
+    {
+      "id": "node-js",
+      "nombre": "Node.js",
+      "categoria": "Backend",
+      "filas_origen": [223]
+    },
+    {
+      "id": "spring-boot",
+      "nombre": "Spring Boot",
+      "categoria": "Backend",
+      "filas_origen": [325]
+    },
+    {
+      "id": "symfony",
+      "nombre": "Symfony",
+      "categoria": "Backend",
+      "filas_origen": [232]
+    },
+    {
+      "id": "cassandra",
+      "nombre": "Cassandra",
+      "categoria": "Bases de Datos",
+      "filas_origen": [260]
+    },
+    {
+      "id": "chromadb",
+      "nombre": "ChromaDB",
+      "categoria": "Bases de Datos",
+      "filas_origen": [267]
+    },
+    {
+      "id": "cosmos-db",
+      "nombre": "Cosmos DB",
+      "categoria": "Bases de Datos",
+      "filas_origen": [149, 263]
+    },
+    {
+      "id": "faiss",
+      "nombre": "FAISS",
+      "categoria": "Bases de Datos",
+      "filas_origen": [268]
+    },
+    {
+      "id": "mariadb",
+      "nombre": "MariaDB",
+      "categoria": "Bases de Datos",
+      "filas_origen": [258]
+    },
+    {
+      "id": "milvus",
+      "nombre": "Milvus",
+      "categoria": "Bases de Datos",
+      "filas_origen": [266]
+    },
+    {
+      "id": "mongodb",
+      "nombre": "MongoDB",
+      "categoria": "Bases de Datos",
+      "filas_origen": [259]
+    },
+    {
+      "id": "mysql",
+      "nombre": "MySQL",
+      "categoria": "Bases de Datos",
+      "filas_origen": [255]
+    },
+    {
+      "id": "oracle",
+      "nombre": "Oracle",
+      "categoria": "Bases de Datos",
+      "filas_origen": [257]
+    },
+    {
+      "id": "pinecone",
+      "nombre": "Pinecone",
+      "categoria": "Bases de Datos",
+      "filas_origen": [264]
+    },
+    {
+      "id": "postgresql",
+      "nombre": "PostgreSQL",
+      "categoria": "Bases de Datos",
+      "filas_origen": [254]
+    },
+    {
+      "id": "redis",
+      "nombre": "Redis",
+      "categoria": "Bases de Datos",
+      "filas_origen": [261]
+    },
+    {
+      "id": "sql-server",
+      "nombre": "SQL Server",
+      "categoria": "Bases de Datos",
+      "filas_origen": [256]
+    },
+    {
+      "id": "weaviate",
+      "nombre": "Weaviate",
+      "categoria": "Bases de Datos",
+      "filas_origen": [265]
+    },
+    {
+      "id": "gdpr",
+      "nombre": "GDPR",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [310]
+    },
+    {
+      "id": "iso-27001",
+      "nombre": "ISO 27001",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [308]
+    },
+    {
+      "id": "oauth2",
+      "nombre": "OAuth2",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [302]
+    },
+    {
+      "id": "openid-connect",
+      "nombre": "OpenID Connect",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [303]
+    },
+    {
+      "id": "owasp-top-10",
+      "nombre": "OWASP Top 10",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [305]
+    },
+    {
+      "id": "penetration-testing",
+      "nombre": "Penetration Testing",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [306]
+    },
+    {
+      "id": "saml",
+      "nombre": "SAML",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [304]
+    },
+    {
+      "id": "soc2",
+      "nombre": "SOC2",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [309]
+    },
+    {
+      "id": "vulnerability-assessment",
+      "nombre": "Vulnerability Assessment",
+      "categoria": "Ciberseguridad",
+      "filas_origen": [307]
+    },
+    {
+      "id": "apache-airflow",
+      "nombre": "Apache Airflow",
+      "categoria": "Data Engineering",
+      "filas_origen": [269]
+    },
+    {
+      "id": "apache-flink",
+      "nombre": "Apache Flink",
+      "categoria": "Data Engineering",
+      "filas_origen": [273]
+    },
+    {
+      "id": "apache-spark",
+      "nombre": "Apache Spark",
+      "categoria": "Data Engineering",
+      "filas_origen": [272]
+    },
+    {
+      "id": "dbt",
+      "nombre": "dbt",
+      "categoria": "Data Engineering",
+      "filas_origen": [270]
+    },
+    {
+      "id": "talend",
+      "nombre": "Talend",
+      "categoria": "Data Engineering",
+      "filas_origen": [271]
+    },
+    {
+      "id": "business-analysis",
+      "nombre": "Business Analysis",
+      "categoria": "Delivery",
+      "filas_origen": [67]
+    },
+    {
+      "id": "change-management",
+      "nombre": "Change Management",
+      "categoria": "Delivery",
+      "filas_origen": [69]
+    },
+    {
+      "id": "kanban",
+      "nombre": "Kanban",
+      "categoria": "Delivery",
+      "filas_origen": [194]
+    },
+    {
+      "id": "less",
+      "nombre": "LeSS",
+      "categoria": "Delivery",
+      "filas_origen": [327]
+    },
+    {
+      "id": "pmo",
+      "nombre": "PMO",
+      "categoria": "Delivery",
+      "filas_origen": [231]
+    },
+    {
+      "id": "product-discovery",
+      "nombre": "Product Discovery",
+      "categoria": "Delivery",
+      "filas_origen": [246]
+    },
+    {
+      "id": "product-manager",
+      "nombre": "Product Manager",
+      "categoria": "Delivery",
+      "filas_origen": [329]
+    },
+    {
+      "id": "product-owner",
+      "nombre": "Product Owner",
+      "categoria": "Delivery",
+      "filas_origen": [328]
+    },
+    {
+      "id": "project-management",
+      "nombre": "Project Management",
+      "categoria": "Delivery",
+      "filas_origen": [274]
+    },
+    {
+      "id": "risk-management",
+      "nombre": "Risk Management",
+      "categoria": "Delivery",
+      "filas_origen": [334]
+    },
+    {
+      "id": "safe",
+      "nombre": "SAFe",
+      "categoria": "Delivery",
+      "filas_origen": [326]
+    },
+    {
+      "id": "scrum",
+      "nombre": "Scrum",
+      "categoria": "Delivery",
+      "filas_origen": [324]
+    },
+    {
+      "id": "c",
+      "nombre": "C",
+      "categoria": "Desarrollo",
+      "filas_origen": [206]
+    },
+    {
+      "id": "desarrollo-c",
+      "nombre": "C#",
+      "categoria": "Desarrollo",
+      "filas_origen": [68]
+    },
+    {
+      "id": "desarrollo-c-2",
+      "nombre": "C++",
+      "categoria": "Desarrollo",
+      "filas_origen": [205]
+    },
+    {
+      "id": "dart",
+      "nombre": "Dart",
+      "categoria": "Desarrollo",
+      "filas_origen": [204]
+    },
+    {
+      "id": "go",
+      "nombre": "Go",
+      "categoria": "Desarrollo",
+      "filas_origen": [200]
+    },
+    {
+      "id": "java",
+      "nombre": "Java",
+      "categoria": "Desarrollo",
+      "filas_origen": [164]
+    },
+    {
+      "id": "javascript",
+      "nombre": "JavaScript",
+      "categoria": "Desarrollo",
+      "filas_origen": [166]
+    },
+    {
+      "id": "php",
+      "nombre": "PHP",
+      "categoria": "Desarrollo",
+      "filas_origen": [227]
+    },
+    {
+      "id": "python",
+      "nombre": "Python",
+      "categoria": "Desarrollo",
+      "filas_origen": [277]
+    },
+    {
+      "id": "ruby",
+      "nombre": "Ruby",
+      "categoria": "Desarrollo",
+      "filas_origen": [207]
+    },
+    {
+      "id": "rust",
+      "nombre": "Rust",
+      "categoria": "Desarrollo",
+      "filas_origen": [201]
+    },
+    {
+      "id": "typescript",
+      "nombre": "TypeScript",
+      "categoria": "Desarrollo",
+      "filas_origen": [332]
+    },
+    {
+      "id": "ansible",
+      "nombre": "Ansible",
+      "categoria": "DevOps",
+      "filas_origen": [191]
+    },
+    {
+      "id": "argocd",
+      "nombre": "ArgoCD",
+      "categoria": "DevOps",
+      "filas_origen": [174]
+    },
+    {
+      "id": "azure-devops-pipelines",
+      "nombre": "Azure DevOps Pipelines",
+      "categoria": "DevOps",
+      "filas_origen": [172]
+    },
+    {
+      "id": "bicep",
+      "nombre": "Bicep",
+      "categoria": "DevOps",
+      "filas_origen": [168]
+    },
+    {
+      "id": "bitbucket",
+      "nombre": "Bitbucket",
+      "categoria": "DevOps",
+      "filas_origen": [190]
+    },
+    {
+      "id": "checkmarx",
+      "nombre": "Checkmarx",
+      "categoria": "DevOps",
+      "filas_origen": [184]
+    },
+    {
+      "id": "chef",
+      "nombre": "Chef",
+      "categoria": "DevOps",
+      "filas_origen": [192]
+    },
+    {
+      "id": "circleci",
+      "nombre": "CircleCI",
+      "categoria": "DevOps",
+      "filas_origen": [175]
+    },
+    {
+      "id": "cloudformation",
+      "nombre": "CloudFormation",
+      "categoria": "DevOps",
+      "filas_origen": [167]
+    },
+    {
+      "id": "datadog",
+      "nombre": "Datadog",
+      "categoria": "DevOps",
+      "filas_origen": [178]
+    },
+    {
+      "id": "devsecops",
+      "nombre": "DevSecOps",
+      "categoria": "DevOps",
+      "filas_origen": [182]
+    },
+    {
+      "id": "docker",
+      "nombre": "Docker",
+      "categoria": "DevOps",
+      "filas_origen": [116]
+    },
+    {
+      "id": "elastic-stack",
+      "nombre": "Elastic Stack",
+      "categoria": "DevOps",
+      "filas_origen": [180]
+    },
+    {
+      "id": "git",
+      "nombre": "Git",
+      "categoria": "DevOps",
+      "filas_origen": [187]
+    },
+    {
+      "id": "github",
+      "nombre": "GitHub",
+      "categoria": "DevOps",
+      "filas_origen": [188]
+    },
+    {
+      "id": "github-actions",
+      "nombre": "GitHub Actions",
+      "categoria": "DevOps",
+      "filas_origen": [170]
+    },
+    {
+      "id": "gitlab",
+      "nombre": "GitLab",
+      "categoria": "DevOps",
+      "filas_origen": [189]
+    },
+    {
+      "id": "gitlab-ci",
+      "nombre": "GitLab CI",
+      "categoria": "DevOps",
+      "filas_origen": [171]
+    },
+    {
+      "id": "grafana",
+      "nombre": "Grafana",
+      "categoria": "DevOps",
+      "filas_origen": [177]
+    },
+    {
+      "id": "helm",
+      "nombre": "Helm",
+      "categoria": "DevOps",
+      "filas_origen": [165]
+    },
+    {
+      "id": "jenkins",
+      "nombre": "Jenkins",
+      "categoria": "DevOps",
+      "filas_origen": [173]
+    },
+    {
+      "id": "kubernetes",
+      "nombre": "Kubernetes",
+      "categoria": "DevOps",
+      "filas_origen": [196]
+    },
+    {
+      "id": "new-relic",
+      "nombre": "New Relic",
+      "categoria": "DevOps",
+      "filas_origen": [179]
+    },
+    {
+      "id": "prometheus",
+      "nombre": "Prometheus",
+      "categoria": "DevOps",
+      "filas_origen": [176]
+    },
+    {
+      "id": "pulumi",
+      "nombre": "Pulumi",
+      "categoria": "DevOps",
+      "filas_origen": [169]
+    },
+    {
+      "id": "puppet",
+      "nombre": "Puppet",
+      "categoria": "DevOps",
+      "filas_origen": [193]
+    },
+    {
+      "id": "snyk",
+      "nombre": "Snyk",
+      "categoria": "DevOps",
+      "filas_origen": [185]
+    },
+    {
+      "id": "sonarqube",
+      "nombre": "SonarQube",
+      "categoria": "DevOps",
+      "filas_origen": [183]
+    },
+    {
+      "id": "splunk",
+      "nombre": "Splunk",
+      "categoria": "DevOps",
+      "filas_origen": [181]
+    },
+    {
+      "id": "terraform",
+      "nombre": "Terraform",
+      "categoria": "DevOps",
+      "filas_origen": [331]
+    },
+    {
+      "id": "trivy",
+      "nombre": "Trivy",
+      "categoria": "DevOps",
+      "filas_origen": [186]
+    },
+    {
+      "id": "angular",
+      "nombre": "Angular",
+      "categoria": "Frontend",
+      "filas_origen": [208]
+    },
+    {
+      "id": "ant-design",
+      "nombre": "Ant Design",
+      "categoria": "Frontend",
+      "filas_origen": [219]
+    },
+    {
+      "id": "astro",
+      "nombre": "Astro",
+      "categoria": "Frontend",
+      "filas_origen": [214]
+    },
+    {
+      "id": "babel",
+      "nombre": "Babel",
+      "categoria": "Frontend",
+      "filas_origen": [222]
+    },
+    {
+      "id": "bootstrap",
+      "nombre": "Bootstrap",
+      "categoria": "Frontend",
+      "filas_origen": [216]
+    },
+    {
+      "id": "material-ui",
+      "nombre": "Material UI",
+      "categoria": "Frontend",
+      "filas_origen": [217]
+    },
+    {
+      "id": "next-js",
+      "nombre": "Next.js",
+      "categoria": "Frontend",
+      "filas_origen": [211]
+    },
+    {
+      "id": "nuxt-js",
+      "nombre": "Nuxt.js",
+      "categoria": "Frontend",
+      "filas_origen": [212]
+    },
+    {
+      "id": "primeng",
+      "nombre": "PrimeNG",
+      "categoria": "Frontend",
+      "filas_origen": [218]
+    },
+    {
+      "id": "react",
+      "nombre": "React",
+      "categoria": "Frontend",
+      "filas_origen": [282]
+    },
+    {
+      "id": "svelte",
+      "nombre": "Svelte",
+      "categoria": "Frontend",
+      "filas_origen": [213]
+    },
+    {
+      "id": "tailwind-css",
+      "nombre": "Tailwind CSS",
+      "categoria": "Frontend",
+      "filas_origen": [215]
+    },
+    {
+      "id": "vite",
+      "nombre": "Vite",
+      "categoria": "Frontend",
+      "filas_origen": [220]
+    },
+    {
+      "id": "vue-js",
+      "nombre": "Vue.js",
+      "categoria": "Frontend",
+      "filas_origen": [210]
+    },
+    {
+      "id": "webpack",
+      "nombre": "Webpack",
+      "categoria": "Frontend",
+      "filas_origen": [221]
+    },
+    {
+      "id": "artifact-registry",
+      "nombre": "Artifact Registry",
+      "categoria": "Google Cloud",
+      "filas_origen": [136]
+    },
+    {
+      "id": "bigquery",
+      "nombre": "BigQuery",
+      "categoria": "Google Cloud",
+      "filas_origen": [62]
+    },
+    {
+      "id": "cloud-build",
+      "nombre": "Cloud Build",
+      "categoria": "Google Cloud",
+      "filas_origen": [137]
+    },
+    {
+      "id": "cloud-cdn",
+      "nombre": "Cloud CDN",
+      "categoria": "Google Cloud",
+      "filas_origen": [131]
+    },
+    {
+      "id": "cloud-functions",
+      "nombre": "Cloud Functions",
+      "categoria": "Google Cloud",
+      "filas_origen": [118]
+    },
+    {
+      "id": "cloud-logging",
+      "nombre": "Cloud Logging",
+      "categoria": "Google Cloud",
+      "filas_origen": [135]
+    },
+    {
+      "id": "cloud-monitoring",
+      "nombre": "Cloud Monitoring",
+      "categoria": "Google Cloud",
+      "filas_origen": [134]
+    },
+    {
+      "id": "cloud-run",
+      "nombre": "Cloud Run",
+      "categoria": "Google Cloud",
+      "filas_origen": [117]
+    },
+    {
+      "id": "cloud-sql",
+      "nombre": "Cloud SQL",
+      "categoria": "Google Cloud",
+      "filas_origen": [123]
+    },
+    {
+      "id": "cloud-storage",
+      "nombre": "Cloud Storage",
+      "categoria": "Google Cloud",
+      "filas_origen": [121]
+    },
+    {
+      "id": "compute-engine",
+      "nombre": "Compute Engine",
+      "categoria": "Google Cloud",
+      "filas_origen": [120]
+    },
+    {
+      "id": "dataflow",
+      "nombre": "Dataflow",
+      "categoria": "Google Cloud",
+      "filas_origen": [126]
+    },
+    {
+      "id": "dataproc",
+      "nombre": "Dataproc",
+      "categoria": "Google Cloud",
+      "filas_origen": [128]
+    },
+    {
+      "id": "dialogflow-cx",
+      "nombre": "Dialogflow CX",
+      "categoria": "Google Cloud",
+      "filas_origen": [108, 113]
+    },
+    {
+      "id": "document-ai",
+      "nombre": "Document AI",
+      "categoria": "Google Cloud",
+      "filas_origen": [140]
+    },
+    {
+      "id": "firestore",
+      "nombre": "Firestore",
+      "categoria": "Google Cloud",
+      "filas_origen": [125]
+    },
+    {
+      "id": "gcp-iam",
+      "nombre": "GCP IAM",
+      "categoria": "Google Cloud",
+      "filas_origen": [133]
+    },
+    {
+      "id": "gemini",
+      "nombre": "Gemini",
+      "categoria": "Google Cloud",
+      "filas_origen": [139]
+    },
+    {
+      "id": "gke",
+      "nombre": "GKE",
+      "categoria": "Google Cloud",
+      "filas_origen": [119]
+    },
+    {
+      "id": "load-balancer",
+      "nombre": "Load Balancer",
+      "categoria": "Google Cloud",
+      "filas_origen": [130]
+    },
+    {
+      "id": "pub-sub",
+      "nombre": "Pub/Sub",
+      "categoria": "Google Cloud",
+      "filas_origen": [127]
+    },
+    {
+      "id": "secret-manager",
+      "nombre": "Secret Manager",
+      "categoria": "Google Cloud",
+      "filas_origen": [132]
+    },
+    {
+      "id": "spanner",
+      "nombre": "Spanner",
+      "categoria": "Google Cloud",
+      "filas_origen": [124]
+    },
+    {
+      "id": "vertex-ai",
+      "nombre": "Vertex AI",
+      "categoria": "Google Cloud",
+      "filas_origen": [138]
+    },
+    {
+      "id": "agentic-ai",
+      "nombre": "Agentic AI",
+      "categoria": "IA & GenAI",
+      "filas_origen": [24]
+    },
+    {
+      "id": "ai-agents",
+      "nombre": "AI Agents",
+      "categoria": "IA & GenAI",
+      "filas_origen": [25]
+    },
+    {
+      "id": "ai-governance",
+      "nombre": "AI Governance",
+      "categoria": "IA & GenAI",
+      "filas_origen": [36]
+    },
+    {
+      "id": "ai-safety",
+      "nombre": "AI Safety",
+      "categoria": "IA & GenAI",
+      "filas_origen": [38]
+    },
+    {
+      "id": "amazon-connect",
+      "nombre": "Amazon Connect",
+      "categoria": "IA & GenAI",
+      "filas_origen": [72]
+    },
+    {
+      "id": "amazon-lex",
+      "nombre": "Amazon Lex",
+      "categoria": "IA & GenAI",
+      "filas_origen": [21]
+    },
+    {
+      "id": "amazon-nova-lite",
+      "nombre": "Amazon Nova Lite",
+      "categoria": "IA & GenAI",
+      "filas_origen": [58]
+    },
+    {
+      "id": "amazon-nova-pro",
+      "nombre": "Amazon Nova Pro",
+      "categoria": "IA & GenAI",
+      "filas_origen": [57]
+    },
+    {
+      "id": "amazon-nova-sonic",
+      "nombre": "Amazon Nova Sonic",
+      "categoria": "IA & GenAI",
+      "filas_origen": [23]
+    },
+    {
+      "id": "anthropic-claude",
+      "nombre": "Anthropic Claude",
+      "categoria": "IA & GenAI",
+      "filas_origen": [52]
+    },
+    {
+      "id": "artificial-intelligence",
+      "nombre": "Artificial Intelligence",
+      "categoria": "IA & GenAI",
+      "filas_origen": [3]
+    },
+    {
+      "id": "autogen",
+      "nombre": "AutoGen",
+      "categoria": "IA & GenAI",
+      "filas_origen": [46]
+    },
+    {
+      "id": "azure-ai-speech",
+      "nombre": "Azure AI Speech",
+      "categoria": "IA & GenAI",
+      "filas_origen": [74]
+    },
+    {
+      "id": "chatbots",
+      "nombre": "Chatbots",
+      "categoria": "IA & GenAI",
+      "filas_origen": [76]
+    },
+    {
+      "id": "clasificacion",
+      "nombre": "Clasificación",
+      "categoria": "IA & GenAI",
+      "filas_origen": [12]
+    },
+    {
+      "id": "cohere-command",
+      "nombre": "Cohere Command",
+      "categoria": "IA & GenAI",
+      "filas_origen": [55]
+    },
+    {
+      "id": "computer-vision",
+      "nombre": "Computer Vision",
+      "categoria": "IA & GenAI",
+      "filas_origen": [7]
+    },
+    {
+      "id": "contact-center-ai",
+      "nombre": "Contact Center AI",
+      "categoria": "IA & GenAI",
+      "filas_origen": [65]
+    },
+    {
+      "id": "context-engineering",
+      "nombre": "Context Engineering",
+      "categoria": "IA & GenAI",
+      "filas_origen": [27]
+    },
+    {
+      "id": "conversational-analytics",
+      "nombre": "Conversational Analytics",
+      "categoria": "IA & GenAI",
+      "filas_origen": [66]
+    },
+    {
+      "id": "crewai",
+      "nombre": "CrewAI",
+      "categoria": "IA & GenAI",
+      "filas_origen": [45]
+    },
+    {
+      "id": "deep-learning",
+      "nombre": "Deep Learning",
+      "categoria": "IA & GenAI",
+      "filas_origen": [5]
+    },
+    {
+      "id": "dspy",
+      "nombre": "DSPy",
+      "categoria": "IA & GenAI",
+      "filas_origen": [49]
+    },
+    {
+      "id": "embeddings",
+      "nombre": "Embeddings",
+      "categoria": "IA & GenAI",
+      "filas_origen": [29]
+    },
+    {
+      "id": "evaluation-frameworks",
+      "nombre": "Evaluation Frameworks",
+      "categoria": "IA & GenAI",
+      "filas_origen": [31]
+    },
+    {
+      "id": "feature-store",
+      "nombre": "Feature Store",
+      "categoria": "IA & GenAI",
+      "filas_origen": [17]
+    },
+    {
+      "id": "fine-tuning",
+      "nombre": "Fine Tuning",
+      "categoria": "IA & GenAI",
+      "filas_origen": [30]
+    },
+    {
+      "id": "function-calling",
+      "nombre": "Function Calling",
+      "categoria": "IA & GenAI",
+      "filas_origen": [33]
+    },
+    {
+      "id": "genesys-cloud",
+      "nombre": "Genesys Cloud",
+      "categoria": "IA & GenAI",
+      "filas_origen": [71]
+    },
+    {
+      "id": "google-gemini",
+      "nombre": "Google Gemini",
+      "categoria": "IA & GenAI",
+      "filas_origen": [163]
+    },
+    {
+      "id": "guardrails",
+      "nombre": "Guardrails",
+      "categoria": "IA & GenAI",
+      "filas_origen": [32]
+    },
+    {
+      "id": "haystack",
+      "nombre": "Haystack",
+      "categoria": "IA & GenAI",
+      "filas_origen": [48]
+    },
+    {
+      "id": "ibm-granite",
+      "nombre": "IBM Granite",
+      "categoria": "IA & GenAI",
+      "filas_origen": [60]
+    },
+    {
+      "id": "langchain",
+      "nombre": "LangChain",
+      "categoria": "IA & GenAI",
+      "filas_origen": [40]
+    },
+    {
+      "id": "langfuse",
+      "nombre": "LangFuse",
+      "categoria": "IA & GenAI",
+      "filas_origen": [43]
+    },
+    {
+      "id": "langgraph",
+      "nombre": "LangGraph",
+      "categoria": "IA & GenAI",
+      "filas_origen": [41]
+    },
+    {
+      "id": "langsmith",
+      "nombre": "LangSmith",
+      "categoria": "IA & GenAI",
+      "filas_origen": [42]
+    },
+    {
+      "id": "llamaindex",
+      "nombre": "LlamaIndex",
+      "categoria": "IA & GenAI",
+      "filas_origen": [44]
+    },
+    {
+      "id": "llm",
+      "nombre": "LLM",
+      "categoria": "IA & GenAI",
+      "filas_origen": [199]
+    },
+    {
+      "id": "machine-learning",
+      "nombre": "Machine Learning",
+      "categoria": "IA & GenAI",
+      "filas_origen": [4]
+    },
+    {
+      "id": "meta-llama",
+      "nombre": "Meta Llama",
+      "categoria": "IA & GenAI",
+      "filas_origen": [53]
+    },
+    {
+      "id": "microsoft-copilot-studio",
+      "nombre": "Microsoft Copilot Studio",
+      "categoria": "IA & GenAI",
+      "filas_origen": [70]
+    },
+    {
+      "id": "mistral",
+      "nombre": "Mistral",
+      "categoria": "IA & GenAI",
+      "filas_origen": [54]
+    },
+    {
+      "id": "ml-pipelines",
+      "nombre": "ML Pipelines",
+      "categoria": "IA & GenAI",
+      "filas_origen": [19]
+    },
+    {
+      "id": "model-context-protocol-mcp",
+      "nombre": "Model Context Protocol (MCP)",
+      "categoria": "IA & GenAI",
+      "filas_origen": [35]
+    },
+    {
+      "id": "model-monitoring",
+      "nombre": "Model Monitoring",
+      "categoria": "IA & GenAI",
+      "filas_origen": [16]
+    },
+    {
+      "id": "model-registry",
+      "nombre": "Model Registry",
+      "categoria": "IA & GenAI",
+      "filas_origen": [18]
+    },
+    {
+      "id": "model-serving",
+      "nombre": "Model Serving",
+      "categoria": "IA & GenAI",
+      "filas_origen": [15]
+    },
+    {
+      "id": "multi-agent-systems",
+      "nombre": "Multi-Agent Systems",
+      "categoria": "IA & GenAI",
+      "filas_origen": [26]
+    },
+    {
+      "id": "nlp",
+      "nombre": "NLP",
+      "categoria": "IA & GenAI",
+      "filas_origen": [11]
+    },
+    {
+      "id": "ocr",
+      "nombre": "OCR",
+      "categoria": "IA & GenAI",
+      "filas_origen": [8]
+    },
+    {
+      "id": "omnichannel-bots",
+      "nombre": "Omnichannel Bots",
+      "categoria": "IA & GenAI",
+      "filas_origen": [64]
+    },
+    {
+      "id": "openai-gpt",
+      "nombre": "OpenAI GPT",
+      "categoria": "IA & GenAI",
+      "filas_origen": [226]
+    },
+    {
+      "id": "prediccion",
+      "nombre": "Predicción",
+      "categoria": "IA & GenAI",
+      "filas_origen": [13]
+    },
+    {
+      "id": "prompt-chaining",
+      "nombre": "Prompt Chaining",
+      "categoria": "IA & GenAI",
+      "filas_origen": [22]
+    },
+    {
+      "id": "prompt-engineering",
+      "nombre": "Prompt Engineering",
+      "categoria": "IA & GenAI",
+      "filas_origen": [276]
+    },
+    {
+      "id": "prompt-testing",
+      "nombre": "Prompt Testing",
+      "categoria": "IA & GenAI",
+      "filas_origen": [39]
+    },
+    {
+      "id": "rag",
+      "nombre": "RAG",
+      "categoria": "IA & GenAI",
+      "filas_origen": [281]
+    },
+    {
+      "id": "redes-neuronales",
+      "nombre": "Redes Neuronales",
+      "categoria": "IA & GenAI",
+      "filas_origen": [6]
+    },
+    {
+      "id": "responsible-ai",
+      "nombre": "Responsible AI",
+      "categoria": "IA & GenAI",
+      "filas_origen": [37]
+    },
+    {
+      "id": "semantic-kernel",
+      "nombre": "Semantic Kernel",
+      "categoria": "IA & GenAI",
+      "filas_origen": [47]
+    },
+    {
+      "id": "sistemas-expertos",
+      "nombre": "Sistemas Expertos",
+      "categoria": "IA & GenAI",
+      "filas_origen": [14]
+    },
+    {
+      "id": "speech-to-text",
+      "nombre": "Speech to Text",
+      "categoria": "IA & GenAI",
+      "filas_origen": [9]
+    },
+    {
+      "id": "text-to-speech",
+      "nombre": "Text to Speech",
+      "categoria": "IA & GenAI",
+      "filas_origen": [10]
+    },
+    {
+      "id": "tool-calling",
+      "nombre": "Tool Calling",
+      "categoria": "IA & GenAI",
+      "filas_origen": [34]
+    },
+    {
+      "id": "twilio",
+      "nombre": "Twilio",
+      "categoria": "IA & GenAI",
+      "filas_origen": [73]
+    },
+    {
+      "id": "vector-databases",
+      "nombre": "Vector Databases",
+      "categoria": "IA & GenAI",
+      "filas_origen": [28]
+    },
+    {
+      "id": "voicebots",
+      "nombre": "Voicebots",
+      "categoria": "IA & GenAI",
+      "filas_origen": [333]
+    },
+    {
+      "id": "watson-assistant",
+      "nombre": "Watson Assistant",
+      "categoria": "IA & GenAI",
+      "filas_origen": [335]
+    },
+    {
+      "id": "whatsapp-bots",
+      "nombre": "WhatsApp Bots",
+      "categoria": "IA & GenAI",
+      "filas_origen": [63]
+    },
+    {
+      "id": "xai-grok",
+      "nombre": "xAI Grok",
+      "categoria": "IA & GenAI",
+      "filas_origen": [59]
+    },
+    {
+      "id": "aleman",
+      "nombre": "Alemán",
+      "categoria": "Idioma",
+      "filas_origen": [349]
+    },
+    {
+      "id": "griego",
+      "nombre": "Griego",
+      "categoria": "Idioma",
+      "filas_origen": [350]
+    },
+    {
+      "id": "ingles",
+      "nombre": "Inglés",
+      "categoria": "Idioma",
+      "filas_origen": [348]
+    },
+    {
+      "id": "italiano",
+      "nombre": "Italiano",
+      "categoria": "Idioma",
+      "filas_origen": [351]
+    },
+    {
+      "id": "portugues",
+      "nombre": "Portugués",
+      "categoria": "Idioma",
+      "filas_origen": [352]
+    },
+    {
+      "id": "adobe-after-effects",
+      "nombre": "Adobe After Effects",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [341]
+    },
+    {
+      "id": "adobe-illustrator",
+      "nombre": "Adobe Illustrator",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [340]
+    },
+    {
+      "id": "adobe-photoshop",
+      "nombre": "Adobe Photoshop",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [339]
+    },
+    {
+      "id": "adobe-premiere",
+      "nombre": "Adobe Premiere",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [342]
+    },
+    {
+      "id": "branding",
+      "nombre": "Branding",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [336]
+    },
+    {
+      "id": "canva",
+      "nombre": "Canva",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [343]
+    },
+    {
+      "id": "copywriting",
+      "nombre": "Copywriting",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [346]
+    },
+    {
+      "id": "direccion-de-arte",
+      "nombre": "Dirección de Arte",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [337]
+    },
+    {
+      "id": "motion-graphics",
+      "nombre": "Motion Graphics",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [338]
+    },
+    {
+      "id": "sem",
+      "nombre": "SEM",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [345]
+    },
+    {
+      "id": "seo",
+      "nombre": "SEO",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [344]
+    },
+    {
+      "id": "social-media",
+      "nombre": "Social Media",
+      "categoria": "Marketing & Creative",
+      "filas_origen": [347]
+    },
+    {
+      "id": "net-maui",
+      "nombre": ".NET MAUI",
+      "categoria": "Mobile",
+      "filas_origen": [240]
+    },
+    {
+      "id": "flutter",
+      "nombre": "Flutter",
+      "categoria": "Mobile",
+      "filas_origen": [238]
+    },
+    {
+      "id": "ionic",
+      "nombre": "Ionic",
+      "categoria": "Mobile",
+      "filas_origen": [239]
+    },
+    {
+      "id": "jetpack-compose",
+      "nombre": "Jetpack Compose",
+      "categoria": "Mobile",
+      "filas_origen": [234]
+    },
+    {
+      "id": "kotlin",
+      "nombre": "Kotlin",
+      "categoria": "Mobile",
+      "filas_origen": [202, 233]
+    },
+    {
+      "id": "react-native",
+      "nombre": "React Native",
+      "categoria": "Mobile",
+      "filas_origen": [283]
+    },
+    {
+      "id": "swift",
+      "nombre": "Swift",
+      "categoria": "Mobile",
+      "filas_origen": [203, 330]
+    },
+    {
+      "id": "swiftui",
+      "nombre": "SwiftUI",
+      "categoria": "Mobile",
+      "filas_origen": [236]
+    },
+    {
+      "id": "appium",
+      "nombre": "Appium",
+      "categoria": "QA & Testing",
+      "filas_origen": [294]
+    },
+    {
+      "id": "cypress",
+      "nombre": "Cypress",
+      "categoria": "QA & Testing",
+      "filas_origen": [292]
+    },
+    {
+      "id": "jira",
+      "nombre": "Jira",
+      "categoria": "QA & Testing",
+      "filas_origen": [299]
+    },
+    {
+      "id": "jmeter",
+      "nombre": "JMeter",
+      "categoria": "QA & Testing",
+      "filas_origen": [297]
+    },
+    {
+      "id": "k6",
+      "nombre": "k6",
+      "categoria": "QA & Testing",
+      "filas_origen": [298]
+    },
+    {
+      "id": "playwright",
+      "nombre": "Playwright",
+      "categoria": "QA & Testing",
+      "filas_origen": [293]
+    },
+    {
+      "id": "postman",
+      "nombre": "Postman",
+      "categoria": "QA & Testing",
+      "filas_origen": [295]
+    },
+    {
+      "id": "selenium",
+      "nombre": "Selenium",
+      "categoria": "QA & Testing",
+      "filas_origen": [291]
+    },
+    {
+      "id": "soapui",
+      "nombre": "SoapUI",
+      "categoria": "QA & Testing",
+      "filas_origen": [296]
+    },
+    {
+      "id": "testrail",
+      "nombre": "TestRail",
+      "categoria": "QA & Testing",
+      "filas_origen": [301]
+    },
+    {
+      "id": "xray",
+      "nombre": "Xray",
+      "categoria": "QA & Testing",
+      "filas_origen": [300]
+    },
+    {
+      "id": "adobe-xd",
+      "nombre": "Adobe XD",
+      "categoria": "UX / UI",
+      "filas_origen": [321]
+    },
+    {
+      "id": "design-systems",
+      "nombre": "Design Systems",
+      "categoria": "UX / UI",
+      "filas_origen": [318]
+    },
+    {
+      "id": "figjam",
+      "nombre": "FigJam",
+      "categoria": "UX / UI",
+      "filas_origen": [320]
+    },
+    {
+      "id": "figma",
+      "nombre": "Figma",
+      "categoria": "UX / UI",
+      "filas_origen": [319]
+    },
+    {
+      "id": "journey-mapping",
+      "nombre": "Journey Mapping",
+      "categoria": "UX / UI",
+      "filas_origen": [313]
+    },
+    {
+      "id": "miro",
+      "nombre": "Miro",
+      "categoria": "UX / UI",
+      "filas_origen": [322]
+    },
+    {
+      "id": "prototyping",
+      "nombre": "Prototyping",
+      "categoria": "UX / UI",
+      "filas_origen": [317]
+    },
+    {
+      "id": "ui-design",
+      "nombre": "UI Design",
+      "categoria": "UX / UI",
+      "filas_origen": [314]
+    },
+    {
+      "id": "user-interviews",
+      "nombre": "User Interviews",
+      "categoria": "UX / UI",
+      "filas_origen": [312]
+    },
+    {
+      "id": "ux-design",
+      "nombre": "UX Design",
+      "categoria": "UX / UI",
+      "filas_origen": [315]
+    },
+    {
+      "id": "ux-research",
+      "nombre": "UX Research",
+      "categoria": "UX / UI",
+      "filas_origen": [311]
+    },
+    {
+      "id": "wcag",
+      "nombre": "WCAG",
+      "categoria": "UX / UI",
+      "filas_origen": [323]
+    },
+    {
+      "id": "wireframes",
+      "nombre": "Wireframes",
+      "categoria": "UX / UI",
+      "filas_origen": [316]
+    }
+  ],
+  "assignments": [
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "amazon-quicksight",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "amazon-quicksight",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "amazon-quicksight",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "amazon-quicksight",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "amazon-quicksight",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "dashboards",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "dashboards",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "dashboards",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "dashboards",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "dashboards",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "dashboards",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "data-visualization",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "data-visualization",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "data-visualization",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "data-visualization",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "data-visualization",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "data-visualization",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "data-visualization",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "data-visualization",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "fullstory",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "google-analytics",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "google-analytics",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "google-analytics",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "google-analytics",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "google-analytics",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "google-analytics",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "google-analytics",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "google-tag-manager",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "hotjar",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "kpis",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "kpis",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "kpis",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "kpis",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "kpis",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "kpis",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "kpis",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "kpis",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "kpis",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "kpis",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "looker-studio",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "looker-studio",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "looker-studio",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "looker-studio",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "looker-studio",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "power-bi",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "power-bi",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "power-bi",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "power-bi",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "power-bi",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "power-bi",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "power-bi",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "power-bi",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "tableau",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "tableau",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "event-driven",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "graphql",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "microservicios",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "microservicios",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "mqtt",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "rest",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "rest",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "rest",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "rest",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "rest",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "rest",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "rest",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "rest",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "rest",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "rest",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "rest",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "serverless",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "serverless",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "websockets",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "websockets",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "agentcore",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "agentcore",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "agentcore",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "agentcore",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "agentcore",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "agentcore",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "agentcore",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "amazon-s3",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "amazon-s3",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "amazon-s3",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "amazon-s3",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "amazon-s3",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "amazon-s3",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "amazon-s3",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "api-gateway",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "api-gateway",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "api-gateway",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "athena",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "athena",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "aurora",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "aws-iam",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "aws-iam",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "bedrock",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "bedrock",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "bedrock",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "bedrock",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "bedrock",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "bedrock",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "bedrock",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "bedrock",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "bedrock",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloudfront",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "cloudwatch",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "cloudwatch",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "cloudwatch",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloudwatch",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "cloudwatch",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cognito",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "comprehend",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "dynamodb",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "dynamodb",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ec2",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ec2",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ecs",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ecs",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "efs",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "eks",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "eks",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "eks",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "eks",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "elastic-load-balancer",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "eventbridge",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "fargate",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "glue",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "glue",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "kinesis",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "kms",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "lambda",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "lambda",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "lambda",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "lambda",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "lambda",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "polly",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "polly",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "polly",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "polly",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "rds",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "route53",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "secrets-manager",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "shield",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "sns",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "sns",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "sqs",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "sqs",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "textract",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "textract",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "transcribe",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vpc",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "waf",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "aks",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "app-service",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "azure-devops",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "azure-devops",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "azure-functions",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "azure-monitor",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "azure-openai",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "blob-storage",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "asp-net-core",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "asp-net-core",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "django",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "express",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "fastapi",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "fastapi",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "laravel",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "laravel",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "laravel",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "laravel",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "laravel",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "node-js",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "node-js",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "node-js",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "node-js",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "node-js",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "node-js",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "node-js",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "node-js",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "node-js",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "node-js",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "spring-boot",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "spring-boot",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "spring-boot",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "spring-boot",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "spring-boot",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "spring-boot",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "spring-boot",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "spring-boot",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cassandra",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "mariadb",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "mongodb",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "mongodb",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "mongodb",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "mysql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "mysql",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "mysql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "mysql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "mysql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "oracle",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "oracle",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "oracle",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "postgresql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "postgresql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "postgresql",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "redis",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "sql-server",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "sql-server",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "sql-server",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "sql-server",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "iso-27001",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "oauth2",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "openid-connect",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "owasp-top-10",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "penetration-testing",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vulnerability-assessment",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "business-analysis",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "business-analysis",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "business-analysis",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "business-analysis",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "business-analysis",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "change-management",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "change-management",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "change-management",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "change-management",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "change-management",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "change-management",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "kanban",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "kanban",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "kanban",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "kanban",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "kanban",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "kanban",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "kanban",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "kanban",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "kanban",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "less",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "pmo",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "pmo",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "pmo",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "product-discovery",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "product-discovery",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "product-discovery",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "product-discovery",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "product-owner",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "product-owner",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "project-management",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "project-management",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "project-management",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "risk-management",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "safe",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "scrum",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "scrum",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "scrum",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "scrum",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "scrum",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "c",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "desarrollo-c",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "desarrollo-c",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "desarrollo-c",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "desarrollo-c",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "desarrollo-c",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "desarrollo-c-2",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "java",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "java",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "java",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "java",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "java",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "java",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "java",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "java",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "java",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "javascript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "javascript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "javascript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "javascript",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "javascript",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "javascript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "javascript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "javascript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "javascript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "javascript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "javascript",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "javascript",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "javascript",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "php",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "php",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "php",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "php",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "php",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "python",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "python",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "python",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "python",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "python",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "python",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "python",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "python",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "python",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "python",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "python",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "python",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ruby",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "rust",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "typescript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "typescript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "typescript",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "typescript",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "typescript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "typescript",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "typescript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "typescript",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "typescript",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ansible",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "argocd",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "azure-devops-pipelines",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "bitbucket",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "bitbucket",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "bitbucket",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloudformation",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "datadog",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "devsecops",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "devsecops",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "devsecops",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "devsecops",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "docker",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "docker",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "docker",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "docker",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "docker",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "docker",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "docker",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "docker",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "elastic-stack",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "git",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "git",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "git",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "github",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "github",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "github",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "github",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "github-actions",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "gitlab",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "gitlab",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "gitlab",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "gitlab-ci",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "helm",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "helm",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "jenkins",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "jenkins",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "jenkins",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "kubernetes",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "kubernetes",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "kubernetes",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "kubernetes",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "sonarqube",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "sonarqube",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "splunk",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "terraform",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "terraform",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "terraform",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "terraform",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "terraform",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "trivy",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "angular",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "angular",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "angular",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "angular",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "astro",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "bootstrap",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "bootstrap",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "bootstrap",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "bootstrap",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "bootstrap",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "next-js",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "react",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "react",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "react",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "react",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "react",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "react",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "react",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "react",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "tailwind-css",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "tailwind-css",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vite",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vue-js",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "artifact-registry",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "bigquery",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "bigquery",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "bigquery",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "bigquery",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "bigquery",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloud-cdn",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloud-functions",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "cloud-functions",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloud-run",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "cloud-run",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "cloud-sql",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cloud-storage",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "cloud-storage",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "compute-engine",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "dataproc",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "dialogflow-cx",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "dialogflow-cx",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "dialogflow-cx",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "dialogflow-cx",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "firestore",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "firestore",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "firestore",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "gcp-iam",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "gcp-iam",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "gemini",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "gemini",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "gemini",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "gemini",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "gke",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "load-balancer",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "secret-manager",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "spanner",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vertex-ai",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "vertex-ai",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "agentic-ai",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "agentic-ai",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "agentic-ai",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "agentic-ai",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "ai-agents",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ai-agents",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ai-agents",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ai-governance",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ai-safety",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "amazon-connect",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "amazon-connect",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "amazon-lex",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "amazon-lex",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "amazon-lex",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "amazon-lex",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "amazon-lex",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "amazon-nova-sonic",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "anthropic-claude",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "anthropic-claude",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "anthropic-claude",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "artificial-intelligence",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "artificial-intelligence",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "artificial-intelligence",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "chatbots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "chatbots",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "chatbots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "chatbots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "chatbots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "chatbots",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "chatbots",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "clasificacion",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "clasificacion",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "cohere-command",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "computer-vision",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "computer-vision",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "contact-center-ai",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "conversational-analytics",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "deep-learning",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "deep-learning",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "embeddings",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "embeddings",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "fine-tuning",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "function-calling",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "function-calling",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "genesys-cloud",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "genesys-cloud",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "genesys-cloud",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "google-gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "google-gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "google-gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "google-gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "google-gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "google-gemini",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "google-gemini",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "google-gemini",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "guardrails",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "guardrails",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "ibm-granite",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "langchain",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "langchain",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "langchain",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "langgraph",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "langgraph",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "langsmith",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "llm",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "llm",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "llm",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "llm",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "llm",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "llm",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "llm",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "llm",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "llm",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "llm",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "llm",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "llm",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "machine-learning",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "machine-learning",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "machine-learning",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "meta-llama",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "microsoft-copilot-studio",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "mistral",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ml-pipelines",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "model-context-protocol-mcp",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "multi-agent-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "multi-agent-systems",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "nlp",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "nlp",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ocr",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ocr",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "openai-gpt",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "openai-gpt",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "openai-gpt",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "openai-gpt",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "openai-gpt",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "openai-gpt",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "openai-gpt",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "openai-gpt",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "openai-gpt",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "openai-gpt",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "openai-gpt",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "prediccion",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "prediccion",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "prompt-chaining",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "prompt-engineering",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "prompt-engineering",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "prompt-engineering",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "prompt-engineering",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "prompt-engineering",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "prompt-engineering",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "prompt-engineering",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "prompt-engineering",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "prompt-engineering",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "prompt-engineering",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "prompt-engineering",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "prompt-engineering",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "prompt-engineering",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "prompt-testing",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "prompt-testing",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "rag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "rag",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "rag",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "rag",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "rag",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "rag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "rag",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "rag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "rag",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "redes-neuronales",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "redes-neuronales",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "responsible-ai",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "sistemas-expertos",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "sistemas-expertos",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "speech-to-text",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "speech-to-text",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "text-to-speech",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "text-to-speech",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "tool-calling",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "tool-calling",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "twilio",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "vector-databases",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "vector-databases",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "voicebots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284355",
+      "skill_id": "voicebots",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-291244",
+      "skill_id": "voicebots",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "voicebots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "watson-assistant",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "watson-assistant",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "whatsapp-bots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "whatsapp-bots",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "whatsapp-bots",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "xai-grok",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "aleman",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "griego",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "ingles",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "ingles",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "ingles",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "ingles",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "ingles",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "ingles",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-247947",
+      "skill_id": "ingles",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "ingles",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "ingles",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "ingles",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ingles",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "ingles",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "ingles",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "ingles",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "portugues",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "portugues",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "adobe-after-effects",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "adobe-illustrator",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "adobe-illustrator",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "adobe-illustrator",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "adobe-illustrator",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "adobe-photoshop",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "adobe-photoshop",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "adobe-photoshop",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "adobe-photoshop",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "adobe-photoshop",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "branding",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "branding",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "canva",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "canva",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "canva",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "canva",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "canva",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "canva",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "direccion-de-arte",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "direccion-de-arte",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "direccion-de-arte",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "direccion-de-arte",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "motion-graphics",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "motion-graphics",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "motion-graphics",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "motion-graphics",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "sem",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "sem",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "seo",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "seo",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "seo",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "social-media",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "social-media",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "ionic",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "react-native",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "react-native",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "react-native",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "react-native",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "react-native",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "react-native",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-133135",
+      "skill_id": "swift",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-173177",
+      "skill_id": "swift",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "swift",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "swift",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "jira",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "jira",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "jira",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "jira",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "jira",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "playwright",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "postman",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "postman",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "soapui",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "adobe-xd",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "adobe-xd",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "adobe-xd",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "design-systems",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "design-systems",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "design-systems",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "design-systems",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "figjam",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "figjam",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "figjam",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "figjam",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "figjam",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "figma",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-284350",
+      "skill_id": "figma",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-284351",
+      "skill_id": "figma",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "figma",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "figma",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "figma",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "figma",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "journey-mapping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "journey-mapping",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "journey-mapping",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "journey-mapping",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "journey-mapping",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-182058",
+      "skill_id": "miro",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "miro",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "miro",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "miro",
+      "nivel": 1
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "miro",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "miro",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-215536",
+      "skill_id": "prototyping",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "prototyping",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "prototyping",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "prototyping",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "prototyping",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "ui-design",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "ui-design",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "ui-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-245078",
+      "skill_id": "ui-design",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-264521",
+      "skill_id": "ui-design",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "ui-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "ui-design",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "ui-design",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "ui-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "ui-design",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "user-interviews",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "user-interviews",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "user-interviews",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "ux-design",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-200559",
+      "skill_id": "ux-design",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "ux-design",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "ux-research",
+      "nivel": 2
+    },
+    {
+      "persona_id": "emp-195910",
+      "skill_id": "ux-research",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-217777",
+      "skill_id": "ux-research",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "ux-research",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "ux-research",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "ux-research",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "ux-research",
+      "nivel": 5
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "ux-research",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "wcag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-191476",
+      "skill_id": "wcag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-293412",
+      "skill_id": "wcag",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "wcag",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-188930",
+      "skill_id": "wireframes",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-267365",
+      "skill_id": "wireframes",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-294922",
+      "skill_id": "wireframes",
+      "nivel": 4
+    },
+    {
+      "persona_id": "emp-295869",
+      "skill_id": "wireframes",
+      "nivel": 3
+    },
+    {
+      "persona_id": "emp-297742",
+      "skill_id": "wireframes",
+      "nivel": 3
+    }
+  ],
+  "conflicts": [],
+  "assignments_per_person": {
+    "Americo Gonzalo Narea Donoso": 12,
+    "Daniel Marcelo Bravo Flores": 52,
+    "Pablo Ariel Godoy Espinoza": 38,
+    "Claudia Andrea Martinez Sepulveda": 69,
+    "Yesnia Araceli Perez Ojeda": 21,
+    "Rebecca Eloisa Tapia Urbina": 46,
+    "Samuel Francisco Collante Meza": 26,
+    "Ignacio Alonso Messina Luna": 106,
+    "Sebastian Alonso Muñoz Zamora": 181,
+    "Scarlette Aracely Villarreal Avila": 13,
+    "Carolina Paz Muñoz Peñafiel": 29,
+    "Camila Andrea Bravo Navea": 10,
+    "Francisco Javier Fuentes Ortega": 8,
+    "Aracelis Alejandra Vivanco Muñoz": 10,
+    "Vicente Rodriguez Santa Maria": 9,
+    "Pablo Sebastian Jofre Jara": 10,
+    "Isidora Perez Apparcel": 21,
+    "Luciano Enrique Gomez Sanchez": 21,
+    "Carolina Andrea Varela Bobadilla": 23,
+    "Jaime Rodrigo Castillo Navarro": 0,
+    "John Fernando Calderon Vera": 42,
+    "Lysset Alejandra Hernandez Hinojosa": 22
+  }
+}

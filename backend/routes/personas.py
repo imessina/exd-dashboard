@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -8,11 +10,14 @@ import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
 
+logger = logging.getLogger("uvicorn.error")
+
 
 @router.get("/", response_model=List[schemas.PersonaOut])
 def list_personas(
     nivel: Optional[str] = Query(None, description="Nivel de pirámide"),
     habilidad: Optional[str] = Query(None),
+    oferta_valor: Optional[str] = Query(None, description="Oferta de valor; __sin_asignar__ para valores nulos"),
     db: Session = Depends(get_db),
 ):
     q = db.query(models.Persona)
@@ -26,6 +31,11 @@ def list_personas(
                 models.Persona.nivel_seniority == nivel,
             )
         )
+
+    if oferta_valor == "__sin_asignar__":
+        q = q.filter(models.Persona.oferta_valor.is_(None))
+    elif oferta_valor:
+        q = q.filter(models.Persona.oferta_valor == oferta_valor)
 
     personas = q.order_by(models.Persona.nombre).all()
 
@@ -148,13 +158,34 @@ def replace_persona_skills(
     data: schemas.PersonaSkillsReplace,
     db: Session = Depends(get_db),
 ):
+    logger.info(
+        "[SKILLS] Inicio guardado | persona_id=%s | cantidad=%s",
+        persona_id,
+        len(data.skills),
+    )
+    logger.info(
+        "[SKILLS] Payload recibido | persona_id=%s | skills=%s",
+        persona_id,
+        [
+            {
+                "skill_id": item.skill_id,
+                "nivel": item.nivel,
+            }
+            for item in data.skills
+        ],
+    )
+
     persona = db.query(models.Persona).filter(models.Persona.id == persona_id).first()
     if not persona:
+        logger.warning(
+            "[SKILLS] Persona no encontrada | persona_id=%s",
+            persona_id,
+        )
         raise HTTPException(status_code=404, detail="Persona no encontrada")
 
     skill_ids = [item.skill_id for item in data.skills]
     if len(skill_ids) != len(set(skill_ids)):
-        raise HTTPException(status_code=400, detail="No se permiten skills duplicadas")
+        raise HTTPException(status_code=400, detail="No se permiten capacidades duplicadas")
 
     skills = db.query(models.Skill).filter(models.Skill.id.in_(skill_ids)).all() if skill_ids else []
     skills_by_id = {skill.id: skill for skill in skills}
@@ -162,7 +193,7 @@ def replace_persona_skills(
     if faltantes:
         raise HTTPException(
             status_code=400,
-            detail=f"Skills inexistentes: {', '.join(faltantes)}",
+            detail=f"Capacidades inexistentes: {', '.join(faltantes)}",
         )
 
     db.query(models.PersonaSkill).filter(
@@ -181,7 +212,34 @@ def replace_persona_skills(
     # Compatibilidad temporal con vistas antiguas: conservar también los nombres.
     persona.habilidades = [skills_by_id[item.skill_id].nombre for item in data.skills]
 
-    db.commit()
+    try:
+        db.commit()
+
+        guardadas = (
+            db.query(models.PersonaSkill)
+            .filter(models.PersonaSkill.persona_id == persona_id)
+            .all()
+        )
+
+        logger.info(
+            "[SKILLS] Guardado OK | persona_id=%s | cantidad_bd=%s | skills_bd=%s",
+            persona_id,
+            len(guardadas),
+            [
+                {
+                    "skill_id": item.skill_id,
+                    "nivel": item.nivel,
+                }
+                for item in guardadas
+            ],
+        )
+    except Exception:
+        db.rollback()
+        logger.exception(
+            "[SKILLS] Error guardando skills | persona_id=%s",
+            persona_id,
+        )
+        raise
 
     return [
         {
@@ -204,5 +262,33 @@ def delete_persona(persona_id: str, db: Session = Depends(get_db)):
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada")
 
-    db.delete(persona)
-    db.commit()
+    try:
+        curriculum_ids = [
+            curriculum_id
+            for (curriculum_id,) in (
+                db.query(models.Curriculum.id)
+                .filter(models.Curriculum.persona_id == persona_id)
+                .all()
+            )
+        ]
+
+        if curriculum_ids:
+            (
+                db.query(models.CurriculumExperiencia)
+                .filter(
+                    models.CurriculumExperiencia.curriculum_id.in_(curriculum_ids)
+                )
+                .delete(synchronize_session=False)
+            )
+
+            (
+                db.query(models.Curriculum)
+                .filter(models.Curriculum.id.in_(curriculum_ids))
+                .delete(synchronize_session=False)
+            )
+
+        db.delete(persona)
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise

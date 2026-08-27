@@ -1,0 +1,72 @@
+{
+  "persona_id": "emp-200561",
+  "persona_nombre": "Carlos Saul Gomez Sanchez",
+  "archivo": "CarlosGomezSanchez_DigitalExperience_20250930_.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 15,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Carlos Saúl Gómez Sánchez\nLead Engineer"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "CV Lead Engineer"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Descripción\nFull Stack Developer con más de 10 años de experiencia, especialista en portales DXP como IBM Portal, Liferay DXP, Liferay Cloud y Modyo, experiencia en desarrollo web, desarrollo SPA en tecnologías como Angular, React y Vue.js, desarrollo de Apis REST bajo tecnologías como Node.js y Spring Boot\n\nExperiencia Seleccionadas\n\nMejora continua portales corporativos – LATAM – Liferay DXP Cloud 7,3 (12/2022 – Actualidad)\n\nContribuyo en iniciativas de mejora continua para LATAM, desarrollando nuevos sitios en Liferay DXP Cloud, optimizando flujos de trabajo y mejorando la experiencia de usuario en portales corporativos.\n\nGestioné la migración de repositorios de Bitbucket a GitLab, asegurando la continuidad del control de versiones, y administré secrets en Liferay Cloud para garantizar la seguridad de configuraciones sensibles.\n\nMigración Portales Corporativos LATAM -Liferay 6,1 A Liferay DXP Cloud 7.3 (05/2021 – 11/2022)\n\nParticipé en la migración exitosa de Liferay 6.1 on-premise a Liferay 7.3 Cloud para LATAM, gestionando la transición de portlets, layouts, web services, themes, contenidos y sitios.\n\nAseguré la compatibilidad de componentes personalizados, optimicé la integración con sistemas externos y colaboré en la validación de la funcionalidad en la plataforma cloud, garantizando continuidad operativa y cumplimiento de requisitos del cliente."
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de Especialización\nLead Engineer | Digital Experience\n\nEstudios\nAnalista de sistema"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Otras Experiencias \n\nReboot canales digitales - Banco Security (06/2021 – 08/2021) \n\nConsultoría de plataformas digitales. Proyecto Reboot canales digitales - Grupo Security.\n\nRFP – Grupo Saesa (05/2025) \n\nColaboré con el equipo de TI para alinear las consultas técnicas con los requisitos estratégicos y funcionales de la organización. \n\nRFP - Canales Aguas Andinas (09/2025) \n\nColaboré con el equipo de TI para alinear las consultas técnicas con los requisitos estratégicos y funcionales de la organización."
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Tecnologías"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Clientes Asesorados"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "Áreas de Especialización\nLead Engineer | Digital Experience\n\nEstudios\nAnalista de sistema"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "Carlos Saúl Gómez Sánchez\nLead Engineer"
+    }
+  ]
+}

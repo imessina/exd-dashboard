@@ -1,9 +1,0 @@
-﻿rtk : fatal: User cancelled dialog.
-En línea: 1 Carácter: 108
-+ ... TA\Dashboard DX\exd-dashboard"; rtk git push origin main 2>&1 | Out-F ...
-+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (fatal: User cancelled dialog.:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-remote: Permission to crengifol/exd-dashboard.git denied to imessina.
-fatal: unable to access 'https://github.com/crengifol/exd-dashboard.git/': The requested URL returned error: 403

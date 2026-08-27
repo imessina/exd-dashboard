@@ -1,4 +1,11 @@
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink,
+  Navigate,
+} from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
 import Personas from "./pages/Personas";
 import Asignaciones from "./pages/Asignaciones";
@@ -9,6 +16,8 @@ import Piramide from "./pages/Piramide";
 //import Carrera from "./pages/Carrera";
 import Skills from "./pages/Skills";
 import Curriculums from "./pages/Curriculums";
+
+import DxAiChat from "./components/DxAiChat";
 
 // Iconos de línea minimalistas (stroke, sin relleno) — look ejecutivo/corporativo
 const Icon = {
@@ -26,6 +35,7 @@ const Icon = {
       <rect x="3" y="16" width="7" height="5" rx="1.5" />
     </svg>
   ),
+
   calendar: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -38,6 +48,7 @@ const Icon = {
       <path d="M3 10h18M8 3v4M16 3v4" />
     </svg>
   ),
+
   users: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -51,6 +62,7 @@ const Icon = {
       <path d="M16 4.8c1.6.3 2.8 1.7 2.8 3.4 0 1.7-1.2 3.1-2.8 3.4M19 14c2 .5 3.5 2.3 3.5 4.5" />
     </svg>
   ),
+
   pyramid: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -63,6 +75,7 @@ const Icon = {
       <path d="M7.5 13.5h9M9.2 10.2h5.6" />
     </svg>
   ),
+
   chart: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -75,6 +88,7 @@ const Icon = {
       <path d="M21 4v6h-6" />
     </svg>
   ),
+
   grid: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -89,6 +103,7 @@ const Icon = {
       <rect x="14" y="14" width="7" height="7" rx="1.2" />
     </svg>
   ),
+
   tag: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -101,6 +116,7 @@ const Icon = {
       <circle cx="16.5" cy="7.5" r="1.3" />
     </svg>
   ),
+
   refresh: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -113,6 +129,7 @@ const Icon = {
       <path d="M4 13a8 8 0 0 0 14.6 4.4M20 20v-5h-5" />
     </svg>
   ),
+
   document: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -125,6 +142,7 @@ const Icon = {
       <path d="M14 3v5h5M9 12h6M9 16h6" />
     </svg>
   ),
+
   rocket: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -141,27 +159,56 @@ const Icon = {
 };
 
 const NAV = [
-  { to: "/", label: "Vista Ejecutiva", icon: Icon.dashboard },
-  { to: "/asignaciones", label: "Asignaciones", icon: Icon.calendar },
   { to: "/personas", label: "Equipo", icon: Icon.users },
   { to: "/piramide", label: "Pirámide", icon: Icon.pyramid },
-  //{ to: "/carrera", label: "Carrera", icon: Icon.chart },
-  { to: "/skill-matrix", label: "Skill Matrix", icon: Icon.grid },
-  { to: "/skills", label: "Skills", icon: Icon.tag },
+  { to: "/skill-matrix", label: "Capacidades", icon: Icon.grid },
   { to: "/curriculums", label: "Currículums", icon: Icon.document },
-  { to: "/proyectos", label: "Proyectos", icon: Icon.refresh },
-  { to: "/oportunidades", label: "Oportunidades", icon: Icon.rocket },
 ];
 
 function Sidebar() {
   return (
     <aside
-      className="w-60 shrink-0 flex flex-col h-screen sticky top-0 z-20 relative"
+      className="w-60 shrink-0 flex flex-col h-screen sticky top-0 z-20 relative overflow-hidden"
       style={{
-        background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        boxShadow: "1px 0 0 rgba(255,255,255,0.05)",
+        background: "#051128",
       }}
     >
+      <style>{`
+        @keyframes dxBotFloat {
+          0% {
+            transform: translateY(0px) rotate(-1deg);
+          }
+
+          50% {
+            transform: translateY(-8px) rotate(1deg);
+          }
+
+          100% {
+            transform: translateY(0px) rotate(-1deg);
+          }
+        }
+
+        @keyframes dxBotGlow {
+          0% {
+            filter: drop-shadow(
+              0 6px 16px rgba(14, 165, 233, 0.12)
+            );
+          }
+
+          50% {
+            filter: drop-shadow(
+              0 10px 24px rgba(14, 165, 233, 0.24)
+            );
+          }
+
+          100% {
+            filter: drop-shadow(
+              0 6px 16px rgba(14, 165, 233, 0.12)
+            );
+          }
+        }
+      `}</style>
+
       {/* Logo */}
       <div className="px-6 pt-6 pb-5">
         <img
@@ -177,7 +224,7 @@ function Sidebar() {
 
       <div className="mx-5 h-px bg-white/10" />
 
-      {/* Nav */}
+      {/* Navegación */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {NAV.map(({ to, label, icon: IconComp }) => (
           <NavLink
@@ -191,16 +238,36 @@ function Sidebar() {
             }
           >
             <IconComp className="w-[18px] h-[18px] shrink-0" />
+
             <span>{label}</span>
           </NavLink>
         ))}
       </nav>
+
+      {/* Robot DX */}
+      <div className="px-3 pb-3">
+        <div className="mx-1 rounded-2xl bg-transparent">
+          <div className="flex min-h-[250px] items-end justify-center px-2 py-2">
+            <img
+              src="/robot-dx.png"
+              alt="Robot DX NTT DATA"
+              className="w-full max-w-[190px] h-auto object-contain select-none pointer-events-none"
+              style={{
+                animation:
+                  "dxBotFloat 4.6s ease-in-out infinite, dxBotGlow 4.6s ease-in-out infinite",
+                transformOrigin: "center bottom",
+              }}
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="mx-5 h-px bg-white/10" />
 
       {/* Footer */}
       <div className="px-5 py-4">
         <p className="text-[11px] text-slate-400 font-medium">NTT DATA · DX</p>
+
         <p className="text-[10px] text-slate-500 mt-0.5">2026</p>
       </div>
     </aside>
@@ -210,25 +277,42 @@ function Sidebar() {
 export default function App() {
   return (
     <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
     >
       <div className="flex min-h-screen w-full bg-surface">
         <Sidebar />
-        <main className="flex-1 overflow-auto min-w-0 w-full">
+
+        <main className="flex-1 overflow-auto min-w-0 w-full -ml-px">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/personas" replace />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
+
             <Route path="/asignaciones" element={<Asignaciones />} />
+
             <Route path="/personas" element={<Personas />} />
+
             <Route path="/skill-matrix" element={<SkillMatrix />} />
+
             <Route path="/proyectos" element={<Proyectos />} />
+
             <Route path="/oportunidades" element={<Oportunidades />} />
+
             <Route path="/piramide" element={<Piramide />} />
+
             {/* <Route path="/carrera" element={<Carrera />} /> */}
+
             <Route path="/skills" element={<Skills />} />
+
             <Route path="/curriculums" element={<Curriculums />} />
           </Routes>
         </main>
       </div>
+
+      <DxAiChat />
     </BrowserRouter>
   );
 }

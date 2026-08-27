@@ -394,7 +394,7 @@ def generar_curriculum_pdf(curriculum: dict[str, Any]) -> bytes:
             else nombre_skill
         )
 
-    historia.extend(_seccion_lista("Skills", skills_texto, estilos))
+    historia.extend(_seccion_lista("Capacidades", skills_texto, estilos))
     historia.extend(
         _seccion_lista(
             "Herramientas y tecnologías",

@@ -1,0 +1,1288 @@
+{
+  "curriculums_con_advertencias": 14,
+  "curriculums_inspeccionados": 14,
+  "errores": 0,
+  "resultados": [
+    {
+      "persona_id": "emp-182831",
+      "persona_nombre": "Alejandro Ignacio Peñaloza Silva",
+      "archivo": "AlejandroPeñalozaSilva_ExperienceDesign_20241122.pptx",
+      "advertencias": [
+        "No se detectaron áreas de especialización."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 25,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Alejandro Peñaloza Silva\nDiseñador UX / UI @NTTData"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Overview\nDiseñador UX/UI con una sólida experiencia fusionando diseño centrado en el usuario y estrategias de Optimización de la Tasa de Conversión (CRO). Mi enfoque se basa en crear experiencias digitales atractivas y funcionales que no solo mejoren la usabilidad, sino que también maximicen la conversión y el valor del producto. A través de una combinación de investigación de usuarios, diseño de interfaces intuitivas y pruebas iterativas, me esfuerzo por obtener resultados impactantes que aporten valor tanto a los usuarios como a los objetivos comerciales. Comprometido con la excelencia en el diseño, siempre busco oportunidades para aprender, innovar y crecer profesionalmente.\n\nExperiencia Seleccionadas\n\nBANNKING | Banco Itaú – Medios de Pago para la App (08/24 – Actualidad)\nDiseño de la experiencia de usuario para los medios de pago dentro de la aplicación móvil de Banco Itaú, buscando optimizar la fluidez y seguridad de las transacciones.\nInvestigaciones de usuarios (research) para entender necesidades y comportamientos, lo que permitió crear soluciones de diseño más centradas en el usuario y adaptadas a sus expectativas.\nDiseño de interfaces intuitivas para mejorar la experiencia de pago, asegurando que fuera simple, rápida y confiable.\nLlevé a cabo pruebas de usabilidad (testing) para validar las soluciones de diseño y realizar ajustes según los resultados obtenidos, optimizando continuamente la experiencia del usuario.\nColaboración con equipos de desarrollo y producto para asegurar una implementación exitosa, alineada con los objetivos de negocio y las mejores prácticas en seguridad de pagos.\n\n TELECOM | Proyecto E-commerce Movistar (04/23 – 07/24)\nDiseño y optimización de la experiencia de usuario para la plataforma de e-commerce de Movistar, enfocándome en mejorar la navegación y facilitar el proceso de compra para aumentar la conversión.\nColaboración con equipos de desarrollo y marketing para garantizar una implementación eficiente de las mejoras en la interfaz.\nResearch y pruebas de usabilidad y análisis de comportamiento de usuarios, lo que resultó en un diseño más intuitivo y centrado en las necesidades del cliente."
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de Especialización\nExperiencia de usuario\nAnálisis heurístico y benchmarking\nJourney maps y mapa de empatía\nDiseño de interfaces\nPrototipos funcionales\nPatrones de diseño\nDesign System\n\nEstudios y Posgrados\nDiplomado UX Design, Diseño de experiencia de usuario - Universidad Finis Terrae, Designar\nDiseño en comunicación visual – Universidad Tecnológica Metropolitana"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Otras Experiencias \nTELECOM | Proyecto de Optimización del Sitio Web de Movistar Empresas\nRediseñé la interfaz del sitio web público de Movistar Empresas, mejorando la experiencia de navegación para clientes B2B.\nImplementé mejoras en el diseño visual y la estructura de contenido, logrando una navegación más fluida y una mejor accesibilidad para usuarios corporativos.\nColaboré con el equipo de contenido para garantizar una alineación visual coherente y optimizada para conversiones.\n\nBNNKING | Proyecto Cálculo Costo de Fondo Empresas Banco BCI\nDiseño de la experiencia para cálculo de costo de fondo empresas, mejorando la experiencia de usuario mediante una interfaz limpia y sencilla.\nColaboración con los analistas de datos y el equipo de desarrollo para garantizar la precisión en el diseño de la herramienta y su funcionalidad.\nPruebas iterativas para asegurarme de que la solución fuera accesible y fácil de usar, generando una mayor satisfacción del cliente.\n\nDiseñador UX/UI & Content Writer | Proyecto Asistente Virtual Transbank\nFui responsable del diseño de la experiencia de usuario del asistente virtual de Transbank, buscando hacer la interacción más intuitiva y fluida para los usuarios finales.\nAdemás, trabajé como content writer, creando el flujo de conversación del asistente\nRealicé pruebas de usabilidad para validar la efectividad de la interfaz y el contenido"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Análisis de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Css"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Google Analytics"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Hotjar"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Looker studio"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Suite Office\nSuite Google\nGoogle Plataform"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 22,
+          "texto": "Html"
+        },
+        {
+          "diapositiva_o_bloque": 23,
+          "texto": "JS"
+        },
+        {
+          "diapositiva_o_bloque": 24,
+          "texto": "Alejandro Peñaloza Silva\nDiseñador UX / UI @NTTData"
+        },
+        {
+          "diapositiva_o_bloque": 25,
+          "texto": "Áreas de Especialización\nExperiencia de usuario\nAnálisis heurístico y benchmarking\nJourney maps y mapa de empatía\nDiseño de interfaces\nPrototipos funcionales\nPatrones de diseño\nDesign System\n\nEstudios y Posgrados\nDiplomado UX Design, Diseño de experiencia de usuario - Universidad Finis Terrae, Designar\nDiseño en comunicación visual – Universidad Tecnológica Metropolitana"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-217777",
+      "persona_nombre": "Camila Andrea Bravo Navea",
+      "archivo": "CamilaBravoNavea_CROanalyst_20261111.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 16,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Camila Bravo Navea \nAnalyst en NTT DATA"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Experiencia Seleccionadas\n\nAnalyst | Transbank - Equipo Marketing Digital (04/2026 – 07/2026)\nAnalista de Marketing Digital en Transbank, responsable del marcaje y la medición del Portal Privado y sus distintas divisiones, asegurando la correcta implementación de analítica digital para generar información confiable que apoye la toma de decisiones.\nGuías de marcaje y su correcta implementación.\nCreación de dashboard de distintos productos.\n\nAnalyst | Transbank - Productos no presenciales (02/2022 – 01/2026)\nAnalista CRO en Transbank, responsable del monitoreo y análisis del desempeño de productos digitales, identificando oportunidades de optimización para mejorar la conversión y la experiencia de usuario mediante análisis de datos.\nMarcaje de Plataforma web. \nAdministración de herramientas de análisis (Google Analytics y Tag manager, entre otros)\nCreación de diferentes dashboards según la necesidad de cliente. \n\nAnálista digital – Agencia de publicidad | Abastible, Renault, Super Pollo, Carozzi, Coopeuch, Confuturo, Skechers, BYD, Fantasilandia, Citroën, entre otros. (01/2016 - 02/2022) \nCreación de reportes o dashboards mensuales de las marca, con datos especificos de campañas.\nPresentación mensual de resultados y propuestas a cliente. \nMétricas de campañas en RRSS y Mailing.\nCreación de anuncios y campañas digitales en RRSS."
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de Especialización\nCRO\nAnálisis de datos\nCreación de dashboards\nEstrategías de medición digital\n\nEstudios y Posgrados\nPublicista y comunicadora integral Universidad Autonoma de Chile\n\nLicenciada en Comunicaciones Universidad Autonoma de Chile"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Clientes Asesorados​"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Herramientas ​"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Google Tag Manager"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Google Analytics"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Looker \nstudio"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Análisis de datos"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Excel\nPower point\nFacebook Analytics /Business"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Trello"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-200561",
+      "persona_nombre": "Carlos Saul Gomez Sanchez",
+      "archivo": "CarlosGomezSanchez_DigitalExperience_20250930_.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 15,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Carlos Saúl Gómez Sánchez\nLead Engineer"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "CV Lead Engineer"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Descripción\nFull Stack Developer con más de 10 años de experiencia, especialista en portales DXP como IBM Portal, Liferay DXP, Liferay Cloud y Modyo, experiencia en desarrollo web, desarrollo SPA en tecnologías como Angular, React y Vue.js, desarrollo de Apis REST bajo tecnologías como Node.js y Spring Boot\n\nExperiencia Seleccionadas\n\nMejora continua portales corporativos – LATAM – Liferay DXP Cloud 7,3 (12/2022 – Actualidad)\n\nContribuyo en iniciativas de mejora continua para LATAM, desarrollando nuevos sitios en Liferay DXP Cloud, optimizando flujos de trabajo y mejorando la experiencia de usuario en portales corporativos.\n\nGestioné la migración de repositorios de Bitbucket a GitLab, asegurando la continuidad del control de versiones, y administré secrets en Liferay Cloud para garantizar la seguridad de configuraciones sensibles.\n\nMigración Portales Corporativos LATAM -Liferay 6,1 A Liferay DXP Cloud 7.3 (05/2021 – 11/2022)\n\nParticipé en la migración exitosa de Liferay 6.1 on-premise a Liferay 7.3 Cloud para LATAM, gestionando la transición de portlets, layouts, web services, themes, contenidos y sitios.\n\nAseguré la compatibilidad de componentes personalizados, optimicé la integración con sistemas externos y colaboré en la validación de la funcionalidad en la plataforma cloud, garantizando continuidad operativa y cumplimiento de requisitos del cliente."
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de Especialización\nLead Engineer | Digital Experience\n\nEstudios\nAnalista de sistema"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Otras Experiencias \n\nReboot canales digitales - Banco Security (06/2021 – 08/2021) \n\nConsultoría de plataformas digitales. Proyecto Reboot canales digitales - Grupo Security.\n\nRFP – Grupo Saesa (05/2025) \n\nColaboré con el equipo de TI para alinear las consultas técnicas con los requisitos estratégicos y funcionales de la organización. \n\nRFP - Canales Aguas Andinas (09/2025) \n\nColaboré con el equipo de TI para alinear las consultas técnicas con los requisitos estratégicos y funcionales de la organización."
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Áreas de Especialización\nLead Engineer | Digital Experience\n\nEstudios\nAnalista de sistema"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Carlos Saúl Gómez Sánchez\nLead Engineer"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-212279",
+      "persona_nombre": "Felipe Andres Guerrero Salgado",
+      "archivo": "FelipeGuerreroSalgado_DX_20251002.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 23,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Skills"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Lenguajes"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "- Node.js + Express <19"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "- Python <3.10"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "- React+JS; React+TS"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Felipe Guerrero S.\nEngineer"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "PERFIL"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Experiencia\nNTT DATA – Solution Assistant | Noviembre 2021 – Actualidad\nLATAM – Engineer | Julio 2025 – Actualidad\nDesarrollo e implementación de la plataforma interna “Centro de Asistencia” para apoyar a agentes en la resolución de casos de clientes. La solución integra Amazon Bedrock con Knowledge Base para brindar respuestas precisas y contextualizadas sobre procesos y decisiones operativas. Incluye mecanismos de extracción y normalización automatizada de contenido según fuente y tipo de dato, facilitando la interpretación de información textual como de flujos y material audiovisual.\nSyntphony – Engineer | Febrero 2025 – Junio 2025\nApoyo en la implementación de soluciones tecnológicas en entornos de contact center, conversacional e IA. Diseño y ejecución de demos y PoCs, evaluación de viabilidad técnica, definición de requisitos y transferencia de conocimiento para impulsar la adopción de nuevas herramientas.\nMINSAL – Engineer | Abril 2024 – Enero 2025\nColaboré en la implementación de una solución de contact center con “panel recomendador” en tiempo real para psicólogos, que sugería respuestas basadas en protocolos clínicos y documentos oficiales. La solución se desarrolló utilizando Amazon Connect, Lex, Bedrock, Kendra, SNS.\nUnilever Brasil & Chile – Engineer | Noviembre 2023 – Febrero 2024\nDiseñé y desarrollé un asistente virtual para una campaña de reducción de desperdicio alimentario. Se aplicaron técnicas de NLP e IA para generar recetas personalizadas a partir de ingredientes disponibles y restricciones nutricionales de los usuarios.\nWalmart Chile – Junior Engineer| Abril 2023 – Octubre 2023\nLideré la automatización de auditorías de atención en WhatsApp y llamadas de voz mediante soluciones de IA. Implementando procesos de transcripción, clasificación y verificación de guiones, además de la extracción de KPIs y publicación de métricas en Power BI.\nL'Oréal Chile & Leonisa Colombia – Junior Engineer| Enero 2022 – Marzo 2023\nDiseño e implementación de asistentes virtuales conversacionales en WhatsApp e Instagram para consultas y recomendaciones personalizadas, potenciando la experiencia de compra con IA.\nSEREMI – Técnico de Asistencia TI | Octubre 2020 – Octubre 2021\nGestión del sistema CRM del centro de contacto y consolidación, limpieza y organización de informes diarios y análisis semanales de desempeño para monitorear la actividad de agentes y la eficiencia operativa. Desarrollo de insights y visualizaciones para tomadores de decisión, optimizando la planificación y asignación de recursos, y garantizando la distribución oportuna de información crítica durante la contingencia COVID‑19."
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Con más de 4 años de experiencia brindando soporte en el ciclo completo de desarrollo e implementación de productos tecnológicos, con mayor énfasis en la integración de soluciones de inteligencia artificial especializadas en casos de uso conversacional (chat y voz), incluyendo CRM y contact centers, para potenciar funcionalidades, automatizar procesos e innovar soluciones.\n\nSoy proactivo, orientado a resultados y sé trabajar de forma colaborativa con equipos multidisciplinarios para desarrollar soluciones innovadoras. Me motiva enfrentar nuevos desafíos y aportar valor a los proyectos"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "- Javascript ES5/ES6"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Cloud"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "- GCP"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "- AWS"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "IA"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "- Azure OpenAI"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "- Gemini"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "- Claude"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Bases de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "- SQL, MySQL, MongoDB, Oracle"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Certificaciones"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "- AWS Certified Cloud Practitioner"
+        },
+        {
+          "diapositiva_o_bloque": 22,
+          "texto": "- AWS Certified AI Practitioner"
+        },
+        {
+          "diapositiva_o_bloque": 23,
+          "texto": "- Inglés B2 (Upper-Intermediate), Certified by the British Council."
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-212278",
+      "persona_nombre": "Felipe Ignacio Zapata Soto",
+      "archivo": "FelipeZapataSoto_DX_20251006.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional.",
+        "No se detectaron experiencias."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 18,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Experiencias \nDesarrollador Bots | Telefonica B2B (03/2025) \nDesarrollo de módulos y flujos conversacionales para el Bot de WhatsApp de Telefónica, orientado a clientes B2B.\nImplementación de lógica de negocio, optimizando tiempos de respuesta y mejorando la experiencia del usuario final.\n\nDesarrollador Mobile | Telefonica B2B (05/2024 – 02/2025) \nDesarrollo de una aplicación móvil desde cero utilizando React Native, estableciendo una base sólida para el proyecto.\nConfiguración inicial del proyecto, definiendo la estructura de carpetas, dependencias y herramientas de desarrollo.\nDesarrollo de componentes reutilizables y modulares para la interfaz de usuario, integrando el sistema de diseño Mística.\n\nDesarrollador Mobile | Telefonica B2B-B2C(09/2022– 2/2023) \nParticipé en sesiones de análisis para comprender los requisitos del negocio y los traduje en especificaciones técnicas para el desarrollo de la aplicación móvil.\nLideré la creación de funcionalidades clave, como el inicio de sesión y el WebView, utilizando React Native.\nDesarrollé e implementé un WebView que funcionó como la columna vertebral de la aplicación, permitiendo la visualización de contenido web principal y proporcionando una experiencia de usuario fluida y coherente.\n\nDesarrollador Web | Transbank(04/2022 – 08/2022) \nDiseñé y desarrollé un portal de pagos web utilizando HTML, CSS y JavaScript, asegurando una experiencia de usuario fluida y segura.\nTrabajé en la interfaz de usuario, mejorando la accesibilidad y la usabilidad, siguiendo buenas prácticas de desarrollo web y estándares de seguridad.\nAnalytics Web| Telefonica B2C (01/2022 – 04/2022) \nImplementé y gestioné Google Analytics y Tag Manager para realizar un seguimiento y análisis de métricas clave en la web.\nUtilicé Google Tag Manager para configurar eventos personalizados, mejorando la medición de interacciones específicas"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Tecnologías\n\nHtml\nJavascript\nCSS\nBootstrap\nTypescript\nReact\nReact Native"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Análisis de Datos\n\nGoogle Analytics\nTag Manager"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "GitHub\nAzure \nAWS"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Felipe Zapata Soto\nEngineer"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Áreas de Especialización\nDesarrollador mobile\n\nEstudios y Posgrados\nDesarrollo Web, DesafioLatam​.\nIngeniería en Informática, Duoc UC.\nCurso iOS, NTTDATA."
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Clientes Asesorados"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-222846",
+      "persona_nombre": "Francisca Guajardo Arellano",
+      "archivo": "FranciscaGuajardoArellano_ExperienceOptimization_20260619.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 20,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Otras Experiencias \n\nMEGASECTOR | Clínica Alemana (02/2026 - Actualidad)            Liderazgo de proyecto Núcleo 2026 Diseño UX, con foco en el delivery de módulos.\n\nBANCA| Banco Chile y Banco Itaú (12/2025 - 02/2027)            Liderazgo de equipo en proyectos de Voicebot y Chatbot\n\nINDUSTRIA | LATAM (05/2024 - 08/2025)                    Diseño de experiencias conversacionales para el asistente virtual Voicebot, manejado a través de IA en AWS. Análisis de KPIs y diseño de propuestas para mejorar indicadores, especialmente NPS, CSAT y hallazgos en general. Investigación y estudio para definir la identidad del voicebot.\n\nASISTENTES VIRTUALES | Eva Conversational AI, NTT DATA (12/2023 - 04/2023) Apoyo en creación de contenidos para la plataforma de asistentes virtuales Eva, además de gestion del equipo web para optimizaciones dentro del sitio.\n\nDOCENCIA | Academia Adity (10/2020 - 08/2022) IP Los Leones (03/2021 – 08/2021) Docente para el curso de ”Google Ads” y “Google Tag Manager\" en Modalidad Online.\nDocente de asignatura Aplicación de Estrategias Digitales, Ingeniería en Marketing IP Los Leones\n\nMARKETING DIGITAL | Clínica Everest, Medicien, Red MTS, Toctoc.com, AFP Modelo, Clínica Alemana, Dimacofi, Manager Software, Fundación Portas (08/2016 - 04/2022) Gestión de clientes, generación de copys para landing pages, creación y optimización de \ncampañas en Google Ads y Meta Ads y marcaje de sitios web."
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Análisis de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Google Analytics"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Hotjar"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Looker \nstudio"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Suite Office\nSuite Google"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Google Tag Manager"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Francisca Guajardo Arellano \nLead Analyst en NTT DATA"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Áreas de Especialización\nUX Writing\nOptimización de flujos\nAnálisis de datos\nCRO\nCreación de campañas digitales\nEstrategias digitales\n\nEstudios y Posgrados\nMaster in Management en Kedge Business School Francia\nIngeniería Comercial, Mención Marketing en Universidad Andrés Bello\n\nInglés Avanzado"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Google Ads"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Amazon\nPolly"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Meta Ads"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-195910",
+      "persona_nombre": "Francisco Javier Fuentes Ortega",
+      "archivo": "FranciscoFuentesOrtega_CROanalyst.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 12,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Francisco Fuentes Ortega\nAnalyst en NTT DATA"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Experiencia Seleccionadas\n\nTengo las habilidades para analizar y entender datos para crear visualizaciones de estos, asegurando una toma de deciones de forma inteligente en cada proyecto. Actualmente estoy ampliando mis capacidades en el ecosistema Adobe, con foco en Journey Optimization para fortalecer procesos de automatización y personalización avanzada.\n\nLead Analyst | Telefónica (01/2026 – 03/2026)\nOptimicé la visibilidad de KPIs de E‑commerce mediante la mantención de dashboards en Power BI y la creación de nuevos modelos en Looker Studio. Aporté análisis accionables para equipos comerciales y de performance, mejorando la toma de decisiones en campañas digitales.\nLead Analyst | Banco de Chile (11/2025 – 12/2026)\nDiseñé y desplegué dashboards en Amazon Quicksight para monitorear el desempeño del voicebot, permitiendo identificar fricciones en la experiencia de atención y oportunidades de mejora en la automatización de consultas.\nLead Analyst | LATAM Airlines (07/2025 – 10/2025)\nApoyé a un equipo multidisciplinario encargado de evaluar y optimizar la experiencia VR de entrenamiento. Desarrollé dashboards que permitieron visualizar el comportamiento de los usuarios dentro de la experiencia, facilitando decisiones de mejora en usabilidad y rendimiento.\nCRO Analyst | Transbank (02/2021 – 07/2025)\nLideré iniciativas de medición y optimización digital, asegurando la correcta implementación de marcajes y la calidad del dato. Creé guías de tagging, implementaciones en Tag Manager y dashboards personalizados en Looker Studio. Detecté oportunidades de mejora que impactaron directamente la conversión y la experiencia digital.\nAnalista Digital – Agencia de Publicidad (Nestlé, Paris, Huawei) (01/2015 – 02/2021)\nDesarrollé reportes y dashboards mensuales para marcas globales, automatizando procesos con Supermetrics + Data Studio. Analicé datos de campañas, E‑commerce y comportamiento digital, además de reportes de escucha social con Brandwatch. Presenté resultados y recomendaciones estratégicas a clientes, y gestioné campañas digitales en RRSS."
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de Especialización\nCRO\nAnálisis de datos\nCampañas digitales\nEstrategías digitales\n\nEstudios y Posgrados\nPublicista Duoc UC\n\nDiplomado Webscrapping y visualización de datos sociales en R ( A22D73A6B6 )"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Clientes Asesorados​"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Herramientas ​"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Análisis de datos"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Excel\nPower point\nFacebook Analytics /Business"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-211200",
+      "persona_nombre": "Francisco Jose Gonzalez Rodriguez",
+      "archivo": "FranciscoGonzalezRodriguez_ExperienceOptimization_20263006.pptx",
+      "advertencias": [
+        "No se detectaron áreas de especialización."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 27,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Overview\nCon más de 10 años de experiencia integrando desarrollo de software, marketing digital y análisis de datos, actualmente enfocado en el diseño e implementación de arquitecturas de Customer Journey Analytics y automatización de marketing sobre Adobe Experience Cloud. Combina competencias consultivas con capacidad técnica para llevar iniciativas end-to-end: desde el levantamiento de casos de uso, la validación de datos y la construcción del modelo analítico, hasta la orquestación de journeys y la generación de dashboards operativos para equipos de negocio.\n\nTrayectoria en clientes de banca, telecomunicaciones y transporte aéreo, con foco reciente en Adobe Experience Platform, Adobe Customer Journey Analytics, Real-Time CDP, Databricks y SQL.\n\nExperiencia Seleccionadas\nBANCA | Santander – Senior MarTech & Customer Journey Analytics Consultant (02/2026 – actual) \nConsultor senior integrado a la célula de datos de Growth del Banco Santander. Aporte técnico-funcional en la migración de journeys de Salesforce Marketing Cloud hacia Adobe Journey Optimizer y en la construcción del modelo de reporting operativo sobre Customer Journey Analytics. Desarrollando las siguientes actividades:\n\nDiseño y construcción de dashboards operativos y ejecutivos en Adobe CJA sobre líneas de negocio críticas: banner de personas en OneApp, monetización Growth, seguros Zurich Santander, contact center y bienvenida.\nImplementación de la capa de medición y optimización de journeys sobre Adobe CJA como parte de la migración corporativa hacia el ecosistema Adobe.\nRol de puente técnico-funcional entre el equipo corporativo del banco (responsable del modelo de datos) y los equipos locales de negocio que consumen los dashboards.\nIdentificación y escalamiento de gaps estructurales del modelo de datos para atribución cruzada entre ofertas y eventos; propuesta de solución adoptada como camino oficial por el corporativo.\nDiseño y construcción de dashboards productivos para medición de performance de journeys, análisis de funnel digital por producto, retención por camada y atribución de derivaciones a canales asistidos.\nValidación de paridad de datos entre fuentes legacy y el nuevo ecosistema Adobe durante la transición, asegurando confiabilidad de las métricas de negocio.\nImplementación de sistemas de alertas tempranas con detección de anomalía estadística sobre canales de derivación, con notificación automática a los responsables de cada journey.\nLevantamiento de paneles analíticos para nuevas líneas de negocio que ingresan al ecosistema Adobe, incluyendo la línea de seguros del banco."
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Otras Experiencias \nTELCO | Telefónica – CRO & Data Analyst (06/2025 – 01/2026) \nApoyo en la consolidación de datos multi-fuente (Excel, SQL Server, Google Analytics y bases de leads) en dashboards únicos sobre Power BI y Looker Studio para el seguimiento comercial. Análisis del rendimiento del funnel con propuestas de optimización por etapa, coordinación transversal con Marketing, Ventas y Tecnología. Durante el proyecto se desarrollaron las siguientes actividades:\nAsegurar la trazabilidad end-to-end del funnel digital B2B y cerrar brechas entre fuentes de datos.\nConsolidar información desde Excel, SQL Server, Google Analytics y Bases de leads en un dashboard único en Power BI.\nAnalizar el rendimiento del funnel y proponer acciones para optimizar la conversión en cada etapa.\nCoordinar la integración de datos con Marketing, Ventas y Tecnología.\nGenerar insights accionables sobre comportamiento de usuarios y eficiencia de canales.\nPromover e implementar metodologías ágiles de experimentación y mejora continua en los distintos equipos. \nAdministrar dashboards en Looker Studio para el seguimiento de KPIs y campañas digitales.\nSupervisar la calidad de datos a lo largo del funnel de ventas.\nBANCA | Transbank – Growth Hacking Developer (04/2022 – 10/2024) \nDesarrollo y ejecución de experimentos estratégicos enfocados en impactar los principales KPI, optimizando cada etapa del funnel para acelerar la adopción de los distintos productos. Durante el proyecto se desarrollaron las siguientes actividades: \nFormular hipótesis y diseñar métodos de experimentación para incrementar la captación de prospectos calificados en los diferentes canales.\nEstablecer las líneas estratégicas de promoción e impulso para la venta de los distintos productos a través de los canales digitales. \nAnalizar el funnel de conversión y desarrollar estrategias para maximizar los resultados en cada etapa. \nObtener Insights de los usuarios y proponer mejoras a los productos a partir de estos. \nAutomatizar procesos de Marketing para recopilar, depurar y centralizar la información de leads desde campañas en los distintos canales."
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Análisis de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "React Native"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Google Analytics"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Power BI"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Suite Office\nSuite Google\nGoogle Marketing Plataform"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "VWO"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Google Tag Manager"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Javascript"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Phyton"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "Firebase"
+        },
+        {
+          "diapositiva_o_bloque": 22,
+          "texto": "TensorFlow"
+        },
+        {
+          "diapositiva_o_bloque": 23,
+          "texto": "Zapier"
+        },
+        {
+          "diapositiva_o_bloque": 24,
+          "texto": "React Leaflet"
+        },
+        {
+          "diapositiva_o_bloque": 25,
+          "texto": "Plotly"
+        },
+        {
+          "diapositiva_o_bloque": 26,
+          "texto": "Databricks"
+        },
+        {
+          "diapositiva_o_bloque": 27,
+          "texto": "SQL"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-294922",
+      "persona_nombre": "John Fernando Calderon Vera",
+      "archivo": "JohnCalderonVera_ExperienceDesign_20260603.pptx",
+      "advertencias": [
+        "No se detectaron experiencias."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 20,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "John Calderón vera\nJunior designer"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Overview\nDiseñador UX/UI con formación en Diseño y Desarrollo, especializado en el diseño de experiencias digitales centradas en el usuario y orientadas a resultados de negocio. Combino pensamiento analítico y visión creativa para traducir necesidades complejas en interfaces claras y eficientes, apoyándome en metodologías como Design Thinking, procesos de UX Research y prototipado iterativo.\nInteresado en la innovación continua y en la aplicación de tecnologías emergentes —incluida la IA generativa— para optimizar flujos de diseño, mejorar la experiencia del usuario y aportar valor tangible a los proyectos.\n\nExperiencia Seleccionadas"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Áreas de Especialización\nExperience designer\nDesarrollo web front-end\n\nEstudios y Posgrados\nDiseño y Desarrollo Web\nDuoc UC | 2023 – 2025\nDiseño UX: Experiencia de Usuario + Figma Curso de IA Generativa\nUdemy | 2025\n\nCurso de IA Generativa\nUdemy | 2025"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "HTML"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "CSS"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "JS"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Jquery"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "PHP"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "SALUD | Clínica Alemana – UX/UI Consultant (2025 – actualidad)\nDiseño de soluciones digitales enfocadas en mejorar la experiencia del paciente y usuarios internos.\nAdaptación a entornos corporativos exigentes y de rápida iteración.\nPresentación de propuestas funcionales ante stakeholders.\nMejora de procesos digitales internos mediante rediseño de experiencia de usuario."
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Json"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Python"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Suite Adobe\nSuite Office\n- Chat gpt"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Clientes"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Canva"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-172962",
+      "persona_nombre": "Luis Flores Zamorano",
+      "archivo": "LuisFloresZamorano_DX_20251002.pptx",
+      "advertencias": [
+        "No se detectaron áreas de especialización.",
+        "El PPTX fue recuperado mediante lectura XML."
+      ],
+      "metodo_lectura": "xml-recuperado",
+      "cantidad_bloques": 2,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Luis Felipe Alberto Flores Zamorano\nOverview\n6 \nAños\n de \nexperiencia\ncomo\ndesarrollador\n web de sitios con \ntecnologia\n FE/CMS AEM, totems de \nautoconsulta\n, \nconfiguración\n de \nservidores\n, \nasi\ncomo\nintegración\n con \nmicroservicos\n. \nTecnologias de \nuso\ndiario\n: SO Linux, JS, CSS, HTML, JAVA, React, Bash, Apache, Apache Sling, \nademas\n de \nuso\nocacional\n de Python, bash script, curl, ssh. \nConocimiento\nen\n .SH .BAT, C/C++, SQL, PLSQL, GLSL, \nGDScript\n, HTL, PHP, etc. Las \nherramientas\nprincipales\nque\nmanejo\n son Postman, Suite Office, Confluence, Jira, Git, Bitbucket, SoapUI, Vim, CRX, VSC, Blender, FileZilla, Godot Engine 4+, Google \nColab\n, entre \notras\n.\nExperiencia \nSeleccionadas\nDX| Latam Airlines– Developer (02/2019 – 12/2021) \nDesarrollo \nen\n AEM\nDesarrollo de \ncomponentes\nen\n AEM\nMigracion\n de \ncomponentes\nMantención\n de CMS\nGestion \nherramientas\n de \nDevOp\nMantención\n de \nservidor\naem\nDX | \nTransbank\n– Developer (12/2021 – 03/22) \nDesarrollo Back End \nen\ntecnologia\n de Java y spring boot\ndesarrollo\n de BE \nen\n Java \nMantención\n de \nfuncionalidades\nÁreas\n de \nEspecialización\nDesarrollo Web Full Stack\nCMS Adobe Experience Manager\nEstudios\n y \nPosgrados\nAnalista\nProgramador\n de Nivel Superior\nCertificación\n Adobe Experience Manager Sites Developer Expert"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Herramientas\nTecnologías\nColaborativas\nOtras\nherramientas\nClientes\nAsesorados\nJira\nConfluence\nLuis Felipe Alberto Flores Zamorano\nÁreas\n de \nEspecialización\nDesarrollo Web Full Stack\nCMS Adobe Experience Manager\nEstudios\n y \nPosgrados\nAnalista\nProgramador\n de Nivel Superior\nCertificación\n Adobe Experience Manager Sites Developer Expert\nFoto \nperfil\nBitBucket\nPostman\nSuite Office\nSuite Google\nVim\nCRX\nGoogle \ncolab\nVSC\nCursor\nSplunk\nBlender\nKrita\nSoapUI\nFileZilla\nSublimeMerge\nDX| Enel – Engineer (03/2022 – Present) \nDesarrollo \nen\n AEM y React para Enel Chile, Colombia y Peru (Latam).\nDesarrollo y \nmantención\n de \ncomponentes\n de AEM\nIntegracion de \nservicios\nMantención\n de ambientes, Author, Publisher, Dispatcher (Apache) \nEstimaciones\n, \ndiagramas\n, etc \ngeneracion\n de \nartefactos\nMantención\n y \ndesarrollo\n de \naplicativo\n para totems de \nautoservicio\nCapacitaciones\nen\n AEM a \nnuevos\nintegrantes"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-267365",
+      "persona_nombre": "Lysset Alejandra Hernandez Hinojosa",
+      "archivo": "LyssetHernándezHinojosa_DigitalExperience_20250411.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 23,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Áreas de Especialización\nAnalista \n\nEstudios y Posgrados\nIngeniería Comercial – Universidad Adolfo Ibáñez \nMagíster en Marketing – Universidad Adolfo Ibáñez"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "LYSSET HERNÁNDEZ\nJunior Analyst"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Overview\n\nExperiencia Seleccionadas\n\nBANCA | SANTANDER– Encargada de testing con personas sintéticas (02/2025 – 04/2025) \nInvestigación de la experiencia en los canales digitales (web y app)\nRealización y análisis de entrevistas a usuarios del banco \nCreación de usuarios sintéticos \nRealización y análisis de entrevistas y test think a loud a usuarios sintéticos \n\nLOGÍSTICA | LATAM CARGO – Apoyo en QA de experiencias XReality (9/2025 – 12/2025)\nApoyo en aseguramiento de calidad (QA) de experiencias inmersivas para procesos de bodega y grúa horquilla.\nEvaluación de flujos de interacción y usabilidad en entornos XReality.\nIdentificación y reporte de incidencias funcionales y de experiencia de usuario.\nValidación de mejoras previo a implementación.\n\nSALUD | CLÍNICA ALEMANA – Diseñadora de módulos internos (01/2026 – Actualidad)\nAnálisis de épicas.\nConstrucción de mapas de flujo.\nDiseño de soluciones digitales en base a épicas o historias de usuario.\nIteración continua de propuestas junto a Product Owners hasta validación final de diseño."
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Análisis de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Power BI"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Áreas de Especialización\nAnalista \n\nEstudios y Posgrados\nIngeniería Comercial – Universidad Adolfo Ibáñez \nMagíster en Marketing – Universidad Adolfo Ibáñez"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "LYSSET HERNÁNDEZ\nJunior Analyst"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 22,
+          "texto": "Otras Experiencia\n\nSALUD | RED SALUD – Apoyo en propuesta de definición estratégica de ecosistema digital (07/2025 – 09/2025)\nParticipación en la definición estratégica del ecosistema digital de la organización.\nRealización de análisis heurísticos de productos y canales digitales.\nAnálisis de entrevistas a usuarios para identificación de oportunidades de mejora.\nSistematización de hallazgos obtenidos en workshops estratégicos.\n\nENERGÍA | METROGAS – Apoyo en QA de experiencias XReality (12/2025)\nApoyo en aseguramiento de calidad (QA) de experiencias inmersivas en entorno XReality.\nEjecución de validaciones finales de flujos.\nIdentificación y reporte de incidencias funcionales y de experiencia de usuario.\nVerificación de cumplimiento de criterios definidos para implementación.\n\nBANCA | BANCO DE CHILE – Apoyo en QA de Voicebot (12/2025)\nEjecución de pruebas de aseguramiento de calidad (QA) para voicebot.\nValidación de flujos conversacionales y lógica de respuestas automatizadas.\nIdentificación y reporte de incidencias funcionales y de experiencia de usuario.\nVerificación de cumplimiento de criterios definidos previo a implementación."
+        },
+        {
+          "diapositiva_o_bloque": 23,
+          "texto": "Figma"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-166259",
+      "persona_nombre": "Nadia Veronica Quezada Navarrete",
+      "archivo": "NadiaQuezada_DX_20250217.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 44,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Experiencia Seleccionadas\nTelecomunicaciones | Telefonica – Desarrolladora (07/2019 – 01/2025) \nComo desarrolladora front-end en la Sucursal Virtual Respuesta (SVR), he tenido la responsabilidad de crear y optimizar interfaces de usuario para plataformas web utilizando HTML y CSS, implementando tecnologías como Angular y otras herramientas para asegurar que las aplicaciones sean modernas, accesibles y altamente responsivas. He trabajado en la adaptación y consumo de APIs desarrolladas por nuestro equipo de backend, lo que me ha permitido integrar funcionalidades de manera eficiente y mantener la fluidez de la experiencia del usuario. He colaborado estrechamente con equipos de UX/UI para el desarrollo de estas interfaces, llevando a cabo proyectos bajo la metodología Agile Scrum que promueve la cooperación eficaz y la entrega continua de valor. He trabajado junto con el equipo de control de calidad (QA) para asegurar que todos los entregables cumplan con los estándares más altos. Además, mantuve un diálogo constante con el cliente, lo que garantizó que las soluciones desarrolladas se alinearan con sus expectativas y necesidades. Como parte de un esfuerzo por modernizar nuestra infraestructura, estuve involucrada en la migración de aplicaciones legadas, enfocándome en mejorar la usabilidad y experiencia del usuario final.\n\nBancario | Transbank– Prototyper (08/2018 – 06/2019) \nEn mi rol como prototyper, mi enfoque estuvo en desarrollar interfaces intuitivas y funcionales para la aplicación Mi Pyme, trabajando en sinergia con el equipo de UX/UI para asegurar que el diseño final fuese no solo atractivo, sino también alineado con la identidad del cliente. Participé activamente en un ambiente de trabajo Agile Scrum y colaboré con QA para garantizar la calidad de cada entrega. Mantuve comunicación constante con el cliente, lo que facilitó un desarrollo ágil y efectivo, ajustando las soluciones a sus requerimientos específicos."
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Nadia Quezada\nDeveloper FrontEnd"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Áreas de Especialización\nDesarrolladora Web/Mobile\n\nEstudios y Postgrados\nIngeniería en Informática\nUniversidad Mayor 2021-2025"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "Git"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Otras Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Typescript\nFlutter\nNativescript\nPython"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "HTML"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "CSS y SCSS"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "Angular"
+        },
+        {
+          "diapositiva_o_bloque": 22,
+          "texto": "React Native"
+        },
+        {
+          "diapositiva_o_bloque": 23,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 24,
+          "texto": "Experiencia Seleccionadas\nPython– Desarrolladora (07/2023) \nDurante mi experiencia en la universidad, desarrollé un proyecto utilizando Python que se enfocó en la creación de un sistema de venta de pasajes aéreos para una aerolínea. Este proyecto surgió por la necesidad de optimizar el proceso de venta de boletos, dado el alto volumen de demanda, lo que hacía inviable el uso de métodos manuales.\nEl objetivo fue implementar un programa que gestionara los pasajes de manera eficiente, considerando diferentes clases de asientos (Primera Clase, Clase Ejecutiva y Clase Turística) y los precios correspondientes. Utilicé matrices para representar los asientos del avión, así como para almacenar los datos de los pasajeros.\nEl sistema permitía registrar información del pasajero, como el RUN, nombre, apellidos y forma de pago, validando la información para evitar errores. Implementé la opción de aplicar descuentos a clientes frecuentes, ofreciendo un 20% de descuento en el total a pagar, lo que demostró la versatilidad de Python para manejar lógicas de negocio como esta.\nEl desarrollo de este proyecto no solo me permitió adquirir conocimientos técnicos sobre Python, sino que también mejoró mis habilidades en la resolución de problemas y en la implementación de soluciones prácticas para necesidades reales en la industria del turismo."
+        },
+        {
+          "diapositiva_o_bloque": 25,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 26,
+          "texto": "Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 27,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 28,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 29,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 30,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 31,
+          "texto": "Figma"
+        },
+        {
+          "diapositiva_o_bloque": 32,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 33,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 34,
+          "texto": "[nombre Xxxx xxxx xxxx] \n[cargo xxxxx xxxxxx,\n xxxx @ NTT DATA]"
+        },
+        {
+          "diapositiva_o_bloque": 35,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 36,
+          "texto": "Nadia Quezada\nEngineer"
+        },
+        {
+          "diapositiva_o_bloque": 37,
+          "texto": "Áreas de Especialización\nDesarrolladora Web/Mobile\n\nEstudios y Postgrados\nIngeniería en Informática\nUniversidad Mayor 2021-2025"
+        },
+        {
+          "diapositiva_o_bloque": 38,
+          "texto": "Python"
+        },
+        {
+          "diapositiva_o_bloque": 39,
+          "texto": "Git"
+        },
+        {
+          "diapositiva_o_bloque": 40,
+          "texto": "Javascript"
+        },
+        {
+          "diapositiva_o_bloque": 41,
+          "texto": "Otras Tecnologías"
+        },
+        {
+          "diapositiva_o_bloque": 42,
+          "texto": "Typescript\nFlutter\nNativescript\nAngular\nReact Native"
+        },
+        {
+          "diapositiva_o_bloque": 43,
+          "texto": "HTML"
+        },
+        {
+          "diapositiva_o_bloque": 44,
+          "texto": "CSS y SCSS"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-173177",
+      "persona_nombre": "Pablo Ariel Godoy Espinoza",
+      "archivo": "Pablo Godoy_20260708.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional.",
+        "No se detectaron experiencias.",
+        "No se detectaron áreas de especialización."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 11,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Informatico con más de 15 Años de experiencia. Como Lead Engineer en NTT DATA Europe & LATAM, aporto más de 7 años de experiencia liderando el diseño técnico e integración de soluciones en la nube, con un enfoque en experiencias conversacionales impulsadas por inteligencia artificial. Mi trabajo se centra en la implementación de arquitecturas escalables y seguras que combinan procesamiento de lenguaje natural (NLP/NLU) y modelos de lenguaje (LLM), transformando la interacción con usuarios en canales digitales y de voz. \nMi misión es habilitar tecnologías innovadoras que optimicen la experiencia del cliente y cumplan con las expectativas del mercado, apoyándome en habilidades como desarrollo ágil de aplicaciones, inteligencia artificial y Arquitectura Cloud. (AWS, AZURE, GCP)"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "Banca | Transbank– Lead Engineer, Arquitecto​\nBanca | Banco ITAU – Lead Engineer, Arquitecto​\nBanca | Banco Chile– Lead Engineer, Arquitecto​\nRetail | Alkosto Colombia - Lead Engineer, Arquitecto​\nMarketing | Indicar USA- Lead Engineer, Arquitecto​\nBanca | Transbank– Lead Engineer, Arquitecto ​\nBanca| Santander Mexico– Lead Engineer ​\nTelecomunicaciones | WOM– Lead Enginner ​\nEnergía | Avangrid USA – Lead Enginner ​\nTelecomunicaciones | Entel Empresas – Lead Enginner\nTelecomunicaciones | Telefonica – Mobile Enginner\nGobierno de chile | Mininsterio de Bienes Nacionales\nSalud | BUPA - Enginner\nBanca | Santander Chile - Enginner"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Cloud: Azure, AWS, GCP\nTecnologias: Python, Javascript, Node, PHP, C#, Java, Typescript\nBBDD: OracleDB, SQL Server, Mongo, Redis, DynamoDB BigQuery\nCICD: Jenkins, Git, GitHub, Argo, Kubernetes\nIA :AWS Bedrock, Agentcore – Novasonic - Google Gemini, Azure AI, OpenAI, NLP-NLU-LLM"
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de conocimiento"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "Resumen"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "EXPERIENCIA PROFESIONAL"
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "CLIENTES ASESORADOS"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Pablo Ariel Godoy Espinoza\n\nLead Engineer"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Estudios​:\nIngeniero Informático \nAnalista de Sistemas\nProgramador Informático\n\nCertificaciones:\nGoogle Cloud Certified Associate Cloud Engineer"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "FORMACIÓN"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Clínica Bupa (Chile)\nBanco ITAU (Chile)\nBanco Chiile (Chile)\nBanco Santander (Chile)\nBanco Santander (Mexico)\nMinisterio de Bienes Nacionales (Chile) \nAvangrid (USA)\nIndicar (USA)\nEntel (Chile)\nMovvistar (Chile)\nWOM (Chile)\nTransbanlk (Chile)\nAlkosto (Colombia)"
+        }
+      ]
+    },
+    {
+      "persona_id": "emp-264585",
+      "persona_nombre": "Pablo Ignacio Quintanilla Peralta",
+      "archivo": "PabloQuintanillaPeralta_CAI_20241122.pptx",
+      "advertencias": [
+        "No se detectó resumen profesional."
+      ],
+      "metodo_lectura": "python-pptx",
+      "cantidad_bloques": 21,
+      "diapositivas": [
+        {
+          "diapositiva_o_bloque": 1,
+          "texto": "Pablo Quintanilla Peralta\nJunior engineer - NTT DATA"
+        },
+        {
+          "diapositiva_o_bloque": 2,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 3,
+          "texto": "Datos generales\nLingüista computacional – Prompt Engineer. Lingüista con enfoque en la lingüística aplicada a la computación con experiencia en diseño conversacional, diseño y entrenamiento de agentes conversacionales en diferentes nubes: GCP y AWS. Experiencia de trabajo bajo metodología ágil. \nInvestigador en temas relacionados a la aplicación de herramientas computacionales que procesan lenguaje natural. Actualmente investigando acerca de la aplicación del sistema de marcación de síntesis de voz (SSML) en la producción de síntesis de voz.\n\nExperiencias seleccionadas\nDESARROLLO | LATAM AIRLINES (01/08/2024 – actualidad) \nEntrenamiento en reconocimiento y asertividad de agente conversacional. Realización de pruebas y obtención de métricas para análisis y propuestas de mejoras. Desarrollo de metodología de trabajo en cada sprint del proyecto.\nCreación de instrumentos de prueba para medir la precisión de reconocimiento del agente conversacional;\nDesarrollo de insumos para medir la asertividad y controlar las fases del entrenamiento acorde a su avance;\nEjecución de pruebas y análisis de resultados con proyecciones de mejoras;\nRecolección de datos para crear instrumentos de evaluación y para reentrenamiento;\nOrganización, trabajo y coordinación en equipo para abarcar el entrenamiento.\n\nDISEÑO CONVERSACIONAL | HOLDTECH (01/04/2024 – 31/07/2024) \nDiseñar, construir y testear agentes conversacionales (voicebot, chatbot) bajo la metodología de trabajo scrum. Manejo de plataforma de NLP, NLU y NLG, DialogFlowCX. Evaluación y análisis de corpus mediante la aplicación LancsBox X. Análisis de datos con excel. Manejo de lenguaje de marcación de síntesis de voz SSML.\nDiseño de agentes conversacionales con respectivo entrenamiento;\nRevisión, clasificación y evaluación de resultados de pruebas masivas con clientes reales;\nCreación y propuestas en equipo sobre metodologías de trabajo para cada fase del proyecto;\nTrabajo con corpus de llamadas para entrenamiento;\nDiseño de síntesis de voz con lenguaje de marcación SSML."
+        },
+        {
+          "diapositiva_o_bloque": 4,
+          "texto": "Áreas de Especialización\nPrompt engineer\nI.A. conversacional en NLU\n\nEstudios y Posgrados\nLicenciado en Lengua y Literatura Hispánicas – Universidad de Chile (Santiago - Chile)\nCandidato a Magíster en Lingüística Española - Universidad de Chile (Santiago – Chile)"
+        },
+        {
+          "diapositiva_o_bloque": 5,
+          "texto": "CV Project Team"
+        },
+        {
+          "diapositiva_o_bloque": 6,
+          "texto": "Otras Experiencias \n\nEDUCACIÓN|UNIVERSIDAD DE CHILE (08/08/2022 - 27/04/2024)\nPlanificar y realizar los módulos Gramática Comunicativa de los cursos de español post elemental y pre intermedio, perteneciente al Área de Español en el Departamento de Lingüística de la universidad. Creación y revisión de pruebas y exámenes a partir de las unidades estudiadas en clases.\nReuniones en equipo para planificación semestral;\nDiseño de instrumentos de evaluación, tales como pruebas de unidad y exámenes;\nCapacidad de comunicación intercultural con estudiantes internacionales.\n\nINVESTIGACIÓN | UNIVERSIDAD DE CHILE (06/09/2021 - 23/06/2022)\nRevisión de documentos, obras y planes de estudio relacionados con el estudio y la enseñanza de italiano como segunda lengua en la Universidad de Chile, en el marco del proyecto Historiografía de la Lingüística Aplicada en Chile (HILACH)\nTrabajo colaborativo en grupo para diseñar la investigación;\nRecopilación de datos del corpus seleccionado para investigar;\nAnálisis e interpretación de los datos obtenidos desde un marco teórico diseñado;\nRedacción del artículo de investigación en equipo."
+        },
+        {
+          "diapositiva_o_bloque": 7,
+          "texto": "Herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 8,
+          "texto": "Colaborativas"
+        },
+        {
+          "diapositiva_o_bloque": 9,
+          "texto": "Análisis de Datos"
+        },
+        {
+          "diapositiva_o_bloque": 10,
+          "texto": "Otras herramientas"
+        },
+        {
+          "diapositiva_o_bloque": 11,
+          "texto": "Miró"
+        },
+        {
+          "diapositiva_o_bloque": 12,
+          "texto": "Jira"
+        },
+        {
+          "diapositiva_o_bloque": 13,
+          "texto": "Amazon CloudWatch"
+        },
+        {
+          "diapositiva_o_bloque": 14,
+          "texto": "Suite Office\nSuite Google\nGoogle Platform\nAWS Platform"
+        },
+        {
+          "diapositiva_o_bloque": 15,
+          "texto": "Trello"
+        },
+        {
+          "diapositiva_o_bloque": 16,
+          "texto": "LancsBox"
+        },
+        {
+          "diapositiva_o_bloque": 17,
+          "texto": "Áreas de Especialización\nProject Management\nData Governance\nData Analysis\nManagement Control\nOperations Management\nSupply Chain Management\n\nEstudios y Posgrados\nMaster degree in Logistics and Supply Chain Management from University of Warwick\nBachelor’s degree in Management from ISEG Lisbon School of Economics and Management\nFluent in English"
+        },
+        {
+          "diapositiva_o_bloque": 18,
+          "texto": "Pablo Quintanilla Peralta\nJunior engineer - NTT DATA"
+        },
+        {
+          "diapositiva_o_bloque": 19,
+          "texto": "Clientes Asesorados"
+        },
+        {
+          "diapositiva_o_bloque": 20,
+          "texto": "Tecnologías​"
+        },
+        {
+          "diapositiva_o_bloque": 21,
+          "texto": "Amazon Lex – Amazon Polly – Amazon Bedrock\n\nDialogFlow"
+        }
+      ]
+    }
+  ],
+  "detalle_errores": []
+}

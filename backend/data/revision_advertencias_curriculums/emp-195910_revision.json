@@ -1,0 +1,60 @@
+{
+  "persona_id": "emp-195910",
+  "persona_nombre": "Francisco Javier Fuentes Ortega",
+  "archivo": "FranciscoFuentesOrtega_CROanalyst.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 12,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Francisco Fuentes Ortega\nAnalyst en NTT DATA"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "CV Project Team"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "Experiencia Seleccionadas\n\nTengo las habilidades para analizar y entender datos para crear visualizaciones de estos, asegurando una toma de deciones de forma inteligente en cada proyecto. Actualmente estoy ampliando mis capacidades en el ecosistema Adobe, con foco en Journey Optimization para fortalecer procesos de automatización y personalización avanzada.\n\nLead Analyst | Telefónica (01/2026 – 03/2026)\nOptimicé la visibilidad de KPIs de E‑commerce mediante la mantención de dashboards en Power BI y la creación de nuevos modelos en Looker Studio. Aporté análisis accionables para equipos comerciales y de performance, mejorando la toma de decisiones en campañas digitales.\nLead Analyst | Banco de Chile (11/2025 – 12/2026)\nDiseñé y desplegué dashboards en Amazon Quicksight para monitorear el desempeño del voicebot, permitiendo identificar fricciones en la experiencia de atención y oportunidades de mejora en la automatización de consultas.\nLead Analyst | LATAM Airlines (07/2025 – 10/2025)\nApoyé a un equipo multidisciplinario encargado de evaluar y optimizar la experiencia VR de entrenamiento. Desarrollé dashboards que permitieron visualizar el comportamiento de los usuarios dentro de la experiencia, facilitando decisiones de mejora en usabilidad y rendimiento.\nCRO Analyst | Transbank (02/2021 – 07/2025)\nLideré iniciativas de medición y optimización digital, asegurando la correcta implementación de marcajes y la calidad del dato. Creé guías de tagging, implementaciones en Tag Manager y dashboards personalizados en Looker Studio. Detecté oportunidades de mejora que impactaron directamente la conversión y la experiencia digital.\nAnalista Digital – Agencia de Publicidad (Nestlé, Paris, Huawei) (01/2015 – 02/2021)\nDesarrollé reportes y dashboards mensuales para marcas globales, automatizando procesos con Supermetrics + Data Studio. Analicé datos de campañas, E‑commerce y comportamiento digital, además de reportes de escucha social con Brandwatch. Presenté resultados y recomendaciones estratégicas a clientes, y gestioné campañas digitales en RRSS."
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "Áreas de Especialización\nCRO\nAnálisis de datos\nCampañas digitales\nEstrategías digitales\n\nEstudios y Posgrados\nPublicista Duoc UC\n\nDiplomado Webscrapping y visualización de datos sociales en R ( A22D73A6B6 )"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "Clientes Asesorados​"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Herramientas ​"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "Colaborativas"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Análisis de datos"
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Miró"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "Jira"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Otras herramientas"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "Excel\nPower point\nFacebook Analytics /Business"
+    }
+  ]
+}

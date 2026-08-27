@@ -1,16 +1,32 @@
-// "Categoría" del diseñador (antes 'seniority'). Orden ascendente = jerarquía.
+// Segmentos de talento.
+// El orden representa la jerarquía desde el nivel superior al inferior.
 export const NIVELES_PIRAMIDE = [
-  "Director",
-  "Manager",
-  "Chief",
-  "Evangelist",
-  "Expert",
-  "Leader",
-  "Professional",
-  "Junior",
+  "Executive",
+  "Top manager",
+  "Top Leader",
+  "Top Expert Leader",
+  "Expert Lead",
+  "Lead",
+  "Key Contributor",
+  "Contributor",
 ];
 
-// Alias temporal para pantallas que aún importan NIVELES.
+
+// Fallback temporal. La fuente oficial es /api/ofertas-valor/.
+// "Todas" NO es una oferta de valor; es solo una opción de filtro.
+export const OFERTAS_VALOR = [
+  "Conversational AI & VoiceBot",
+  "Experience Design & Research",
+  "Experience Optimization & Martech",
+  "Creative Design",
+  "X-Reality",
+  "Digital Experiences Platforms",
+  "Mobile Platforms",
+];
+
+export const OFERTA_SIN_ASIGNAR = "__sin_asignar__";
+
+// Alias temporal para componentes que todavía importan NIVELES.
 export const NIVELES = NIVELES_PIRAMIDE;
 
 export const COMPETENCIAS = [
@@ -37,7 +53,8 @@ export const FASES_LABEL = {
   evolution: "Evolution",
 };
 
-// Tipo de engagement: proyecto cerrado (fixed scope) vs T&M (capacidad)
+// Tipo de engagement:
+// proyecto cerrado (fixed scope) o capacidad (time & materials).
 export const TIPO_PROYECTO = ["fixed_scope", "time_materials"];
 
 export const TIPO_LABEL = {
@@ -50,7 +67,7 @@ export const TIPO_COLOR = {
   time_materials: "bg-cyan-100 text-cyan-700",
 };
 
-// Estado operativo (aplica a ambos tipos)
+// Estados operativos de proyectos.
 export const ESTADOS_PROYECTO = [
   "pre_sales",
   "active",
@@ -86,9 +103,9 @@ export const OPORTUNIDAD_STATUS = [
 export const OPORTUNIDAD_STATUS_LABEL = {
   opportunity: "Oportunidad",
   approved: "Aprobada",
-  bidding: "En Licitación",
+  bidding: "En licitación",
   signed: "Firmada",
-  executing: "En Ejecución",
+  executing: "En ejecución",
 };
 
 export const HEALTH_COLOR = {
@@ -103,23 +120,33 @@ export const HEALTH_LABEL = {
   blocked: "Bloqueado",
 };
 
+// Colores utilizados para los segmentos de talento
+// en Equipo, Pirámide y otros componentes.
 export const NIVEL_COLOR = {
-  Director: "bg-slate-900 text-white",
-  Manager: "bg-slate-700 text-white",
-  Chief: "bg-blue-950 text-blue-100",
-  Evangelist: "bg-amber-100 text-amber-900 border border-amber-300/70",
-  Expert: "bg-blue-800 text-blue-100",
-  Leader: "bg-teal-800 text-teal-100",
-  Professional: "bg-slate-200 text-slate-800",
-  Junior: "bg-gray-100 text-gray-600 border border-gray-200",
+  Executive: "bg-slate-900 text-white",
+
+  "Top manager": "bg-slate-700 text-white",
+
+  "Top Leader": "bg-blue-950 text-blue-100",
+
+  "Top Expert Leader": "bg-amber-100 text-amber-900 border border-amber-300/70",
+
+  "Expert Lead": "bg-blue-800 text-blue-100",
+
+  Lead: "bg-teal-800 text-teal-100",
+
+  "Key Contributor": "bg-slate-200 text-slate-800",
+
+  Contributor: "bg-gray-100 text-gray-600 border border-gray-200",
 };
 
-// Heatmap skill: score 0-5 → bg color (escala de brand)
+// Heatmap de capacidades.
+// Puntaje de 0 a 5.
 export const SKILL_COLORS = [
-  "bg-gray-100", // 0 — sin skill
-  "bg-brand-100", // 1 — Junior Designer
-  "bg-brand-200", // 2 — Designer
-  "bg-brand-300", // 3 — Lead Designer
-  "bg-brand-500", // 4 — Expert Designer
-  "bg-brand-700", // 5 — Chief Designer
+  "bg-gray-100", // 0 — sin capacidad
+  "bg-brand-100", // 1
+  "bg-brand-200", // 2
+  "bg-brand-300", // 3
+  "bg-brand-500", // 4
+  "bg-brand-700", // 5
 ];

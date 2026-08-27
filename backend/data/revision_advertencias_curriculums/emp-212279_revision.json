@@ -1,0 +1,104 @@
+{
+  "persona_id": "emp-212279",
+  "persona_nombre": "Felipe Andres Guerrero Salgado",
+  "archivo": "FelipeGuerreroSalgado_DX_20251002.pptx",
+  "advertencias": [
+    "No se detectó resumen profesional."
+  ],
+  "metodo_lectura": "python-pptx",
+  "cantidad_bloques": 23,
+  "diapositivas": [
+    {
+      "diapositiva_o_bloque": 1,
+      "texto": "Skills"
+    },
+    {
+      "diapositiva_o_bloque": 2,
+      "texto": "Lenguajes"
+    },
+    {
+      "diapositiva_o_bloque": 3,
+      "texto": "- Node.js + Express <19"
+    },
+    {
+      "diapositiva_o_bloque": 4,
+      "texto": "- Python <3.10"
+    },
+    {
+      "diapositiva_o_bloque": 5,
+      "texto": "- React+JS; React+TS"
+    },
+    {
+      "diapositiva_o_bloque": 6,
+      "texto": "Felipe Guerrero S.\nEngineer"
+    },
+    {
+      "diapositiva_o_bloque": 7,
+      "texto": "PERFIL"
+    },
+    {
+      "diapositiva_o_bloque": 8,
+      "texto": "Experiencia\nNTT DATA – Solution Assistant | Noviembre 2021 – Actualidad\nLATAM – Engineer | Julio 2025 – Actualidad\nDesarrollo e implementación de la plataforma interna “Centro de Asistencia” para apoyar a agentes en la resolución de casos de clientes. La solución integra Amazon Bedrock con Knowledge Base para brindar respuestas precisas y contextualizadas sobre procesos y decisiones operativas. Incluye mecanismos de extracción y normalización automatizada de contenido según fuente y tipo de dato, facilitando la interpretación de información textual como de flujos y material audiovisual.\nSyntphony – Engineer | Febrero 2025 – Junio 2025\nApoyo en la implementación de soluciones tecnológicas en entornos de contact center, conversacional e IA. Diseño y ejecución de demos y PoCs, evaluación de viabilidad técnica, definición de requisitos y transferencia de conocimiento para impulsar la adopción de nuevas herramientas.\nMINSAL – Engineer | Abril 2024 – Enero 2025\nColaboré en la implementación de una solución de contact center con “panel recomendador” en tiempo real para psicólogos, que sugería respuestas basadas en protocolos clínicos y documentos oficiales. La solución se desarrolló utilizando Amazon Connect, Lex, Bedrock, Kendra, SNS.\nUnilever Brasil & Chile – Engineer | Noviembre 2023 – Febrero 2024\nDiseñé y desarrollé un asistente virtual para una campaña de reducción de desperdicio alimentario. Se aplicaron técnicas de NLP e IA para generar recetas personalizadas a partir de ingredientes disponibles y restricciones nutricionales de los usuarios.\nWalmart Chile – Junior Engineer| Abril 2023 – Octubre 2023\nLideré la automatización de auditorías de atención en WhatsApp y llamadas de voz mediante soluciones de IA. Implementando procesos de transcripción, clasificación y verificación de guiones, además de la extracción de KPIs y publicación de métricas en Power BI.\nL'Oréal Chile & Leonisa Colombia – Junior Engineer| Enero 2022 – Marzo 2023\nDiseño e implementación de asistentes virtuales conversacionales en WhatsApp e Instagram para consultas y recomendaciones personalizadas, potenciando la experiencia de compra con IA.\nSEREMI – Técnico de Asistencia TI | Octubre 2020 – Octubre 2021\nGestión del sistema CRM del centro de contacto y consolidación, limpieza y organización de informes diarios y análisis semanales de desempeño para monitorear la actividad de agentes y la eficiencia operativa. Desarrollo de insights y visualizaciones para tomadores de decisión, optimizando la planificación y asignación de recursos, y garantizando la distribución oportuna de información crítica durante la contingencia COVID‑19."
+    },
+    {
+      "diapositiva_o_bloque": 9,
+      "texto": "Con más de 4 años de experiencia brindando soporte en el ciclo completo de desarrollo e implementación de productos tecnológicos, con mayor énfasis en la integración de soluciones de inteligencia artificial especializadas en casos de uso conversacional (chat y voz), incluyendo CRM y contact centers, para potenciar funcionalidades, automatizar procesos e innovar soluciones.\n\nSoy proactivo, orientado a resultados y sé trabajar de forma colaborativa con equipos multidisciplinarios para desarrollar soluciones innovadoras. Me motiva enfrentar nuevos desafíos y aportar valor a los proyectos"
+    },
+    {
+      "diapositiva_o_bloque": 10,
+      "texto": "- Javascript ES5/ES6"
+    },
+    {
+      "diapositiva_o_bloque": 11,
+      "texto": "Cloud"
+    },
+    {
+      "diapositiva_o_bloque": 12,
+      "texto": "- GCP"
+    },
+    {
+      "diapositiva_o_bloque": 13,
+      "texto": "- AWS"
+    },
+    {
+      "diapositiva_o_bloque": 14,
+      "texto": "IA"
+    },
+    {
+      "diapositiva_o_bloque": 15,
+      "texto": "- Azure OpenAI"
+    },
+    {
+      "diapositiva_o_bloque": 16,
+      "texto": "- Gemini"
+    },
+    {
+      "diapositiva_o_bloque": 17,
+      "texto": "- Claude"
+    },
+    {
+      "diapositiva_o_bloque": 18,
+      "texto": "Bases de Datos"
+    },
+    {
+      "diapositiva_o_bloque": 19,
+      "texto": "- SQL, MySQL, MongoDB, Oracle"
+    },
+    {
+      "diapositiva_o_bloque": 20,
+      "texto": "Certificaciones"
+    },
+    {
+      "diapositiva_o_bloque": 21,
+      "texto": "- AWS Certified Cloud Practitioner"
+    },
+    {
+      "diapositiva_o_bloque": 22,
+      "texto": "- AWS Certified AI Practitioner"
+    },
+    {
+      "diapositiva_o_bloque": 23,
+      "texto": "- Inglés B2 (Upper-Intermediate), Certified by the British Council."
+    }
+  ]
+}

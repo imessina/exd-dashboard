@@ -60,3 +60,11 @@ push_log*.txt
 backend/reporte_importacion_skills.json
 push_log.txt
 README.txt
+
+# Archivos privados de importación de currículums
+backend/data/curriculums_raw/
+backend/backups/
+
+# Reportes locales de auditoría
+backend/data/auditoria_curriculums.json
+backend/data/auditoria_curriculums.csv
