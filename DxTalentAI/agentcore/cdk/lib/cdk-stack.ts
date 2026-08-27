@@ -204,12 +204,15 @@ export class AgentCoreStack extends Stack {
         for (const connector of payment.connectors) {
           const connId = toCdkId(connector.name);
           const conn = new AgentCorePaymentConnector(this, `Payment${mgrId}${connId}`, {
-            projectName: spec.name,
-            paymentManager: manager,
-            connectorName: connector.name,
-            connectorType: connector.provider,
-            credentialProviderArn: connector.credentialProviderArn,
-          });
+  projectName: spec.name,
+  paymentManager: manager,
+  connector: {
+    name: connector.name,
+    provider: connector.provider,
+    credentialName: connector.name,
+  },
+  credentialProviderArn: connector.credentialProviderArn,
+});
 
           // Wire first connector's ID as env var (eligible agents only)
           if (connector === payment.connectors[0]) {

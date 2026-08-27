@@ -1,23 +1,50 @@
+
+import asyncio
 import json
 import logging
 import os
+import uuid
 from typing import Any, AsyncGenerator
 
+import boto3
 import httpx
+from botocore.exceptions import BotoCoreError, ClientError
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
 
+load_dotenv()
 
 logger = logging.getLogger("uvicorn.error")
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
+AGENTCORE_MODE = os.getenv(
+    "AGENTCORE_MODE",
+    "local",
+).strip().lower()
+
 AGENTCORE_URL = os.getenv(
     "AGENTCORE_URL",
     "http://localhost:8080/invocations",
 )
+
+AGENTCORE_RUNTIME_ARN = os.getenv(
+    "AGENTCORE_RUNTIME_ARN",
+    "",
+).strip()
+
+AGENTCORE_QUALIFIER = os.getenv(
+    "AGENTCORE_QUALIFIER",
+    "DEFAULT",
+).strip()
+
+AWS_REGION = os.getenv(
+    "AWS_REGION",
+    "us-east-1",
+).strip()
 
 
 class AiChatRequest(BaseModel):
@@ -25,10 +52,6 @@ class AiChatRequest(BaseModel):
 
 
 def _extract_text(value: Any) -> list[str]:
-    """
-    Extrae únicamente fragmentos de texto útiles desde eventos
-    de AgentCore / Strands.
-    """
     result: list[str] = []
 
     if isinstance(value, dict):
@@ -71,9 +94,6 @@ def _extract_text(value: Any) -> list[str]:
 
 
 def _encode_sse(payload: dict) -> str:
-    """
-    Convierte un payload Python a un evento SSE.
-    """
     return (
         "data: "
         + json.dumps(
@@ -85,10 +105,6 @@ def _encode_sse(payload: dict) -> str:
 
 
 def _extract_text_from_raw_json(raw: bytes) -> str:
-    """
-    Fallback para runtimes que respondan JSON completo
-    en lugar de SSE.
-    """
     if not raw:
         return ""
 
@@ -104,14 +120,179 @@ def _extract_text_from_raw_json(raw: bytes) -> str:
     ).strip()
 
 
-async def _stream_agentcore(
+def _invoke_agentcore_aws_sync(
+    message: str,
+) -> tuple[str, list[str]]:
+    if not AGENTCORE_RUNTIME_ARN:
+        raise RuntimeError(
+            "AGENTCORE_RUNTIME_ARN no está configurado."
+        )
+
+    client = boto3.client(
+        "bedrock-agentcore",
+        region_name=AWS_REGION,
+    )
+
+    payload = json.dumps(
+        {
+            "prompt": message,
+        },
+        ensure_ascii=False,
+    ).encode("utf-8")
+
+    response = client.invoke_agent_runtime(
+        agentRuntimeArn=AGENTCORE_RUNTIME_ARN,
+        runtimeSessionId=str(uuid.uuid4()),
+        qualifier=AGENTCORE_QUALIFIER,
+        contentType="application/json",
+        accept="text/event-stream",
+        payload=payload,
+    )
+
+    status_code = response.get("statusCode", 200)
+
+    if status_code >= 400:
+        raise RuntimeError(
+            f"AgentCore AWS respondió con HTTP {status_code}."
+        )
+
+    content_type = response.get(
+        "contentType",
+        "",
+    ).lower()
+
+    body = response.get("response")
+
+    if body is None:
+        return content_type, []
+
+    lines: list[str] = []
+
+    for raw_line in body.iter_lines(chunk_size=10):
+        if not raw_line:
+            continue
+
+        line = raw_line.decode("utf-8").strip()
+
+        if not line:
+            continue
+
+        lines.append(line)
+
+    return content_type, lines
+
+async def _stream_agentcore_aws(
     message: str,
 ) -> AsyncGenerator[str, None]:
-    """
-    Consume AgentCore mediante streaming y retransmite
-    solamente los fragmentos de texto necesarios al frontend.
-    """
+    try:
+        content_type, lines = await asyncio.to_thread(
+            _invoke_agentcore_aws_sync,
+            message,
+        )
 
+        sent_text = False
+
+        if "text/event-stream" in content_type:
+            for line in lines:
+                if not line.startswith("data:"):
+                    continue
+
+                data = line[5:].strip()
+
+                if not data or data == "[DONE]":
+                    continue
+
+                try:
+                    payload = json.loads(data)
+                    fragments = _extract_text(payload)
+                except json.JSONDecodeError:
+                    fragments = [data]
+
+                for fragment in fragments:
+                    if not fragment:
+                        continue
+
+                    sent_text = True
+
+                    yield _encode_sse(
+                        {
+                            "type": "delta",
+                            "text": fragment,
+                        }
+                    )
+
+        else:
+            raw_text = "\n".join(lines).strip()
+
+            if raw_text:
+                try:
+                    payload = json.loads(raw_text)
+                    fragments = _extract_text(payload)
+                except json.JSONDecodeError:
+                    fragments = [raw_text]
+
+                for fragment in fragments:
+                    if not fragment:
+                        continue
+
+                    sent_text = True
+
+                    yield _encode_sse(
+                        {
+                            "type": "delta",
+                            "text": fragment,
+                        }
+                    )
+
+        if not sent_text:
+            yield _encode_sse(
+                {
+                    "type": "error",
+                    "detail": "TalentIA respondió sin contenido.",
+                }
+            )
+            return
+
+        yield _encode_sse(
+            {
+                "type": "done",
+            }
+        )
+
+    except (BotoCoreError, ClientError):
+        logger.exception(
+            "Error invocando AgentCore AWS"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "No fue posible comunicarse con "
+                    "TalentIA en AWS."
+                ),
+            }
+        )
+
+    except Exception:
+        logger.exception(
+            "Error inesperado invocando AgentCore AWS"
+        )
+
+        yield _encode_sse(
+            {
+                "type": "error",
+                "detail": (
+                    "Ocurrió un error inesperado "
+                    "al consultar TalentIA."
+                ),
+            }
+        )
+
+
+async def _stream_agentcore_local(
+    message: str,
+) -> AsyncGenerator[str, None]:
     timeout = httpx.Timeout(
         connect=10.0,
         read=120.0,
@@ -143,9 +324,6 @@ async def _stream_agentcore(
                     "",
                 ).lower()
 
-                # ---------------------------------------------------------
-                # AgentCore SSE
-                # ---------------------------------------------------------
                 if "text/event-stream" in content_type:
                     async for raw_line in response.aiter_lines():
                         line = raw_line.strip()
@@ -164,10 +342,6 @@ async def _stream_agentcore(
                         try:
                             payload = json.loads(data)
                         except json.JSONDecodeError:
-                            logger.warning(
-                                "Evento SSE no JSON recibido desde AgentCore: %r",
-                                data[:500],
-                            )
                             continue
 
                         fragments = _extract_text(payload)
@@ -185,9 +359,6 @@ async def _stream_agentcore(
                                 }
                             )
 
-                # ---------------------------------------------------------
-                # Fallback JSON
-                # ---------------------------------------------------------
                 else:
                     raw = await response.aread()
 
@@ -206,10 +377,6 @@ async def _stream_agentcore(
                         )
 
         if not sent_text:
-            logger.error(
-                "AgentCore terminó sin entregar texto."
-            )
-
             yield _encode_sse(
                 {
                     "type": "error",
@@ -218,7 +385,6 @@ async def _stream_agentcore(
                     ),
                 }
             )
-
             return
 
         yield _encode_sse(
@@ -237,17 +403,12 @@ async def _stream_agentcore(
             {
                 "type": "error",
                 "detail": (
-                    "TalentIA no está disponible. "
-                    "Verifica que AgentCore esté iniciado."
+                    "TalentIA no está disponible."
                 ),
             }
         )
 
     except httpx.TimeoutException:
-        logger.exception(
-            "Timeout esperando respuesta de AgentCore"
-        )
-
         yield _encode_sse(
             {
                 "type": "error",
@@ -257,12 +418,7 @@ async def _stream_agentcore(
             }
         )
 
-    except httpx.HTTPStatusError as exc:
-        logger.exception(
-            "AgentCore respondió con HTTP %s",
-            exc.response.status_code,
-        )
-
+    except httpx.HTTPStatusError:
         yield _encode_sse(
             {
                 "type": "error",
@@ -272,38 +428,9 @@ async def _stream_agentcore(
             }
         )
 
-    except httpx.RequestError:
-        logger.exception(
-            "Error comunicándose con AgentCore"
-        )
-
-        yield _encode_sse(
-            {
-                "type": "error",
-                "detail": (
-                    "No fue posible comunicarse con TalentIA."
-                ),
-            }
-        )
-
-    except RuntimeError:
-        logger.exception(
-            "No fue posible interpretar la respuesta de AgentCore"
-        )
-
-        yield _encode_sse(
-            {
-                "type": "error",
-                "detail": (
-                    "La respuesta de TalentIA "
-                    "no pudo ser interpretada."
-                ),
-            }
-        )
-
     except Exception:
         logger.exception(
-            "Error inesperado procesando el stream de TalentIA"
+            "Error inesperado procesando TalentIA local"
         )
 
         yield _encode_sse(
@@ -315,6 +442,18 @@ async def _stream_agentcore(
                 ),
             }
         )
+
+
+async def _stream_agentcore(
+    message: str,
+) -> AsyncGenerator[str, None]:
+    if AGENTCORE_MODE == "aws":
+        async for event in _stream_agentcore_aws(message):
+            yield event
+        return
+
+    async for event in _stream_agentcore_local(message):
+        yield event
 
 
 @router.post("/chat")
