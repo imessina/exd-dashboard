@@ -1,3 +1,17 @@
 {
-  "targets": {}
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "DxTalentAI": {
+            "runtimeId": "DxTalentAI_DxTalentAI-FCGq0z5s5F",
+            "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:637423241361:runtime/DxTalentAI_DxTalentAI-FCGq0z5s5F",
+            "roleArn": "arn:aws:iam::637423241361:role/AgentCore-DxTalentAI-defa-ApplicationAgentDxTalentA-PZE5BC5p3n4B"
+          }
+        },
+        "stackName": "AgentCore-DxTalentAI-default",
+        "deployHash": "7e665bb10a620dbb"
+      }
+    }
+  }
 }

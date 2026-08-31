@@ -15,7 +15,17 @@
       "codeLocation": "app/DxTalentAI/",
       "runtimeVersion": "PYTHON_3_14",
       "networkMode": "PUBLIC",
-      "protocol": "HTTP"
+      "protocol": "HTTP",
+      "envVars": [
+        {
+          "name": "DX_API_BASE_URL",
+          "value": "https://exd-dashboard-eight.vercel.app/api"
+        },
+        {
+          "name": "DX_API_KEY",
+          "value": "6lMEsiItfbgvbEujEV6f5loSC0tPlU_MGuLOk7QA2ik"
+        }
+      ]
     }
   ],
   "memories": [],

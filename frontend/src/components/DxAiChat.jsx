@@ -198,9 +198,22 @@ export default function DxAiChat() {
   const inputRef = useRef(null);
   const abortControllerRef = useRef(null);
   const messageRefs = useRef({});
+  const sessionIdRef = useRef(null);
 
-  // Solo enfoca el input al abrir el chat.
-  // Ya no hacemos scroll por cada cambio en "messages".
+  if (!sessionIdRef.current) {
+    const storedSessionId = sessionStorage.getItem("talentia-session-id");
+
+    if (storedSessionId) {
+      sessionIdRef.current = storedSessionId;
+    } else {
+      const newSessionId = crypto.randomUUID();
+
+      sessionStorage.setItem("talentia-session-id", newSessionId);
+
+      sessionIdRef.current = newSessionId;
+    }
+  }
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -213,8 +226,6 @@ export default function DxAiChat() {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  // Al enviar una pregunta, lleva la vista al bloque "Analizando..."
-  // mientras esperamos el primer fragmento.
   useEffect(() => {
     if (!isOpen || !loading || streamingStarted) {
       return;
@@ -226,10 +237,6 @@ export default function DxAiChat() {
     });
   }, [isOpen, loading, streamingStarted]);
 
-  // Cuando llega el PRIMER fragmento de la respuesta,
-  // posiciona el chat al comienzo de la respuesta de TalentIA.
-  //
-  // Después de esto NO seguimos empujando el scroll hacia abajo.
   useEffect(() => {
     if (!streamingStarted || !activeAssistantId) {
       return;
@@ -292,6 +299,7 @@ export default function DxAiChat() {
 
     try {
       const data = await aiApi.chatStream(cleanMessage, {
+        sessionId: sessionIdRef.current,
         signal: controller.signal,
 
         onDelta: (delta, fullText) => {
@@ -312,8 +320,6 @@ export default function DxAiChat() {
             ),
           );
 
-          // Solo cambia de false → true
-          // cuando empieza realmente la respuesta.
           setStreamingStarted(true);
         },
       });
@@ -450,7 +456,6 @@ export default function DxAiChat() {
             <div className="space-y-4">
               {messages.map((item) => {
                 const isUser = item.role === "user";
-
                 const isError = item.role === "error";
 
                 if (item.role === "assistant" && !item.content) {

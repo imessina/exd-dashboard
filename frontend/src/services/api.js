@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// ── Personas ────────────────────────────────────────────────
+// Personas
 export const personasApi = {
   list: (params) => api.get("/personas", { params }).then((r) => r.data),
 
@@ -30,7 +30,7 @@ export const personasApi = {
     api.put(`/personas/${id}/skills`, { skills }).then((r) => r.data),
 };
 
-// ── Asignaciones ────────────────────────────────────────────
+// Asignaciones
 export const asignacionesApi = {
   list: (params) => api.get("/asignaciones", { params }).then((r) => r.data),
 
@@ -51,7 +51,7 @@ export const asignacionesApi = {
   delete: (id) => api.delete(`/asignaciones/${id}`),
 };
 
-// ── Proyectos ───────────────────────────────────────────────
+// Proyectos
 export const proyectosApi = {
   list: (params) => api.get("/proyectos", { params }).then((r) => r.data),
 
@@ -69,7 +69,7 @@ export const proyectosApi = {
     api.patch(`/proyectos/${id}/hitos/${hitoId}`, data).then((r) => r.data),
 };
 
-// ── Oportunidades ───────────────────────────────────────────
+// Oportunidades
 export const oportunidadesApi = {
   list: (params) => api.get("/oportunidades", { params }).then((r) => r.data),
 
@@ -85,14 +85,14 @@ export const oportunidadesApi = {
   match: (id) => api.post(`/oportunidades/${id}/match`).then((r) => r.data),
 };
 
-// ── Skill Matrix ────────────────────────────────────────────
+// Skill Matrix
 export const skillMatrixApi = {
   get: (params) => api.get("/skill-matrix", { params }).then((r) => r.data),
 
   gaps: () => api.get("/skill-matrix/gaps").then((r) => r.data),
 };
 
-// ── Skills / Capacidades ────────────────────────────────────
+// Skills / Capacidades
 export const skillsApi = {
   list: () => api.get("/skills/").then((r) => r.data),
 
@@ -115,7 +115,7 @@ export const skillsApi = {
       .then((r) => r.data),
 };
 
-// ── Currículums ─────────────────────────────────────────────
+// Currículums
 export const curriculumsApi = {
   list: (params) => api.get("/curriculums/", { params }).then((r) => r.data),
 
@@ -142,7 +142,7 @@ export const curriculumsApi = {
     ),
 };
 
-// ── Ofertas de Valor ────────────────────────────────────────
+// Ofertas de Valor
 export const ofertasValorApi = {
   list: (params) => api.get("/ofertas-valor/", { params }).then((r) => r.data),
 
@@ -157,14 +157,17 @@ export const ofertasValorApi = {
     api.delete(`/ofertas-valor/${id}`).then((r) => r.data),
 };
 
-// ── Dashboard ───────────────────────────────────────────────
+// Dashboard
 export const dashboardApi = {
   summary: () => api.get("/dashboard/summary").then((r) => r.data),
 };
 
-// ── TalentIA ────────────────────────────────────────────────
+// TalentIA
 export const aiApi = {
-  chatStream: async (message, { onDelta, signal } = {}) => {
+  chatStream: async (
+    message,
+    { sessionId, onDelta, signal } = {},
+  ) => {
     const response = await fetch(`${baseURL}/ai/chat`, {
       method: "POST",
 
@@ -176,6 +179,7 @@ export const aiApi = {
 
       body: JSON.stringify({
         message,
+        session_id: sessionId,
       }),
 
       signal,
