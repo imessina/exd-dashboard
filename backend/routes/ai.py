@@ -1,18 +1,16 @@
-
 import asyncio
 import json
 import logging
 import os
-import uuid
 from typing import Any, AsyncGenerator
 
 import boto3
 import httpx
 from botocore.exceptions import BotoCoreError, ClientError
+from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -49,6 +47,7 @@ AWS_REGION = os.getenv(
 
 class AiChatRequest(BaseModel):
     message: str = Field(min_length=1)
+    session_id: str = Field(min_length=1)
 
 
 def _extract_text(value: Any) -> list[str]:
@@ -122,6 +121,7 @@ def _extract_text_from_raw_json(raw: bytes) -> str:
 
 def _invoke_agentcore_aws_sync(
     message: str,
+    session_id: str,
 ) -> tuple[str, list[str]]:
     if not AGENTCORE_RUNTIME_ARN:
         raise RuntimeError(
@@ -140,9 +140,16 @@ def _invoke_agentcore_aws_sync(
         ensure_ascii=False,
     ).encode("utf-8")
 
+    logger.info(
+    "Invocando AgentCore runtime=%s region=%s",
+    AGENTCORE_RUNTIME_ARN,
+    AWS_REGION,
+)
+
+
     response = client.invoke_agent_runtime(
         agentRuntimeArn=AGENTCORE_RUNTIME_ARN,
-        runtimeSessionId=str(uuid.uuid4()),
+        runtimeSessionId=session_id,
         qualifier=AGENTCORE_QUALIFIER,
         contentType="application/json",
         accept="text/event-stream",
@@ -181,13 +188,16 @@ def _invoke_agentcore_aws_sync(
 
     return content_type, lines
 
+
 async def _stream_agentcore_aws(
     message: str,
+    session_id: str,
 ) -> AsyncGenerator[str, None]:
     try:
         content_type, lines = await asyncio.to_thread(
             _invoke_agentcore_aws_sync,
             message,
+            session_id,
         )
 
         sent_text = False
@@ -259,9 +269,10 @@ async def _stream_agentcore_aws(
             }
         )
 
-    except (BotoCoreError, ClientError):
+    except (BotoCoreError, ClientError) as exc:
         logger.exception(
-            "Error invocando AgentCore AWS"
+            "Error invocando AgentCore AWS: %s",
+        exc,
         )
 
         yield _encode_sse(
@@ -446,9 +457,13 @@ async def _stream_agentcore_local(
 
 async def _stream_agentcore(
     message: str,
+    session_id: str,
 ) -> AsyncGenerator[str, None]:
     if AGENTCORE_MODE == "aws":
-        async for event in _stream_agentcore_aws(message):
+        async for event in _stream_agentcore_aws(
+            message,
+            session_id,
+        ):
             yield event
         return
 
@@ -461,6 +476,7 @@ async def chat_with_talentia(
     data: AiChatRequest,
 ):
     message = data.message.strip()
+    session_id = data.session_id.strip()
 
     if not message:
         raise HTTPException(
@@ -468,8 +484,17 @@ async def chat_with_talentia(
             detail="El mensaje no puede estar vacío.",
         )
 
+    if not session_id:
+        raise HTTPException(
+            status_code=400,
+            detail="El session_id no puede estar vacío.",
+        )
+
     return StreamingResponse(
-        _stream_agentcore(message),
+        _stream_agentcore(
+            message,
+            session_id,
+        ),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
