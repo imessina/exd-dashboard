@@ -393,11 +393,11 @@ function PersonaForm({ initial, onClose, ofertasValor = [] }) {
         Disponible para mentoría
       </label>
       {err && <p className="text-xs text-red-500">Error: {err.message}</p>}
-      <div className="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+      <div className="flex flex-col gap-3 border-t border-gray-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           {initial &&
             (confirmingDelete ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-red-600">
                   ¿Eliminar permanentemente?
                 </span>
@@ -430,7 +430,7 @@ function PersonaForm({ initial, onClose, ofertasValor = [] }) {
             ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={onClose}
@@ -575,12 +575,12 @@ function OfertaValorForm({ initial, personas, onCancel, onSaved }) {
         <p className="text-xs text-red-500">Error: {detalleError}</p>
       )}
 
-      <div className="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+      <div className="flex flex-col gap-3 border-t border-gray-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           {initial &&
             initial.personas_count === 0 &&
             (confirmingDelete ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-red-600">
                   ¿Eliminar esta oferta?
                 </span>
@@ -613,7 +613,7 @@ function OfertaValorForm({ initial, personas, onCancel, onSaved }) {
             ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={onCancel}
@@ -963,7 +963,7 @@ function PersonaPanel({ persona, onClose, onEdit }) {
                                   >
                                     {skill}
                                   </span>
-                                  <div className="flex items-center gap-2 shrink-0">
+                                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:shrink-0">
                                     <div className="w-16 h-1.5 rounded-full overflow-hidden bg-gray-100">
                                       <div
                                         className="h-full rounded-full"
@@ -995,7 +995,7 @@ function PersonaPanel({ persona, onClose, onEdit }) {
 
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           {confirming ? (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-red-600">
                 ¿Eliminar permanentemente?
               </span>
@@ -1271,9 +1271,9 @@ export default function Personas() {
   })();
 
   return (
-    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
+    <div className="w-full space-y-6 pb-8 pt-0 sm:space-y-8">
       {/* Header */}
-      <div className="relative min-h-[170px] overflow-hidden text-white">
+      <div className="relative min-h-[190px] overflow-hidden text-white sm:min-h-[170px]">
         {/* Banner */}
         <img
           src="/banner-personas.jpg"
@@ -1304,29 +1304,29 @@ export default function Personas() {
         />
 
         {/* Contenido */}
-        <div className="relative z-10 flex min-h-[170px] items-center justify-between gap-4 px-8 py-6">
+        <div className="relative z-10 flex min-h-[190px] flex-col items-start justify-center gap-5 px-4 py-6 sm:min-h-[170px] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/70">
               Somos DX
             </p>
-            <h2 className="text-2xl font-bold tracking-tight">Equipo DX</h2>
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Equipo DX</h2>
             <p className="mt-1 text-sm font-medium text-white/70">
               {filtered.length} personas
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:shrink-0">
             <button
               type="button"
               onClick={() => setGestionandoOfertas(true)}
-              className="btn-primary !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20"
+              className="btn-primary w-full justify-center !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20 sm:w-auto"
             >
               Gestionar ofertas de valor
             </button>
 
             <button
               onClick={() => setCreating(true)}
-              className="btn-primary shrink-0 shadow-[0_8px_24px_rgba(14,165,233,0.22)]"
+              className="btn-primary w-full justify-center shadow-[0_8px_24px_rgba(14,165,233,0.22)] sm:w-auto sm:shrink-0"
             >
               + Nueva persona
             </button>
@@ -1334,11 +1334,11 @@ export default function Personas() {
         </div>
       </div>
 
-      <div className="px-8 space-y-6">
+      <div className="space-y-5 px-4 sm:space-y-6 sm:px-6 lg:px-8">
         {/* Filtros y resumen de oferta */}
         <div className="space-y-3">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-[300px_190px_270px_220px]">
+            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-[300px_190px_270px_220px]">
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -1390,7 +1390,7 @@ export default function Personas() {
               </select>
             </div>
 
-            <div className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm xl:w-[270px] xl:shrink-0">
+            <div className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-5 xl:w-[270px] xl:shrink-0">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
                 Resumen de oferta
               </p>
@@ -1425,12 +1425,12 @@ export default function Personas() {
             </div>
           </div>
 
-          <div className="flex rounded-lg border border-gray-200 overflow-hidden bg-white w-fit">
+          <div className="flex w-full overflow-hidden rounded-lg border border-gray-200 bg-white sm:w-fit">
             <button
               type="button"
               onClick={() => setVista("list")}
               className={clsx(
-                "px-3 py-2 text-xs font-semibold transition-colors",
+                "flex-1 px-3 py-2 text-xs font-semibold transition-colors sm:flex-none",
                 vista === "list"
                   ? "bg-brand-500 text-white"
                   : "text-gray-500 hover:bg-gray-50",
@@ -1443,7 +1443,7 @@ export default function Personas() {
               type="button"
               onClick={() => setVista("cards")}
               className={clsx(
-                "px-3 py-2 text-xs font-semibold transition-colors",
+                "flex-1 px-3 py-2 text-xs font-semibold transition-colors sm:flex-none",
                 vista === "cards"
                   ? "bg-brand-500 text-white"
                   : "text-gray-500 hover:bg-gray-50",
@@ -1458,7 +1458,7 @@ export default function Personas() {
         {isLoading ? (
           <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
         ) : vista === "cards" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((p) => (
               <PersonaCard
                 key={p.id}
@@ -1474,8 +1474,120 @@ export default function Personas() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-x-auto">
-            <table className="w-full text-sm">
+          <>
+            {/* Lista móvil: evita que la tabla desktop ensanche el viewport */}
+            <div className="space-y-3 md:hidden">
+              {filtered.map((p) => {
+                const curriculum = curriculumPorPersona.get(String(p.id));
+
+                return (
+                  <div
+                    key={p.id}
+                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setEditing(p)}
+                      className="w-full text-left"
+                      title={`Editar a ${p.nombre}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="break-words text-sm font-bold leading-5 text-slate-900">
+                            {p.nombre}
+                          </p>
+                          <p className="mt-1 break-words text-xs leading-5 text-slate-500">
+                            {p.rol || "Sin rol"}
+                          </p>
+                        </div>
+
+                        <span
+                          className={clsx(
+                            "badge max-w-[46%] shrink-0 text-center",
+                            NIVEL_COLOR[p.nivel_piramide] ??
+                              "bg-gray-100 text-gray-600",
+                          )}
+                        >
+                          {p.nivel_piramide ?? "Sin clasificar"}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-slate-100 pt-3">
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                            Oferta de valor
+                          </p>
+                          <p className="mt-1 break-words text-xs font-medium text-slate-600">
+                            {p.oferta_valor || "Sin asignar"}
+                          </p>
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                            N° empleado
+                          </p>
+                          <p className="mt-1 break-words text-xs font-medium text-slate-600">
+                            {p.numero_empleado || "—"}
+                          </p>
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                            Fecha de ingreso
+                          </p>
+                          <p className="mt-1 text-xs font-medium text-slate-600">
+                            {formatearFecha(p.fecha_ingreso_compania)}
+                          </p>
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                            Experiencia
+                          </p>
+                          <p className="mt-1 text-xs font-medium text-slate-600">
+                            {p.anos_experiencia != null
+                              ? `${p.anos_experiencia} años`
+                              : "—"}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (curriculum) setCvDetalle(curriculum);
+                        }}
+                        disabled={!curriculum}
+                        className="text-xs font-semibold text-brand-600 hover:text-brand-800 hover:underline disabled:cursor-not-allowed disabled:text-gray-300 disabled:no-underline"
+                        title={`Ver currículum de ${p.nombre}`}
+                      >
+                        Ver CV
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEditing(p)}
+                        className="btn-secondary !px-3 !py-1.5 !text-xs"
+                      >
+                        Editar
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {filtered.length === 0 && (
+                <p className="py-8 text-center text-sm text-gray-400">
+                  Sin resultados.
+                </p>
+              )}
+            </div>
+
+            {/* Tabla original, solo desde md hacia arriba */}
+            <div className="hidden max-w-full overflow-x-auto rounded-2xl border border-gray-200 bg-white md:block">
+            <table className="min-w-[980px] w-full text-sm">
               <thead className="bg-gray-50">
                 <tr className="text-left text-xs uppercase tracking-wider text-gray-400">
                   <th className="px-4 py-3">Persona</th>
@@ -1596,7 +1708,8 @@ export default function Personas() {
                 )}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
 
         {gestionandoOfertas && (

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -165,10 +166,12 @@ const NAV = [
   { to: "/curriculums", label: "Currículums", icon: Icon.document },
 ];
 
-function Sidebar() {
+function Sidebar({ mobile = false, onNavigate }) {
   return (
     <aside
-      className="w-60 shrink-0 flex flex-col h-screen sticky top-0 z-20 relative overflow-hidden"
+      className={`w-60 shrink-0 flex flex-col h-screen relative overflow-hidden ${
+        mobile ? "w-[280px] max-w-[86vw]" : "sticky top-0 z-20"
+      }`}
       style={{
         background: "#051128",
       }}
@@ -231,6 +234,7 @@ function Sidebar() {
             key={to}
             to={to}
             end={to === "/"}
+            onClick={onNavigate}
             className={({ isActive }) =>
               isActive
                 ? "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold bg-brand-500 text-white transition-colors duration-150"
@@ -238,7 +242,6 @@ function Sidebar() {
             }
           >
             <IconComp className="w-[18px] h-[18px] shrink-0" />
-
             <span>{label}</span>
           </NavLink>
         ))}
@@ -267,7 +270,6 @@ function Sidebar() {
       {/* Footer */}
       <div className="px-5 py-4">
         <p className="text-[11px] text-slate-400 font-medium">NTT DATA · DX</p>
-
         <p className="text-[10px] text-slate-500 mt-0.5">2026</p>
       </div>
     </aside>
@@ -275,6 +277,8 @@ function Sidebar() {
 }
 
 export default function App() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <BrowserRouter
       future={{
@@ -283,9 +287,82 @@ export default function App() {
       }}
     >
       <div className="flex min-h-screen w-full bg-surface">
-        <Sidebar />
+        {/* Sidebar escritorio */}
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
 
-        <main className="flex-1 overflow-auto min-w-0 w-full -ml-px">
+        {/* Drawer móvil */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-[70] flex md:hidden">
+            <button
+              type="button"
+              className="absolute inset-0 bg-slate-950/55 backdrop-blur-[1px]"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Cerrar menú"
+            />
+
+            <div className="relative z-10 h-full shadow-2xl">
+              <Sidebar
+                mobile
+                onNavigate={() => setMobileMenuOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        <main className="flex-1 overflow-auto min-w-0 w-full md:-ml-px">
+          {/* Header exclusivo para móvil */}
+          <div
+            className="
+              sticky top-0 z-40
+              flex h-16 items-center justify-between
+              border-b border-white/10
+              bg-[linear-gradient(135deg,#051128_0%,#08274d_100%)]
+              px-4
+              shadow-[0_8px_24px_rgba(5,17,40,0.18)]
+              md:hidden
+            "
+          >
+            <div className="flex min-w-0 items-center">
+              <img
+                src="/logo.png"
+                alt="NTT DATA"
+                className="h-9 w-auto max-w-[170px] object-contain object-left"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="
+                inline-flex h-10 w-10 items-center justify-center
+                rounded-xl
+                border border-white/15
+                bg-white/10
+                text-white
+                shadow-sm
+                backdrop-blur
+                transition
+                hover:bg-white/15
+                active:scale-95
+              "
+              aria-label="Abrir menú"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                className="h-5 w-5"
+                aria-hidden="true"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+          </div>
+
           <Routes>
             <Route path="/" element={<Navigate to="/personas" replace />} />
 

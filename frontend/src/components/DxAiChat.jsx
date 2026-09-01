@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -392,20 +393,18 @@ export default function DxAiChat() {
     }
   };
 
-  return (
+  const chatUi = (
     <>
       {isOpen && (
         <div
           className="
   fixed
-  right-6
+  inset-x-3
   bottom-24
-  z-50
+  z-[9998]
   flex
-  h-[470px]
-  w-[340px]
-  max-h-[62vh]
-  max-w-[calc(100vw-2rem)]
+  h-[68dvh]
+  max-h-[72dvh]
   flex-col
   overflow-hidden
   rounded-2xl
@@ -413,6 +412,13 @@ export default function DxAiChat() {
   border-slate-200
   bg-white
   shadow-2xl
+
+  sm:inset-x-auto
+  sm:bottom-24
+  sm:right-6
+  sm:h-[470px]
+  sm:w-[340px]
+  sm:max-h-[62vh]
 "
         >
           <div
@@ -452,7 +458,7 @@ export default function DxAiChat() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto bg-slate-50 px-3.5 py-3.5">
+          <div className="flex-1 overflow-y-auto bg-slate-50 px-3 py-3 sm:px-3.5 sm:py-3.5">
             <div className="space-y-4">
               {messages.map((item) => {
                 const isUser = item.role === "user";
@@ -564,8 +570,6 @@ export default function DxAiChat() {
                 <SendIcon className="h-[18px] w-[18px]" />
               </button>
             </div>
-
-            <p className="mt-2 text-center text-[10px] leading-4 text-slate-400"></p>
           </form>
         </div>
       )}
@@ -576,14 +580,27 @@ export default function DxAiChat() {
           type="button"
           onClick={() => setIsOpen(false)}
           className="
-            fixed bottom-6 right-6 z-50
-            flex h-14 w-14 items-center justify-center
+            fixed
+            bottom-5
+            right-4
+            z-[9999]
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
             rounded-full
-            bg-brand-500 text-white
+            bg-brand-500
+            text-white
             shadow-xl
-            transition-transform duration-200
+            transition-transform
+            duration-200
             hover:-translate-y-0.5
             hover:scale-105
+            sm:bottom-6
+            sm:right-6
+            sm:h-14
+            sm:w-14
           "
           aria-label="Cerrar TalentIA"
         >
@@ -595,14 +612,26 @@ export default function DxAiChat() {
           type="button"
           onClick={() => setIsOpen(true)}
           className="
-            fixed bottom-6 right-6 z-50
-            flex h-24 w-24 items-center justify-center
+            fixed
+            bottom-4
+            right-3
+            z-[9999]
+            flex
+            h-24
+            w-24
+            items-center
+            justify-center
             overflow-visible
-            border-0 bg-transparent p-0
+            border-0
+            bg-transparent
+            p-0
             shadow-none
-            transition-transform duration-200
+            transition-transform
+            duration-200
             hover:-translate-y-0.5
             hover:scale-105
+            sm:bottom-6
+            sm:right-6
           "
           aria-label="Abrir TalentIA"
         >
@@ -610,10 +639,23 @@ export default function DxAiChat() {
             src="/talentia-chat.png"
             alt=""
             aria-hidden="true"
-            className="h-24 w-24 max-w-none scale-125 object-contain drop-shadow-[0_8px_20px_rgba(14,165,233,0.35)]"
+            className="
+              h-24
+              w-24
+              max-w-none
+              scale-125
+              object-contain
+              drop-shadow-[0_8px_20px_rgba(14,165,233,0.35)]
+            "
           />
         </button>
       )}
     </>
   );
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(chatUi, document.body);
 }
