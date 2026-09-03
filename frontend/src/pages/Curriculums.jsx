@@ -1041,7 +1041,7 @@ export default function Curriculums() {
   };
 
   return (
-    <div className="w-full space-y-8 pb-8 pl-[1px] pr-[2px] pt-0">
+    <div className="w-full space-y-8 pb-8 pt-0">
       <div className="relative min-h-[170px] overflow-hidden text-white">
         <img
           src="/banner-personas.jpg"

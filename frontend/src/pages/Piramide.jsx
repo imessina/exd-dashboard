@@ -238,7 +238,7 @@ export default function Piramide() {
   const mesActual = nombreMesActual();
 
   return (
-    <div className="pt-0 pl-[1px] pr-[2px] pb-0 space-y-8 w-full">
+    <div className="w-full space-y-8 pb-0 pt-0">
       <div className="relative min-h-[170px] overflow-hidden text-white">
         <img
           src="/banner-personas.jpg"

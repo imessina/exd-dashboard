@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     # en producción son obligatorias (auth.py cierra la API si faltan).
     API_KEY: str = Field(default="")
     ADMIN_API_KEY: str = Field(default="")
+    SUPABASE_URL: str = Field(default="")
+    SUPABASE_SECRET_KEY: str = Field(default="")
 
     @property
     def cors_origins_list(self) -> List[str]:

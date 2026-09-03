@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAuthorizedUser } from "./lib/authUser";
+import SuperAdminRoute from "./components/SuperAdminRoute";
+import EstablecerPassword from "./pages/EstablecerPassword";
+
 import {
   BrowserRouter,
   Routes,
@@ -7,6 +11,9 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import IdleSessionTimeout from "./components/IdleSessionTimeout";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Dashboard from "./pages/Dashboard";
 import Personas from "./pages/Personas";
 import Asignaciones from "./pages/Asignaciones";
@@ -14,42 +21,18 @@ import Proyectos from "./pages/Proyectos";
 import Oportunidades from "./pages/Oportunidades";
 import SkillMatrix from "./pages/SkillMatrix";
 import Piramide from "./pages/Piramide";
-//import Carrera from "./pages/Carrera";
+import Usuarios from "./pages/Usuarios";
 import Skills from "./pages/Skills";
 import Curriculums from "./pages/Curriculums";
+import Login from "./pages/Login";
 
+import { supabase } from "./lib/supabase";
 import DxAiChat from "./components/DxAiChat";
 
-// Iconos de línea minimalistas (stroke, sin relleno) — look ejecutivo/corporativo
+const AUTHORIZED_USER_CACHE_KEY =
+  "somosdx_authorized_user";
+
 const Icon = {
-  dashboard: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <rect x="3" y="3" width="7" height="9" rx="1.5" />
-      <rect x="14" y="3" width="7" height="5" rx="1.5" />
-      <rect x="14" y="12" width="7" height="9" rx="1.5" />
-      <rect x="3" y="16" width="7" height="5" rx="1.5" />
-    </svg>
-  ),
-
-  calendar: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M3 10h18M8 3v4M16 3v4" />
-    </svg>
-  ),
-
   users: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -77,19 +60,6 @@ const Icon = {
     </svg>
   ),
 
-  chart: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <path d="M3 17l5-5 4 4 8-8" />
-      <path d="M21 4v6h-6" />
-    </svg>
-  ),
-
   grid: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -105,32 +75,6 @@ const Icon = {
     </svg>
   ),
 
-  tag: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <path d="M20.6 12.3 12 20.9a2 2 0 0 1-2.8 0L3.1 14.8a2 2 0 0 1 0-2.8L11.7 3.4a2 2 0 0 1 1.4-.6H19a2 2 0 0 1 2 2v6.1a2 2 0 0 1-.4 1.4z" />
-      <circle cx="16.5" cy="7.5" r="1.3" />
-    </svg>
-  ),
-
-  refresh: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <path d="M20 11a8 8 0 0 0-14.6-4.4M4 4v5h5" />
-      <path d="M4 13a8 8 0 0 0 14.6 4.4M20 20v-5h-5" />
-    </svg>
-  ),
-
   document: (p) => (
     <svg
       viewBox="0 0 24 24"
@@ -143,38 +87,139 @@ const Icon = {
       <path d="M14 3v5h5M9 12h6M9 16h6" />
     </svg>
   ),
-
-  rocket: (p) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      {...p}
-    >
-      <path d="M12 2c3 1.5 5 5 5 9 0 2-1 4-2 5l-3 3-3-3c-1-1-2-3-2-5 0-4 2-7.5 5-9z" />
-      <circle cx="12" cy="10" r="1.6" />
-      <path d="M8.5 15.5 6 21l4-2M15.5 15.5 18 21l-4-2" />
-    </svg>
-  ),
 };
 
 const NAV = [
-  { to: "/personas", label: "Equipo", icon: Icon.users },
-  { to: "/piramide", label: "Pirámide", icon: Icon.pyramid },
-  { to: "/skill-matrix", label: "Capacidades", icon: Icon.grid },
-  { to: "/curriculums", label: "Currículums", icon: Icon.document },
+  {
+    to: "/personas",
+    label: "Equipo",
+    icon: Icon.users,
+  },
+  {
+    to: "/piramide",
+    label: "Pirámide",
+    icon: Icon.pyramid,
+  },
+  {
+    to: "/skill-matrix",
+    label: "Capacidades",
+    icon: Icon.grid,
+  },
+  {
+    to: "/curriculums",
+    label: "Currículums",
+    icon: Icon.document,
+  },
 ];
 
-function Sidebar({ mobile = false, onNavigate }) {
+function leerUsuarioCacheado() {
+  try {
+    const cached = sessionStorage.getItem(
+      AUTHORIZED_USER_CACHE_KEY
+    );
+
+    if (!cached) return null;
+
+    return JSON.parse(cached);
+  } catch {
+    return null;
+  }
+}
+
+function Sidebar({
+  mobile = false,
+  onNavigate,
+}) {
+  /*
+    CLAVE:
+    Primero intentamos cargar el usuario desde sessionStorage.
+
+    Así, al hacer F5, el menú ya conoce el rol inmediatamente
+    y "Usuarios" no aparece dos segundos después.
+  */
+  const [authorizedUser, setAuthorizedUser] =
+    useState(() => leerUsuarioCacheado());
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadUser = async () => {
+      try {
+        const user =
+          await getAuthorizedUser();
+
+        if (!mounted) return;
+
+        setAuthorizedUser(user);
+
+        if (user) {
+          sessionStorage.setItem(
+            AUTHORIZED_USER_CACHE_KEY,
+            JSON.stringify(user)
+          );
+        } else {
+          sessionStorage.removeItem(
+            AUTHORIZED_USER_CACHE_KEY
+          );
+        }
+      } catch {
+        /*
+          No destruimos inmediatamente el cache visual.
+          ProtectedRoute sigue siendo quien protege el acceso real.
+        */
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const puedeGestionarUsuarios =
+    authorizedUser?.rol === "superadmin" ||
+    authorizedUser?.rol === "admin";
+
+  const navItems = puedeGestionarUsuarios
+    ? [
+        ...NAV,
+        {
+          to: "/usuarios",
+          label: "Usuarios",
+          icon: Icon.users,
+        },
+      ]
+    : NAV;
+
+  const logout = async () => {
+    sessionStorage.removeItem(
+      AUTHORIZED_USER_CACHE_KEY
+    );
+
+    await supabase.auth.signOut();
+
+    window.location.href =
+      "/login";
+  };
+
   return (
     <aside
-      className={`w-60 shrink-0 flex flex-col h-screen relative overflow-hidden ${
-        mobile ? "w-[280px] max-w-[86vw]" : "sticky top-0 z-20"
-      }`}
-      style={{
-        background: "#051128",
-      }}
+      className={`
+        relative
+        flex
+        h-dvh
+        shrink-0
+        flex-col
+        overflow-hidden
+        bg-[#051128]
+
+        ${
+          mobile
+            ? "w-[250px] max-w-[84vw]"
+            : "sticky top-0 z-20 w-[220px] 2xl:w-60"
+        }
+      `}
     >
       <style>{`
         @keyframes dxBotFloat {
@@ -183,7 +228,7 @@ function Sidebar({ mobile = false, onNavigate }) {
           }
 
           50% {
-            transform: translateY(-8px) rotate(1deg);
+            transform: translateY(-6px) rotate(1deg);
           }
 
           100% {
@@ -212,137 +257,316 @@ function Sidebar({ mobile = false, onNavigate }) {
         }
       `}</style>
 
-      {/* Logo */}
-      <div className="px-6 pt-6 pb-5">
+      {/* LOGO */}
+      <div
+        className={
+          mobile
+            ? "shrink-0 px-4 pb-4 pt-4"
+            : "shrink-0 px-4 pb-4 pt-5 2xl:px-5"
+        }
+      >
         <img
           src="/logo.png"
           alt="NTT DATA"
-          className="h-14 w-auto max-w-[250px] object-contain object-left mb-4 -ml-4"
+          className={
+            mobile
+              ? `
+                  mb-3
+                  h-9
+                  w-auto
+                  max-w-[175px]
+                  object-contain
+                  object-left
+                `
+              : `
+                  mb-3
+                  h-10
+                  w-auto
+                  max-w-[185px]
+                  object-contain
+                  object-left
+                  2xl:h-11
+                `
+          }
         />
 
-        <h1 className="text-lg font-semibold text-white leading-none truncate">
+        <h1
+          className={
+            mobile
+              ? "text-base font-semibold text-white"
+              : "text-base font-semibold text-white 2xl:text-lg"
+          }
+        >
           Somos DX
         </h1>
       </div>
 
-      <div className="mx-5 h-px bg-white/10" />
+      <div className="mx-4 shrink-0 border-t border-white/10" />
 
-      {/* Navegación */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {NAV.map(({ to, label, icon: IconComp }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === "/"}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold bg-brand-500 text-white transition-colors duration-150"
-                : "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors duration-150"
-            }
-          >
-            <IconComp className="w-[18px] h-[18px] shrink-0" />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+      {/* NAVEGACIÓN */}
+      <nav className="shrink-0 space-y-1 px-3 py-4">
+        {navItems.map(
+          ({
+            to,
+            label,
+            icon: IconComp,
+          }) => (
+            <NavLink
+              key={to}
+              to={to}
+              onClick={onNavigate}
+              className={({
+                isActive,
+              }) =>
+                isActive
+                  ? `
+                      flex
+                      h-10
+                      items-center
+                      gap-3
+                      rounded-lg
+                      bg-brand-500
+                      px-3
+                      text-sm
+                      font-semibold
+                      text-white
+                      transition
+                    `
+                  : `
+                      flex
+                      h-10
+                      items-center
+                      gap-3
+                      rounded-lg
+                      px-3
+                      text-sm
+                      font-medium
+                      text-slate-300
+                      transition
+                      hover:bg-white/5
+                      hover:text-white
+                    `
+              }
+            >
+              <IconComp className="h-[18px] w-[18px] shrink-0" />
+
+              <span className="truncate">
+                {label}
+              </span>
+            </NavLink>
+          )
+        )}
       </nav>
 
-      {/* Robot DX */}
-      <div className="px-3 pb-3">
-        <div className="mx-1 rounded-2xl bg-transparent">
-          <div className="flex min-h-[250px] items-end justify-center px-2 py-2">
-            <img
-              src="/robot-dx.png"
-              alt="Robot DX NTT DATA"
-              className="w-full max-w-[190px] h-auto object-contain select-none pointer-events-none"
-              style={{
-                animation:
-                  "dxBotFloat 4.6s ease-in-out infinite, dxBotGlow 4.6s ease-in-out infinite",
-                transformOrigin: "center bottom",
-              }}
-            />
-          </div>
+      {/* ROBOT */}
+      <div
+        className="
+          flex
+          min-h-0
+          flex-1
+          items-center
+          justify-center
+          overflow-hidden
+          px-3
+          py-3
+        "
+      >
+        <img
+          src="/robot-dx.png"
+          alt="Robot DX NTT DATA"
+          className={
+            mobile
+              ? `
+                  h-auto
+                  max-h-full
+                  w-[90px]
+                  max-w-full
+                  select-none
+                  object-contain
+                  pointer-events-none
+                `
+              : `
+                  h-auto
+                  max-h-full
+                  w-[115px]
+                  max-w-full
+                  select-none
+                  object-contain
+                  pointer-events-none
+
+                  xl:w-[135px]
+                  2xl:w-[175px]
+                `
+          }
+          style={{
+            animation:
+              "dxBotFloat 4.6s ease-in-out infinite, dxBotGlow 4.6s ease-in-out infinite",
+            transformOrigin:
+              "center center",
+          }}
+        />
+      </div>
+
+      {/* USUARIO */}
+      <div className="mx-4 shrink-0 border-t border-white/10" />
+
+      <div className="shrink-0 px-4 py-3">
+        <p className="text-[10px] font-medium text-slate-400">
+          Bienvenido
+        </p>
+
+        <p className="mt-1 truncate text-[13px] font-semibold text-white">
+          {authorizedUser
+            ? `${authorizedUser.nombre} ${
+                authorizedUser.apellido ?? ""
+              }`.trim()
+            : "Usuario"}
+        </p>
+
+        {authorizedUser?.rol && (
+          <p className="mt-1 truncate text-[9px] uppercase tracking-wide text-slate-500">
+            {authorizedUser.rol}
+          </p>
+        )}
+      </div>
+
+      {/* CERRAR SESIÓN */}
+      <div className="shrink-0 px-3 pb-3">
+        <button
+          type="button"
+          onClick={logout}
+          className="
+            w-full
+            rounded-lg
+            border
+            border-white/10
+            px-3
+            py-2
+            text-left
+            text-[13px]
+            font-medium
+            text-slate-300
+            transition
+            hover:bg-white/5
+            hover:text-white
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+
+      {/* FOOTER */}
+      {!mobile && (
+        <div className="shrink-0 px-4 pb-3">
+          <p className="text-[10px] text-slate-500">
+            NTT DATA · DX 2026
+          </p>
         </div>
-      </div>
-
-      <div className="mx-5 h-px bg-white/10" />
-
-      {/* Footer */}
-      <div className="px-5 py-4">
-        <p className="text-[11px] text-slate-400 font-medium">NTT DATA · DX</p>
-        <p className="text-[10px] text-slate-500 mt-0.5">2026</p>
-      </div>
+      )}
     </aside>
   );
 }
 
-export default function App() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+function MainLayout() {
+  const [
+    mobileMenuOpen,
+    setMobileMenuOpen,
+  ] = useState(false);
 
   return (
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
-      <div className="flex min-h-screen w-full bg-surface">
-        {/* Sidebar escritorio */}
-        <div className="hidden md:block">
+    <>
+      <IdleSessionTimeout />
+
+      <div className="flex min-h-dvh w-full bg-surface">
+        {/* SIDEBAR NOTEBOOK / ESCRITORIO */}
+        <div className="hidden shrink-0 lg:block">
           <Sidebar />
         </div>
 
-        {/* Drawer móvil */}
+        {/* DRAWER CELULAR / TABLET */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-[70] flex md:hidden">
+          <div className="fixed inset-0 z-[70] flex lg:hidden">
             <button
               type="button"
-              className="absolute inset-0 bg-slate-950/55 backdrop-blur-[1px]"
-              onClick={() => setMobileMenuOpen(false)}
+              className="
+                absolute
+                inset-0
+                bg-slate-950/60
+                backdrop-blur-[1px]
+              "
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
               aria-label="Cerrar menú"
             />
 
             <div className="relative z-10 h-full shadow-2xl">
               <Sidebar
                 mobile
-                onNavigate={() => setMobileMenuOpen(false)}
+                onNavigate={() =>
+                  setMobileMenuOpen(false)
+                }
               />
             </div>
           </div>
         )}
 
-        <main className="flex-1 overflow-auto min-w-0 w-full md:-ml-px">
-          {/* Header exclusivo para móvil */}
+        {/* CONTENIDO */}
+        <main
+          className="
+            min-w-0
+            w-full
+            flex-1
+            overflow-x-hidden
+          "
+        >
+          {/* HEADER MÓVIL */}
           <div
             className="
-              sticky top-0 z-40
-              flex h-16 items-center justify-between
-              border-b border-white/10
+              sticky
+              top-0
+              z-40
+              flex
+              h-16
+              items-center
+              justify-between
+              border-b
+              border-white/10
               bg-[linear-gradient(135deg,#051128_0%,#08274d_100%)]
               px-4
               shadow-[0_8px_24px_rgba(5,17,40,0.18)]
-              md:hidden
+              sm:px-5
+              lg:hidden
             "
           >
-            <div className="flex min-w-0 items-center">
-              <img
-                src="/logo.png"
-                alt="NTT DATA"
-                className="h-9 w-auto max-w-[170px] object-contain object-left"
-              />
-            </div>
+            <img
+              src="/logo.png"
+              alt="NTT DATA"
+              className="
+                h-9
+                w-auto
+                max-w-[170px]
+                object-contain
+                object-left
+              "
+            />
 
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() =>
+                setMobileMenuOpen(true)
+              }
               className="
-                inline-flex h-10 w-10 items-center justify-center
+                inline-flex
+                h-10
+                w-10
+                items-center
+                justify-center
                 rounded-xl
-                border border-white/15
+                border
+                border-white/15
                 bg-white/10
                 text-white
-                shadow-sm
-                backdrop-blur
                 transition
                 hover:bg-white/15
                 active:scale-95
@@ -356,40 +580,114 @@ export default function App() {
                 strokeWidth="1.8"
                 strokeLinecap="round"
                 className="h-5 w-5"
-                aria-hidden="true"
               >
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             </button>
           </div>
 
+          {/* RUTAS */}
           <Routes>
-            <Route path="/" element={<Navigate to="/personas" replace />} />
+            <Route
+              path="/"
+              element={
+                <Navigate
+                  to="/personas"
+                  replace
+                />
+              }
+            />
 
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
 
-            <Route path="/asignaciones" element={<Asignaciones />} />
+            <Route
+              path="/usuarios"
+              element={
+                <SuperAdminRoute>
+                  <Usuarios />
+                </SuperAdminRoute>
+              }
+            />
 
-            <Route path="/personas" element={<Personas />} />
+            <Route
+              path="/asignaciones"
+              element={<Asignaciones />}
+            />
 
-            <Route path="/skill-matrix" element={<SkillMatrix />} />
+            <Route
+              path="/personas"
+              element={<Personas />}
+            />
 
-            <Route path="/proyectos" element={<Proyectos />} />
+            <Route
+              path="/skill-matrix"
+              element={<SkillMatrix />}
+            />
 
-            <Route path="/oportunidades" element={<Oportunidades />} />
+            <Route
+              path="/proyectos"
+              element={<Proyectos />}
+            />
 
-            <Route path="/piramide" element={<Piramide />} />
+            <Route
+              path="/oportunidades"
+              element={<Oportunidades />}
+            />
 
-            {/* <Route path="/carrera" element={<Carrera />} /> */}
+            <Route
+              path="/piramide"
+              element={<Piramide />}
+            />
 
-            <Route path="/skills" element={<Skills />} />
+            <Route
+              path="/skills"
+              element={<Skills />}
+            />
 
-            <Route path="/curriculums" element={<Curriculums />} />
+            <Route
+              path="/curriculums"
+              element={<Curriculums />}
+            />
           </Routes>
         </main>
       </div>
 
       <DxAiChat />
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <Routes>
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/establecer-password"
+          element={<EstablecerPassword />}
+        />
+
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

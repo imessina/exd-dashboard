@@ -318,7 +318,7 @@ export default function SkillMatrix() {
   }
 
   return (
-    <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
+    <div className="w-full space-y-8 pb-8 pt-0">
       {/* Header */}
       <div className="relative min-h-[170px] overflow-hidden text-white">
         <img

@@ -16,6 +16,7 @@ from routes import (
     curriculums,
     ofertas_valor,
     ai,
+    usuarios,
 )
 import models  # noqa: F401  -- needed by /api/admin/* endpoints
 
@@ -59,6 +60,7 @@ app.include_router(
     prefix="/api",
     dependencies=_protegido,
 )
+app.include_router(usuarios.router, prefix="/api")
 
 @app.get("/")
 def root():
