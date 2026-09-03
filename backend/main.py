@@ -37,9 +37,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+cors_origins = list(
+    dict.fromkeys(
+        [
+            *settings.cors_origins_list,
+            "https://talentia-dx.vercel.app",
+        ]
+    )
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
