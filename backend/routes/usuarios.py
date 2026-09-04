@@ -7,6 +7,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from auth import (
@@ -116,10 +117,21 @@ def crear_usuario(
             detail="Supabase Auth no está configurado",
         )
 
+    # --------------------------------------------------------
+    # INVITACIÓN SUPABASE
+    #
+    # IMPORTANTE:
+    # redirect_to se envía como query parameter del endpoint
+    # /auth/v1/invite y NO dentro del body JSON.
+    # --------------------------------------------------------
+
+    redirect_to = (
+        "https://talentia-dx.vercel.app/establecer-password"
+    )
+
     payload = json.dumps(
         {
             "email": email,
-            "redirect_to": "https://talentia-dx.vercel.app/establecer-password",
             "data": {
                 "nombre": nombre,
                 "apellido": apellido,
@@ -127,10 +139,16 @@ def crear_usuario(
         }
     ).encode("utf-8")
 
+    query = urlencode(
+        {
+            "redirect_to": redirect_to,
+        }
+    )
+
     request = Request(
         (
             f"{settings.SUPABASE_URL.rstrip('/')}"
-            "/auth/v1/invite"
+            f"/auth/v1/invite?{query}"
         ),
         data=payload,
         method="POST",
