@@ -120,7 +120,7 @@ def crear_usuario(
         {
             "email": email,
             "redirect_to": (
-                "http://localhost:5173/"
+                "http://localhost:5173/establecer-password"
                 "establecer-password"
             ),
             "data": {
