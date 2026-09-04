@@ -120,7 +120,7 @@ def crear_usuario(
         {
             "email": email,
             "redirect_to": (
-                "http://localhost:5173/establecer-password"
+                "https://talentia-dx.vercel.app/establecer-password"
                 "establecer-password"
             ),
             "data": {
