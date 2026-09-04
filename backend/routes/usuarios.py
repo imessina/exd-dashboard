@@ -119,10 +119,7 @@ def crear_usuario(
     payload = json.dumps(
         {
             "email": email,
-            "redirect_to": (
-                "https://talentia-dx.vercel.app/establecer-password"
-                "establecer-password"
-            ),
+            "redirect_to": "https://talentia-dx.vercel.app/establecer-password",
             "data": {
                 "nombre": nombre,
                 "apellido": apellido,
