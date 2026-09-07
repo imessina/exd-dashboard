@@ -88,6 +88,22 @@ const Icon = {
       <path d="M14 3v5h5M9 12h6M9 16h6" />
     </svg>
   ),
+
+  logout: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5" />
+      <path d="M21 12H9" />
+    </svg>
+  ),
 };
 
 const NAV = [
@@ -437,33 +453,56 @@ function Sidebar({
           type="button"
           onClick={logout}
           className="
+            flex
             w-full
-            rounded-lg
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
             border
-            border-white/10
+            border-red-400/30
+            bg-red-500/10
             px-3
-            py-2
-            text-left
+            py-2.5
             text-[13px]
-            font-medium
-            text-slate-300
+            font-semibold
+            text-red-300
             transition
-            hover:bg-white/5
-            hover:text-white
+            duration-200
+            hover:border-red-400/50
+            hover:bg-red-500/20
+            hover:text-red-200
+            focus:outline-none
+            focus:ring-2
+            focus:ring-red-400/50
+            focus:ring-offset-2
+            focus:ring-offset-[#051128]
           "
         >
-          Cerrar sesión
+          <Icon.logout className="h-4 w-4 shrink-0" />
+
+          <span>
+            Cerrar sesión
+          </span>
         </button>
       </div>
 
       {/* FOOTER */}
-      {!mobile && (
-        <div className="shrink-0 px-4 pb-3">
-          <p className="text-[10px] text-slate-500">
-            NTT DATA · DX 2026
-          </p>
-        </div>
-      )}
+<div className="shrink-0 px-4 pb-3">
+  <p className="text-[10px] text-slate-500">
+    NTT DATA · DX 2026
+  </p>
+
+  <p
+    className={
+      mobile
+        ? "mt-0.5 text-[7px] font-medium text-slate-600"
+        : "mt-0.5 text-[8px] font-medium text-slate-600"
+    }
+  >
+    Desarrollado por Ignacio Messina Luna
+  </p>
+</div>
     </aside>
   );
 }
