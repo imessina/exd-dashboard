@@ -5,29 +5,6 @@ import remarkGfm from "remark-gfm";
 
 import { aiApi } from "../services/api";
 
-function BotIcon({ className = "w-5 h-5" }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden="true"
-    >
-      <rect x="5" y="7" width="14" height="11" rx="3" />
-      <path d="M12 3v4" />
-      <path d="M9 12h.01" />
-      <path d="M15 12h.01" />
-      <path d="M9 15h6" />
-      <path d="M3 11v4" />
-      <path d="M21 11v4" />
-    </svg>
-  );
-}
-
 function SendIcon({ className = "w-5 h-5" }) {
   return (
     <svg
@@ -398,50 +375,54 @@ export default function DxAiChat() {
       {isOpen && (
         <div
           className="
-  fixed
-  inset-x-3
-  bottom-24
-  z-[9998]
-  flex
-  h-[68dvh]
-  max-h-[72dvh]
-  flex-col
-  overflow-hidden
-  rounded-2xl
-  border
-  border-slate-200
-  bg-white
-  shadow-2xl
+            fixed
+            bottom-4
+            right-4
+            z-[9998]
+            flex
+            h-[54dvh]
+            max-h-[500px]
+            w-[calc(100vw-32px)]
+            max-w-[350px]
+            flex-col
+            overflow-hidden
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white
+            shadow-2xl
 
-  sm:inset-x-auto
-  sm:bottom-24
-  sm:right-6
-  sm:h-[470px]
-  sm:w-[340px]
-  sm:max-h-[62vh]
-"
+            sm:bottom-6
+            sm:right-6
+            sm:h-[470px]
+            sm:max-h-[62vh]
+            sm:w-[340px]
+            sm:max-w-none
+          "
         >
           <div
-            className="flex items-center justify-between px-4 py-2.5 text-white"
+            className="flex items-center justify-between px-3.5 py-2 text-white sm:px-4 sm:py-2.5"
             style={{
               background: "linear-gradient(135deg, #051128 0%, #08274d 100%)",
             }}
           >
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <img
                 src="/talentia-chat.png"
                 alt=""
                 aria-hidden="true"
-                className="h-10 w-10 shrink-0 scale-[1.5] object-contain"
+                className="h-9 w-9 shrink-0 scale-[1.45] object-contain sm:h-10 sm:w-10 sm:scale-[1.5]"
               />
 
               <div>
-                <h2 className="text-sm font-semibold">TalentIA</h2>
+                <h2 className="text-[13px] font-semibold sm:text-sm">
+                  TalentIA
+                </h2>
 
                 <div className="mt-0.5 flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
 
-                  <span className="text-[11px] text-slate-300">
+                  <span className="text-[10px] text-slate-300 sm:text-[11px]">
                     Asistente de talento
                   </span>
                 </div>
@@ -451,15 +432,15 @@ export default function DxAiChat() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition hover:bg-white/10 hover:text-white sm:h-9 sm:w-9"
               aria-label="Cerrar chat"
             >
-              <CloseIcon />
+              <CloseIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto bg-slate-50 px-3 py-3 sm:px-3.5 sm:py-3.5">
-            <div className="space-y-4">
+          <div className="flex-1 overflow-y-auto bg-slate-50 px-2.5 py-2.5 sm:px-3.5 sm:py-3.5">
+            <div className="space-y-3 sm:space-y-4">
               {messages.map((item) => {
                 const isUser = item.role === "user";
                 const isError = item.role === "error";
@@ -489,9 +470,10 @@ export default function DxAiChat() {
                         "rounded-2xl",
                         "px-3",
                         "py-2.5",
-                        "text-[12.5px]",
+                        "text-[12px]",
                         "leading-5",
                         "break-words",
+                        "sm:text-[12.5px]",
                         isUser
                           ? "rounded-br-md bg-brand-500 text-white"
                           : isError
@@ -547,7 +529,7 @@ export default function DxAiChat() {
 
           <form
             onSubmit={handleSubmit}
-            className="border-t border-slate-200 bg-white p-3"
+            className="border-t border-slate-200 bg-white p-2.5 sm:p-3"
           >
             <div className="flex items-end gap-2 rounded-xl border border-slate-300 bg-white p-1.5 transition focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/10">
               <textarea
@@ -558,55 +540,23 @@ export default function DxAiChat() {
                 onKeyDown={handleKeyDown}
                 disabled={loading}
                 placeholder="Pregunta sobre el equipo DX..."
-                className="max-h-24 min-h-[36px] flex-1 resize-none border-0 bg-transparent px-1.5 py-1.5 text-[13px] text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
+                className="max-h-24 min-h-[34px] flex-1 resize-none border-0 bg-transparent px-1.5 py-1.5 text-[12px] text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-60 sm:min-h-[36px] sm:text-[13px]"
               />
 
               <button
                 type="submit"
                 disabled={loading || !message.trim()}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9"
                 aria-label="Enviar mensaje"
               >
-                <SendIcon className="h-[18px] w-[18px]" />
+                <SendIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {isOpen ? (
-        <button
-          key="talentia-close"
-          type="button"
-          onClick={() => setIsOpen(false)}
-          className="
-            fixed
-            bottom-5
-            right-4
-            z-[9999]
-            flex
-            h-12
-            w-12
-            items-center
-            justify-center
-            rounded-full
-            bg-brand-500
-            text-white
-            shadow-xl
-            transition-transform
-            duration-200
-            hover:-translate-y-0.5
-            hover:scale-105
-            sm:bottom-6
-            sm:right-6
-            sm:h-14
-            sm:w-14
-          "
-          aria-label="Cerrar TalentIA"
-        >
-          <CloseIcon className="h-6 w-6" />
-        </button>
-      ) : (
+      {!isOpen && (
         <button
           key="talentia-open"
           type="button"
@@ -617,8 +567,8 @@ export default function DxAiChat() {
             right-3
             z-[9999]
             flex
-            h-24
-            w-24
+            h-20
+            w-20
             items-center
             justify-center
             overflow-visible
@@ -630,8 +580,11 @@ export default function DxAiChat() {
             duration-200
             hover:-translate-y-0.5
             hover:scale-105
+
             sm:bottom-6
             sm:right-6
+            sm:h-24
+            sm:w-24
           "
           aria-label="Abrir TalentIA"
         >
@@ -640,12 +593,15 @@ export default function DxAiChat() {
             alt=""
             aria-hidden="true"
             className="
-              h-24
-              w-24
+              h-20
+              w-20
               max-w-none
               scale-125
               object-contain
               drop-shadow-[0_8px_20px_rgba(14,165,233,0.35)]
+
+              sm:h-24
+              sm:w-24
             "
           />
         </button>
