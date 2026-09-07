@@ -173,15 +173,6 @@ export default function Login() {
           "
         >
           <div className="w-full max-w-md">
-            {/* Logo móvil / tablet */}
-            <div className="mb-6 flex justify-center xl:hidden">
-              <img
-                src="/logo-azul.png"
-                alt="NTT DATA"
-                className="h-auto w-[170px] object-contain"
-              />
-            </div>
-
             {/* TARJETA LOGIN */}
             <div
               className="
@@ -471,6 +462,16 @@ export default function Login() {
                           />
                         </svg>
                       )}
+                    </button>
+                  </div>
+
+                  <div className="mt-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/recuperar-password")}
+                      className="text-xs font-semibold text-sky-600 transition hover:text-sky-700 hover:underline"
+                    >
+                      ¿Olvidaste tu contraseña?
                     </button>
                   </div>
                 </div>

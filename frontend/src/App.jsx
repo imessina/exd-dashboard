@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAuthorizedUser } from "./lib/authUser";
 import SuperAdminRoute from "./components/SuperAdminRoute";
 import EstablecerPassword from "./pages/EstablecerPassword";
+import RecuperarPassword from "./pages/RecuperarPassword";
 
 import {
   BrowserRouter,
@@ -677,6 +678,16 @@ export default function App() {
         <Route
           path="/establecer-password"
           element={<EstablecerPassword />}
+        />
+
+        <Route
+          path="/restablecer-password"
+          element={<EstablecerPassword modo="recovery" />}
+        />
+
+        <Route
+          path="/recuperar-password"
+          element={<RecuperarPassword />}
         />
 
         <Route

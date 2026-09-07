@@ -1198,16 +1198,7 @@ export default function Personas() {
       .filter(Boolean);
 
     const contenidoPersona = normalizarTexto(
-      [
-        p.nombre,
-        p.rol,
-        p.nivel_piramide,
-        p.oferta_valor,
-        p.responsable,
-        p.numero_empleado,
-      ]
-        .filter(Boolean)
-        .join(" "),
+      [p.nombre, p.numero_empleado].filter(Boolean).join(" "),
     );
 
     const coincideBusqueda =

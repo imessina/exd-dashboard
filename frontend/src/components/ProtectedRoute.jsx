@@ -71,7 +71,23 @@ export default function ProtectedRoute({ children }) {
   }, []);
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-slate-50 px-4">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/logo-azul.png"
+            alt="NTT DATA"
+            className="h-auto w-[170px] object-contain"
+          />
+
+          <div className="mt-6 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-sky-500" />
+
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Cargando tu espacio de trabajo...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (!session) {
