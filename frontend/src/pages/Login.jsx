@@ -309,7 +309,7 @@ export default function Login() {
                       }
                       required
                       autoComplete="email"
-                      placeholder="tu.correo@nttdata.com"
+                      placeholder="tu.correo@mail.com"
                       className="
                         w-full
                         rounded-xl
