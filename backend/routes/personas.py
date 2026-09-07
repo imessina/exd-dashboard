@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from database import get_db
+from auth import require_editor_or_higher
 import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
@@ -64,7 +65,11 @@ def get_persona(persona_id: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=schemas.PersonaOut, status_code=201)
-def create_persona(data: schemas.PersonaCreate, db: Session = Depends(get_db)):
+def create_persona(
+    data: schemas.PersonaCreate,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     existing = (
         db.query(models.Persona)
         .filter(models.Persona.id == data.id)
@@ -94,6 +99,7 @@ def create_persona(data: schemas.PersonaCreate, db: Session = Depends(get_db)):
 def update_persona(
     persona_id: str,
     data: schemas.PersonaUpdate,
+    _usuario: dict = Depends(require_editor_or_higher),
     db: Session = Depends(get_db),
 ):
     persona = (
@@ -156,6 +162,7 @@ def get_persona_skills(persona_id: str, db: Session = Depends(get_db)):
 def replace_persona_skills(
     persona_id: str,
     data: schemas.PersonaSkillsReplace,
+    _usuario: dict = Depends(require_editor_or_higher),
     db: Session = Depends(get_db),
 ):
     logger.info(
@@ -253,7 +260,11 @@ def replace_persona_skills(
 
 
 @router.delete("/{persona_id}", status_code=204)
-def delete_persona(persona_id: str, db: Session = Depends(get_db)):
+def delete_persona(
+    persona_id: str,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     persona = (
         db.query(models.Persona)
         .filter(models.Persona.id == persona_id)

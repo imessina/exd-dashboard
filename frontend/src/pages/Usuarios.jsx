@@ -221,6 +221,24 @@ export default function Usuarios() {
     await cargarUsuarios();
   };
 
+  if (loading) {
+    return (
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-slate-50 px-4 lg:min-h-dvh">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/logo-azul.png"
+            alt="NTT DATA"
+            className="h-auto w-[170px] object-contain"
+          />
+          <div className="mt-6 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-sky-500" />
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Cargando tu espacio de trabajo...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-6 pb-8 pt-0 sm:space-y-8">
       {/* =====================================================
@@ -604,13 +622,6 @@ export default function Usuarios() {
               </button>
             </div>
           </form>
-        )}
-
-        {/* Cargando */}
-        {loading && (
-          <p className="text-sm text-slate-500">
-            Cargando usuarios...
-          </p>
         )}
 
         {/* Error listado */}

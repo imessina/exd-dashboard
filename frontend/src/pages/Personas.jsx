@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { curriculumsApi, ofertasValorApi, personasApi } from "../services/api";
+import { getAuthorizedUser } from "../lib/authUser";
 import {
   NIVELES_PIRAMIDE,
   NIVEL_COLOR,
@@ -745,7 +746,7 @@ function GestionOfertasPanel({ ofertas, personas, onClose }) {
 }
 
 // ── Perfil completo ──────────────────────────────────────────────────────────
-function PersonaPanel({ persona, onClose, onEdit }) {
+function PersonaPanel({ persona, onClose, onEdit, puedeEditar = false }) {
   const qc = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const { data: skillsEvaluadas = [] } = useQuery({
@@ -993,38 +994,40 @@ function PersonaPanel({ persona, onClose, onEdit }) {
             </div>
           )}
 
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-          {confirming ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-red-600">
-                ¿Eliminar permanentemente?
-              </span>
+        {puedeEditar && (
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+            {confirming ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm text-red-600">
+                  ¿Eliminar permanentemente?
+                </span>
+                <button
+                  onClick={() => del.mutate()}
+                  disabled={del.isPending}
+                  className="text-xs text-red-600 font-semibold hover:underline"
+                >
+                  Sí
+                </button>
+                <button
+                  onClick={() => setConfirming(false)}
+                  className="text-xs text-gray-500 hover:underline"
+                >
+                  No
+                </button>
+              </div>
+            ) : (
               <button
-                onClick={() => del.mutate()}
-                disabled={del.isPending}
-                className="text-xs text-red-600 font-semibold hover:underline"
+                onClick={() => setConfirming(true)}
+                className="text-xs text-red-400 hover:text-red-600 font-medium"
               >
-                Sí
+                Eliminar persona
               </button>
-              <button
-                onClick={() => setConfirming(false)}
-                className="text-xs text-gray-500 hover:underline"
-              >
-                No
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setConfirming(true)}
-              className="text-xs text-red-400 hover:text-red-600 font-medium"
-            >
-              Eliminar persona
+            )}
+            <button onClick={onEdit} className="btn-primary !text-xs !py-1.5">
+              ✏️ Editar
             </button>
-          )}
-          <button onClick={onEdit} className="btn-primary !text-xs !py-1.5">
-            ✏️ Editar
-          </button>
-        </div>
+          </div>
+        )}
       </div>
     </Panel>
   );
@@ -1118,7 +1121,24 @@ export default function Personas() {
   const [cvDetalle, setCvDetalle] = useState(null);
   const [cvEditando, setCvEditando] = useState(null);
   const [descargandoPdfId, setDescargandoPdfId] = useState(null);
+  const [authorizedUser, setAuthorizedUser] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    let mounted = true;
+
+    getAuthorizedUser().then((usuario) => {
+      if (mounted) setAuthorizedUser(usuario);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const puedeEditar = ["superadmin", "admin", "editor"].includes(
+    authorizedUser?.rol,
+  );
 
   const { data: personas = [], isLoading } = useQuery({
     queryKey: ["personas"],
@@ -1261,6 +1281,24 @@ export default function Personas() {
     };
   })();
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-slate-50 px-4 lg:min-h-dvh">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/logo-azul.png"
+            alt="NTT DATA"
+            className="h-auto w-[170px] object-contain"
+          />
+          <div className="mt-6 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-sky-500" />
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Cargando tu espacio de trabajo...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-6 pb-8 pt-0 sm:space-y-8">
       {/* Header */}
@@ -1306,22 +1344,24 @@ export default function Personas() {
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:shrink-0">
-            <button
-              type="button"
-              onClick={() => setGestionandoOfertas(true)}
-              className="btn-primary w-full justify-center !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20 sm:w-auto"
-            >
-              Gestionar ofertas de valor
-            </button>
+          {puedeEditar && (
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:shrink-0">
+              <button
+                type="button"
+                onClick={() => setGestionandoOfertas(true)}
+                className="btn-primary w-full justify-center !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20 sm:w-auto"
+              >
+                Gestionar ofertas de valor
+              </button>
 
-            <button
-              onClick={() => setCreating(true)}
-              className="btn-primary w-full justify-center shadow-[0_8px_24px_rgba(14,165,233,0.22)] sm:w-auto sm:shrink-0"
-            >
-              + Nueva persona
-            </button>
-          </div>
+              <button
+                onClick={() => setCreating(true)}
+                className="btn-primary w-full justify-center shadow-[0_8px_24px_rgba(14,165,233,0.22)] sm:w-auto sm:shrink-0"
+              >
+                + Nueva persona
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1446,9 +1486,7 @@ export default function Personas() {
         </div>
 
         {/* Vista de tarjetas o lista */}
-        {isLoading ? (
-          <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
-        ) : vista === "cards" ? (
+        {vista === "cards" ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((p) => (
               <PersonaCard
@@ -1478,9 +1516,9 @@ export default function Personas() {
                   >
                     <button
                       type="button"
-                      onClick={() => setEditing(p)}
+                      onClick={() => (puedeEditar ? setEditing(p) : setSelected(p))}
                       className="w-full text-left"
-                      title={`Editar a ${p.nombre}`}
+                      title={puedeEditar ? `Editar a ${p.nombre}` : `Ver a ${p.nombre}`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
@@ -1557,13 +1595,15 @@ export default function Personas() {
                         Ver CV
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setEditing(p)}
-                        className="btn-secondary !px-3 !py-1.5 !text-xs"
-                      >
-                        Editar
-                      </button>
+                      {puedeEditar && (
+                        <button
+                          type="button"
+                          onClick={() => setEditing(p)}
+                          className="btn-secondary !px-3 !py-1.5 !text-xs"
+                        >
+                          Editar
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -1602,9 +1642,9 @@ export default function Personas() {
                 {filtered.map((p) => (
                   <tr
                     key={p.id}
-                    onClick={() => setEditing(p)}
+                    onClick={() => (puedeEditar ? setEditing(p) : setSelected(p))}
                     className="border-t border-gray-100 hover:bg-brand-50/30 cursor-pointer"
-                    title={`Editar a ${p.nombre}`}
+                    title={puedeEditar ? `Editar a ${p.nombre}` : `Ver a ${p.nombre}`}
                   >
                     <td className="px-4 py-3 font-semibold text-gray-900">
                       {p.nombre}
@@ -1659,30 +1699,32 @@ export default function Personas() {
                     </td>
 
                     <td className="px-4 py-3 text-center">
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setEditing(p);
-                        }}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
-                        title={`Editar a ${p.nombre}`}
-                        aria-label={`Editar a ${p.nombre}`}
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                          aria-hidden="true"
+                      {puedeEditar && (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setEditing(p);
+                          }}
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+                          title={`Editar a ${p.nombre}`}
+                          aria-label={`Editar a ${p.nombre}`}
                         >
-                          <path d="M12 20h9" />
-                          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                        </svg>
-                      </button>
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-4 w-4"
+                            aria-hidden="true"
+                          >
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                          </svg>
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -1715,10 +1757,14 @@ export default function Personas() {
           <DetalleCurriculum
             curriculum={cvDetalle}
             onClose={() => setCvDetalle(null)}
-            onEdit={() => {
-              setCvEditando(cvDetalle);
-              setCvDetalle(null);
-            }}
+            onEdit={
+              puedeEditar
+                ? () => {
+                    setCvEditando(cvDetalle);
+                    setCvDetalle(null);
+                  }
+                : undefined
+            }
             onDownload={() => descargarPdf(cvDetalle)}
             downloading={descargandoPdfId === cvDetalle.id}
             centered
@@ -1747,6 +1793,7 @@ export default function Personas() {
           <PersonaPanel
             persona={selected}
             onClose={() => setSelected(null)}
+            puedeEditar={puedeEditar}
             onEdit={() => {
               setEditing(selected);
               setSelected(null);

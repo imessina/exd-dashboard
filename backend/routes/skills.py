@@ -5,6 +5,7 @@ from typing import List
 import re
 import unicodedata
 from database import get_db
+from auth import require_editor_or_higher
 import models, schemas
 
 router = APIRouter(prefix="/skills", tags=["skills"])
@@ -68,7 +69,11 @@ def list_categorias(db: Session = Depends(get_db)):
 # que el router no interprete "categorias" como un skill_id.
 
 @router.put("/categorias")
-def rename_categoria(data: schemas.CategoriaRename, db: Session = Depends(get_db)):
+def rename_categoria(
+    data: schemas.CategoriaRename,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     """Renombra una categoría en todas sus skills. Si `nuevo` ya existe, fusiona."""
     actual = (data.actual or "").strip()
     nuevo = (data.nuevo or "").strip()
@@ -93,6 +98,7 @@ def rename_categoria(data: schemas.CategoriaRename, db: Session = Depends(get_db
 @router.delete("/categorias", status_code=200)
 def delete_categoria(
     nombre: str = Query(..., description="Categoría a eliminar"),
+    _usuario: dict = Depends(require_editor_or_higher),
     db: Session = Depends(get_db),
 ):
     """
@@ -155,7 +161,11 @@ def delete_categoria(
 
 
 @router.post("/", response_model=schemas.SkillOut, status_code=201)
-def create_skill(data: schemas.SkillCreate, db: Session = Depends(get_db)):
+def create_skill(
+    data: schemas.SkillCreate,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     """Crea una skill nueva. Si no se da `id`, se genera del nombre."""
     skill_id = data.id or _slugify(data.nombre)
     if not skill_id:
@@ -182,7 +192,12 @@ def create_skill(data: schemas.SkillCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{skill_id}", response_model=schemas.SkillOut)
-def update_skill(skill_id: str, data: schemas.SkillUpdate, db: Session = Depends(get_db)):
+def update_skill(
+    skill_id: str,
+    data: schemas.SkillUpdate,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     """
     Edita una skill. Si cambia el nombre, propaga el cambio a `personas.habilidades`
     para mantener consistencia.
@@ -218,7 +233,11 @@ def update_skill(skill_id: str, data: schemas.SkillUpdate, db: Session = Depends
 
 
 @router.delete("/{skill_id}", status_code=204)
-def delete_skill(skill_id: str, db: Session = Depends(get_db)):
+def delete_skill(
+    skill_id: str,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     """
     Borra una skill SI no está en uso. Si está en uso, error 409.
     Para "ocultar" una skill en uso, edita y pon `activa=false`.

@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, selectinload
 from pydantic import BaseModel, Field
 
 from database import get_db
+from auth import require_editor_or_higher
 import models, schemas
 from services.curriculum_pdf import generar_curriculum_pdf, nombre_archivo_pdf
 
@@ -330,7 +331,11 @@ def descargar_curriculum_pdf(
 
 
 @router.post("/", response_model=schemas.CurriculumOut, status_code=201)
-def create_curriculum(data: schemas.CurriculumCreate, db: Session = Depends(get_db)):
+def create_curriculum(
+    data: schemas.CurriculumCreate,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
     persona = db.query(models.Persona).filter(models.Persona.id == data.persona_id).first()
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada")
@@ -372,6 +377,7 @@ def create_curriculum(data: schemas.CurriculumCreate, db: Session = Depends(get_
 def update_curriculum(
     persona_id: str,
     data: schemas.CurriculumUpdate,
+    _usuario: dict = Depends(require_editor_or_higher),
     db: Session = Depends(get_db),
 ):
     curriculum = (

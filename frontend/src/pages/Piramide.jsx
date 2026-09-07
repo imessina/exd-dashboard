@@ -237,6 +237,24 @@ export default function Piramide() {
   const cumpleanosDelMes = obtenerCumpleanosDelMes(personas);
   const mesActual = nombreMesActual();
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-slate-50 px-4 lg:min-h-dvh">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/logo-azul.png"
+            alt="NTT DATA"
+            className="h-auto w-[170px] object-contain"
+          />
+          <div className="mt-6 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-sky-500" />
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Cargando tu espacio de trabajo...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-8 pb-0 pt-0">
       <div className="relative min-h-[170px] overflow-hidden text-white">
@@ -271,10 +289,7 @@ export default function Piramide() {
       </div>
 
       <div className="px-3 sm:px-5 py-0 min-h-[calc(100dvh-132px)]">
-        {isLoading ? (
-          <p className="text-sm text-gray-400 py-8 text-center">Cargando...</p>
-        ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 xl:gap-6 items-start w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 xl:gap-6 items-start w-full">
             {/* ── Pirámide visual ─────────────────────────────────────────── */}
             <div className="card min-w-0 w-full h-full !p-4 sm:!p-6 xl:!p-7">
               <div className="flex flex-col items-center gap-3.5">
@@ -549,7 +564,6 @@ export default function Piramide() {
               </div>
             </div>
           </div>
-        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { skillMatrixApi } from "../services/api";
+import { getAuthorizedUser } from "../lib/authUser";
 import { OFERTAS_VALOR } from "../utils/constants";
 import clsx from "clsx";
 
@@ -241,6 +242,23 @@ export default function SkillMatrix() {
   const [personaSearch, setPersonaSearch] = useState("");
   const [skillSearch, setSkillSearch] = useState("");
   const [ofertaFilter, setOfertaFilter] = useState("");
+  const [authorizedUser, setAuthorizedUser] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    getAuthorizedUser().then((usuario) => {
+      if (mounted) setAuthorizedUser(usuario);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const puedeEditar = ["superadmin", "admin", "editor"].includes(
+    authorizedUser?.rol,
+  );
 
   const ofertasVisibles = useMemo(
     () => OFERTAS_VALOR.filter((oferta) => oferta !== "Todas"),
@@ -286,8 +304,23 @@ export default function SkillMatrix() {
   }, [data]);
 
   if (isLoading) {
-    return <p className="p-6 text-sm text-gray-400 text-center">Cargando…</p>;
+    return (
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-slate-50 px-4 lg:min-h-dvh">
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/logo-azul.png"
+            alt="NTT DATA"
+            className="h-auto w-[170px] object-contain"
+          />
+          <div className="mt-6 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-sky-500" />
+          <p className="mt-5 text-sm font-medium text-slate-500">
+            Cargando tu espacio de trabajo...
+          </p>
+        </div>
+      </div>
+    );
   }
+
 
   if (!data) {
     return <p className="p-6 text-sm text-gray-400 text-center">Sin datos.</p>;
@@ -353,13 +386,15 @@ export default function SkillMatrix() {
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            <button
-              type="button"
-              onClick={() => navigate("/skills")}
-              className="btn-primary"
-            >
-              Mantenedor capacidades
-            </button>
+            {puedeEditar && (
+              <button
+                type="button"
+                onClick={() => navigate("/skills")}
+                className="btn-primary"
+              >
+                Mantenedor capacidades
+              </button>
+            )}
 
             <div className="flex flex-wrap gap-3 text-xs">
               <Stat

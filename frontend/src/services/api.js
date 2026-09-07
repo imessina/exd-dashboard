@@ -1,4 +1,5 @@
 import axios from "axios";
+import { supabase } from "../lib/supabase";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -10,6 +11,18 @@ const api = axios.create({
     "Content-Type": "application/json",
     "X-API-Key": import.meta.env.VITE_API_KEY || "",
   },
+});
+
+api.interceptors.request.use(async (config) => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session?.access_token) {
+    config.headers.Authorization = `Bearer ${session.access_token}`;
+  }
+
+  return config;
 });
 
 // Personas
