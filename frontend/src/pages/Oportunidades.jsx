@@ -21,19 +21,19 @@ const STATUS_COLORS = {
 
 const STATUS_HEADER_STYLE = {
   opportunity: {
-    background: "linear-gradient(135deg, rgba(71,85,105,0.96), rgba(30,41,59,0.98))",
+    background: "linear-gradient(135deg, rgba(30,41,59,0.97), rgba(15,23,42,0.99))",
   },
   approved: {
-    background: "linear-gradient(135deg, rgba(30,64,175,0.92), rgba(15,23,42,0.98))",
+    background: "linear-gradient(135deg, rgba(14,80,156,0.92), rgba(15,23,42,0.99))",
   },
   bidding: {
-    background: "linear-gradient(135deg, rgba(180,138,25,0.82), rgba(120,86,12,0.92))",
+    background: "linear-gradient(135deg, rgba(10,60,120,0.90), rgba(6,18,40,0.99))",
   },
   signed: {
-    background: "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(17,60,66,0.98))",
+    background: "linear-gradient(135deg, rgba(8,100,170,0.90), rgba(6,18,40,0.99))",
   },
   executing: {
-    background: "linear-gradient(135deg, rgba(14,116,144,0.88), rgba(15,23,42,0.98))",
+    background: "linear-gradient(135deg, rgba(6,60,110,0.94), rgba(6,18,40,0.99))",
   },
 };
 
