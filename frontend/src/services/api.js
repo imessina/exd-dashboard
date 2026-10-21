@@ -1,3 +1,4 @@
+/** Centraliza las llamadas autenticadas y el streaming; usa rutas canónicas para evitar redirecciones. */
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 
@@ -13,6 +14,7 @@ const api = axios.create({
   },
 });
 
+// Obtiene el token de la sesión local; no valida remotamente en cada petición.
 api.interceptors.request.use(async (config) => {
   const {
     data: { session },
@@ -27,11 +29,11 @@ api.interceptors.request.use(async (config) => {
 
 // Personas
 export const personasApi = {
-  list: (params) => api.get("/personas", { params }).then((r) => r.data),
+  list: (params) => api.get("/personas/", { params }).then((r) => r.data),
 
   get: (id) => api.get(`/personas/${id}`).then((r) => r.data),
 
-  create: (data) => api.post("/personas", data).then((r) => r.data),
+  create: (data) => api.post("/personas/", data).then((r) => r.data),
 
   update: (id, data) => api.put(`/personas/${id}`, data).then((r) => r.data),
 
@@ -41,11 +43,19 @@ export const personasApi = {
 
   replaceSkills: (id, skills) =>
     api.put(`/personas/${id}/skills`, { skills }).then((r) => r.data),
+
+  /**
+   * Carga masiva de personas desde CSV.
+   * @param {Array<object>} personas - Filas parseadas del CSV.
+   * @returns {Promise<{creadas, omitidas, errores, resultados}>}
+   */
+  bulkCreate: (personas) =>
+    api.post("/personas/bulk", { personas }).then((r) => r.data),
 };
 
 // Asignaciones
 export const asignacionesApi = {
-  list: (params) => api.get("/asignaciones", { params }).then((r) => r.data),
+  list: (params) => api.get("/asignaciones/", { params }).then((r) => r.data),
 
   proximasLiberaciones: (dias = 14) =>
     api
@@ -56,7 +66,7 @@ export const asignacionesApi = {
 
   get: (id) => api.get(`/asignaciones/${id}`).then((r) => r.data),
 
-  create: (data) => api.post("/asignaciones", data).then((r) => r.data),
+  create: (data) => api.post("/asignaciones/", data).then((r) => r.data),
 
   update: (id, data) =>
     api.put(`/asignaciones/${id}`, data).then((r) => r.data),
@@ -66,11 +76,11 @@ export const asignacionesApi = {
 
 // Proyectos
 export const proyectosApi = {
-  list: (params) => api.get("/proyectos", { params }).then((r) => r.data),
+  list: (params) => api.get("/proyectos/", { params }).then((r) => r.data),
 
   get: (id) => api.get(`/proyectos/${id}`).then((r) => r.data),
 
-  create: (data) => api.post("/proyectos", data).then((r) => r.data),
+  create: (data) => api.post("/proyectos/", data).then((r) => r.data),
 
   update: (id, data) => api.put(`/proyectos/${id}`, data).then((r) => r.data),
 
@@ -84,11 +94,11 @@ export const proyectosApi = {
 
 // Oportunidades
 export const oportunidadesApi = {
-  list: (params) => api.get("/oportunidades", { params }).then((r) => r.data),
+  list: (params) => api.get("/oportunidades/", { params }).then((r) => r.data),
 
   get: (id) => api.get(`/oportunidades/${id}`).then((r) => r.data),
 
-  create: (data) => api.post("/oportunidades", data).then((r) => r.data),
+  create: (data) => api.post("/oportunidades/", data).then((r) => r.data),
 
   update: (id, data) =>
     api.put(`/oportunidades/${id}`, data).then((r) => r.data),
@@ -100,7 +110,7 @@ export const oportunidadesApi = {
 
 // Skill Matrix
 export const skillMatrixApi = {
-  get: (params) => api.get("/skill-matrix", { params }).then((r) => r.data),
+  get: (params) => api.get("/skill-matrix/", { params }).then((r) => r.data),
 
   gaps: () => api.get("/skill-matrix/gaps").then((r) => r.data),
 };
@@ -181,12 +191,19 @@ export const aiApi = {
     message,
     { sessionId, onDelta, signal } = {},
   ) => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      throw new Error("Tu sesión expiró. Vuelve a iniciar sesión para consultar TalentIA.");
+    }
+
     const response = await fetch(`${baseURL}/ai/chat`, {
       method: "POST",
 
       headers: {
         "Content-Type": "application/json",
         Accept: "text/event-stream",
+        Authorization: `Bearer ${session.access_token}`,
         "X-API-Key": import.meta.env.VITE_API_KEY || "",
       },
 
@@ -224,6 +241,7 @@ export const aiApi = {
     let buffer = "";
     let fullText = "";
     let streamError = null;
+    let completed = false;
 
     const processEvent = (rawEvent) => {
       const dataLines = rawEvent
@@ -237,7 +255,12 @@ export const aiApi = {
 
       const data = dataLines.join("\n");
 
-      if (!data || data === "[DONE]") {
+      if (data === "[DONE]") {
+        completed = true;
+        return;
+      }
+
+      if (!data) {
         return;
       }
 
@@ -246,6 +269,11 @@ export const aiApi = {
       try {
         payload = JSON.parse(data);
       } catch {
+        throw new Error("TalentIA envió una respuesta inválida. Intenta consultar nuevamente.");
+      }
+
+      if (payload.type === "done") {
+        completed = true;
         return;
       }
 
@@ -293,6 +321,10 @@ export const aiApi = {
             throw streamError;
           }
         }
+
+        if (completed) {
+          break;
+        }
       }
 
       buffer += decoder.decode();
@@ -305,10 +337,15 @@ export const aiApi = {
         throw streamError;
       }
 
+      if (!completed) {
+        throw new Error("La conexión se interrumpió antes de completar la respuesta. Puedes consultar nuevamente.");
+      }
+
       return {
         response: fullText,
       };
     } finally {
+      await reader.cancel().catch(() => {});
       reader.releaseLock();
     }
   },

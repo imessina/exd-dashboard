@@ -152,6 +152,47 @@ class PersonaOut(PersonaBase):
         from_attributes = True
 
 
+# ── Bulk / Carga masiva ──────────────────────────────────────────────────────
+
+class PersonaBulkItem(BaseModel):
+    """Una fila del CSV de carga masiva. Solo los campos mínimos son obligatorios."""
+
+    numero_empleado: str
+    nombre: str
+    rol: str
+    nivel_piramide: Optional[str] = None
+    fecha_ingreso_compania: Optional[date] = None
+    fecha_nacimiento: Optional[date] = None
+    estado_laboral: EstadoLaboral = EstadoLaboral.disponible
+    oferta_valor: Optional[str] = None
+    responsable: Optional[str] = None
+    empresa_actual: Optional[str] = None
+    area: Optional[str] = None
+    anos_experiencia: Optional[int] = None
+    certificaciones: List[str] = Field(default_factory=list)
+    intereses: List[str] = Field(default_factory=list)
+    disponible_mentoria: bool = False
+    portfolio_link: Optional[str] = None
+
+
+class PersonaBulkRequest(BaseModel):
+    personas: List[PersonaBulkItem] = Field(..., min_length=1)
+
+
+class PersonaBulkResultItem(BaseModel):
+    numero_empleado: str
+    nombre: str
+    status: str          # "created" | "skipped" | "error"
+    detail: Optional[str] = None
+
+
+class PersonaBulkResponse(BaseModel):
+    creadas: int
+    omitidas: int
+    errores: int
+    resultados: List[PersonaBulkResultItem]
+
+
 
 
 # ── Ofertas de Valor Schemas ─────────────────────────────────────────────────

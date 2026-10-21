@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/** Gestiona Equipo, ofertas y acceso a CV; reutiliza consultas e índices para agilizar navegación y filtros. */
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { curriculumsApi, ofertasValorApi, personasApi } from "../services/api";
 import { getAuthorizedUser } from "../lib/authUser";
@@ -1107,6 +1108,529 @@ function PersonaCard({ persona, onClick }) {
   );
 }
 
+// ── Carga masiva ─────────────────────────────────────────────────────────────
+
+const CSV_COLUMNAS = [
+  "numero_empleado",
+  "nombre",
+  "rol",
+  "nivel_piramide",
+  "fecha_ingreso_compania",
+  "fecha_nacimiento",
+  "estado_laboral",
+  "oferta_valor",
+  "responsable",
+  "empresa_actual",
+  "area",
+  "anos_experiencia",
+  "certificaciones",
+  "intereses",
+  "disponible_mentoria",
+  "portfolio_link",
+];
+
+const CSV_EJEMPLO = [
+  CSV_COLUMNAS.join(","),
+  '284356,Ana García,UX Designer,Contributor,2023-03-15,1990-07-22,Disponible,Digital Experience,María López,NTT DATA,Diseño,4,"Design Thinking,Figma","UX Research,Accesibilidad",false,',
+  '291045,Carlos Ruiz,Lead Engineer,Lead,2021-09-01,1988-11-10,Disponible,Technology,,NTT DATA,Desarrollo,7,"React,Node.js","Backend,APIs",true,https://carlosruiz.dev',
+].join("\n");
+
+function descargarPlantillaCSV() {
+  const blob = new Blob([CSV_EJEMPLO], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = "plantilla_carga_masiva_personas.csv";
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  URL.revokeObjectURL(url);
+}
+
+function parsearCSV(texto) {
+  const lineas = texto.trim().split(/\r?\n/);
+  if (lineas.length < 2) return { filas: [], error: "El archivo no tiene datos." };
+
+  const encabezados = lineas[0]
+    .split(",")
+    .map((h) => h.trim().toLowerCase().replace(/\s+/g, "_"));
+
+  const requeridos = ["numero_empleado", "nombre", "rol"];
+  const faltantes = requeridos.filter((r) => !encabezados.includes(r));
+  if (faltantes.length) {
+    return {
+      filas: [],
+      error: `Faltan columnas obligatorias: ${faltantes.join(", ")}`,
+    };
+  }
+
+  // Parseo simple que respeta campos entre comillas con comas internas.
+  function splitFila(linea) {
+    const resultado = [];
+    let actual = "";
+    let dentroComillas = false;
+    for (let i = 0; i < linea.length; i++) {
+      const ch = linea[i];
+      if (ch === '"') {
+        dentroComillas = !dentroComillas;
+      } else if (ch === "," && !dentroComillas) {
+        resultado.push(actual.trim());
+        actual = "";
+      } else {
+        actual += ch;
+      }
+    }
+    resultado.push(actual.trim());
+    return resultado;
+  }
+
+  const filas = [];
+  for (let i = 1; i < lineas.length; i++) {
+    const valores = splitFila(lineas[i]);
+    if (valores.every((v) => !v)) continue; // línea vacía
+
+    const fila = {};
+    encabezados.forEach((col, idx) => {
+      fila[col] = valores[idx] ?? "";
+    });
+
+    filas.push({
+      _linea: i + 1,
+      numero_empleado: fila.numero_empleado || "",
+      nombre: fila.nombre || "",
+      rol: fila.rol || "",
+      nivel_piramide: fila.nivel_piramide || null,
+      fecha_ingreso_compania: fila.fecha_ingreso_compania || null,
+      fecha_nacimiento: fila.fecha_nacimiento || null,
+      estado_laboral: fila.estado_laboral || "Disponible",
+      oferta_valor: fila.oferta_valor || null,
+      responsable: fila.responsable || null,
+      empresa_actual: fila.empresa_actual || null,
+      area: fila.area || null,
+      anos_experiencia: fila.anos_experiencia
+        ? parseInt(fila.anos_experiencia, 10) || null
+        : null,
+      certificaciones: fila.certificaciones
+        ? fila.certificaciones.split(";").map((s) => s.trim()).filter(Boolean)
+        : [],
+      intereses: fila.intereses
+        ? fila.intereses.split(";").map((s) => s.trim()).filter(Boolean)
+        : [],
+      disponible_mentoria:
+        String(fila.disponible_mentoria).toLowerCase() === "true",
+      portfolio_link: fila.portfolio_link || null,
+    });
+  }
+
+  return { filas, error: null };
+}
+
+function CargaMasivaPanel({ onClose, onSuccess }) {
+  const qc = useQueryClient();
+  const inputRef = useRef(null);
+
+  const [paso, setPaso] = useState("upload"); // upload | preview | resultado
+  const [filas, setFilas] = useState([]);
+  const [parseError, setParseError] = useState("");
+  const [resultado, setResultado] = useState(null);
+  const [enviando, setEnviando] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState("");
+
+  function handleArchivo(archivo) {
+    if (!archivo) return;
+    if (!archivo.name.endsWith(".csv")) {
+      setParseError("Solo se aceptan archivos .csv");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const { filas: filasParseadas, error } = parsearCSV(e.target.result);
+      if (error) {
+        setParseError(error);
+        setFilas([]);
+      } else {
+        setParseError("");
+        setFilas(filasParseadas);
+        setPaso("preview");
+      }
+    };
+    reader.readAsText(archivo, "UTF-8");
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const archivo = e.dataTransfer.files?.[0];
+    handleArchivo(archivo);
+  }
+
+  async function confirmarEnvio() {
+    setEnviando(true);
+    setErrorEnvio("");
+    try {
+      // Quitar el campo interno _linea antes de enviar
+      const payload = filas.map(({ _linea, ...rest }) => rest);
+      const res = await personasApi.bulkCreate(payload);
+      setResultado(res);
+      setPaso("resultado");
+      qc.invalidateQueries({ queryKey: ["personas"] });
+      qc.invalidateQueries({ queryKey: ["skill-matrix"] });
+      if (res.creadas > 0) onSuccess?.();
+    } catch (err) {
+      setErrorEnvio(
+        err?.response?.data?.detail ||
+          err?.message ||
+          "No fue posible completar la carga masiva.",
+      );
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  function reiniciar() {
+    setPaso("upload");
+    setFilas([]);
+    setParseError("");
+    setResultado(null);
+    setErrorEnvio("");
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  const erroresValidacion = filas.filter(
+    (f) => !f.numero_empleado || !f.nombre || !f.rol,
+  );
+
+  return (
+    <Panel title="Carga masiva de personas" onClose={onClose}>
+      <div className="space-y-5">
+        {/* ── Pasos indicadores ── */}
+        <div className="flex items-center gap-2 text-xs font-medium">
+          {["Subir archivo", "Revisar", "Resultado"].map((label, idx) => {
+            const pasos = ["upload", "preview", "resultado"];
+            const activo = pasos[idx] === paso;
+            const completado = pasos.indexOf(paso) > idx;
+            return (
+              <div key={label} className="flex items-center gap-2">
+                <span
+                  className={clsx(
+                    "flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
+                    activo && "bg-sky-500 text-white",
+                    completado && "bg-emerald-500 text-white",
+                    !activo && !completado && "bg-slate-200 text-slate-500",
+                  )}
+                >
+                  {completado ? "✓" : idx + 1}
+                </span>
+                <span
+                  className={clsx(
+                    activo ? "text-slate-900" : "text-slate-400",
+                  )}
+                >
+                  {label}
+                </span>
+                {idx < 2 && (
+                  <span className="text-slate-300 select-none">›</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ══════════════════════════════════════════
+            PASO 1 — UPLOAD
+        ══════════════════════════════════════════ */}
+        {paso === "upload" && (
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Sube un archivo <strong>.csv</strong> con una persona por fila.
+              Las columnas obligatorias son{" "}
+              <code className="rounded bg-slate-100 px-1 text-xs">
+                numero_empleado
+              </code>
+              ,{" "}
+              <code className="rounded bg-slate-100 px-1 text-xs">nombre</code>{" "}
+              y{" "}
+              <code className="rounded bg-slate-100 px-1 text-xs">rol</code>.
+            </p>
+
+            {/* Zona de drop */}
+            <label
+              htmlFor="csv-upload"
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+              className="
+                flex cursor-pointer flex-col items-center justify-center gap-3
+                rounded-xl border-2 border-dashed border-slate-300
+                bg-slate-50 px-6 py-10 text-center
+                transition hover:border-sky-400 hover:bg-sky-50
+              "
+            >
+              <svg
+                className="h-10 w-10 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                />
+              </svg>
+              <div>
+                <p className="text-sm font-semibold text-slate-700">
+                  Arrastra tu CSV aquí o{" "}
+                  <span className="text-sky-600 underline underline-offset-2">
+                    selecciona un archivo
+                  </span>
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Solo archivos .csv · UTF-8
+                </p>
+              </div>
+              <input
+                id="csv-upload"
+                ref={inputRef}
+                type="file"
+                accept=".csv"
+                className="sr-only"
+                onChange={(e) => handleArchivo(e.target.files?.[0])}
+              />
+            </label>
+
+            {parseError && (
+              <p className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600 border border-red-200">
+                {parseError}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={descargarPlantillaCSV}
+              className="flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-800 transition-colors"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 3v13.5m0 0l-4.5-4.5M12 16.5l4.5-4.5"
+                />
+              </svg>
+              Descargar plantilla CSV
+            </button>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════
+            PASO 2 — PREVIEW
+        ══════════════════════════════════════════ */}
+        {paso === "preview" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-slate-700">
+                Se encontraron{" "}
+                <strong className="text-slate-900">{filas.length}</strong>{" "}
+                {filas.length === 1 ? "persona" : "personas"} en el archivo.
+              </p>
+              <button
+                type="button"
+                onClick={reiniciar}
+                className="text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                ← Cambiar archivo
+              </button>
+            </div>
+
+            {erroresValidacion.length > 0 && (
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+                <p className="text-sm font-semibold text-amber-800">
+                  {erroresValidacion.length}{" "}
+                  {erroresValidacion.length === 1 ? "fila tiene" : "filas tienen"} campos obligatorios vacíos y serán omitidas.
+                </p>
+                <ul className="mt-1 space-y-0.5 text-xs text-amber-700">
+                  {erroresValidacion.slice(0, 5).map((f) => (
+                    <li key={f._linea}>
+                      Línea {f._linea}: numero_empleado="{f.numero_empleado}"
+                      nombre="{f.nombre}" rol="{f.rol}"
+                    </li>
+                  ))}
+                  {erroresValidacion.length > 5 && (
+                    <li>…y {erroresValidacion.length - 5} más</li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {/* Tabla preview */}
+            <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <table className="w-full text-xs">
+                <thead className="bg-slate-50 text-slate-500 uppercase tracking-wide">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-semibold">Línea</th>
+                    <th className="px-3 py-2 text-left font-semibold">N° empleado</th>
+                    <th className="px-3 py-2 text-left font-semibold">Nombre</th>
+                    <th className="px-3 py-2 text-left font-semibold">Rol</th>
+                    <th className="px-3 py-2 text-left font-semibold">Segmento</th>
+                    <th className="px-3 py-2 text-left font-semibold">Estado</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filas.map((f) => {
+                    const invalida =
+                      !f.numero_empleado || !f.nombre || !f.rol;
+                    return (
+                      <tr
+                        key={f._linea}
+                        className={clsx(
+                          invalida
+                            ? "bg-red-50 text-red-700"
+                            : "text-slate-700 hover:bg-slate-50",
+                        )}
+                      >
+                        <td className="px-3 py-2 text-slate-400">{f._linea}</td>
+                        <td className="px-3 py-2 font-mono">{f.numero_empleado || <span className="italic text-red-400">vacío</span>}</td>
+                        <td className="px-3 py-2">{f.nombre || <span className="italic text-red-400">vacío</span>}</td>
+                        <td className="px-3 py-2">{f.rol || <span className="italic text-red-400">vacío</span>}</td>
+                        <td className="px-3 py-2 text-slate-500">{f.nivel_piramide || "—"}</td>
+                        <td className="px-3 py-2 text-slate-500">{f.estado_laboral}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {errorEnvio && (
+              <p className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600 border border-red-200">
+                {errorEnvio}
+              </p>
+            )}
+
+            <div className="flex justify-end gap-3 pt-1">
+              <button
+                type="button"
+                onClick={reiniciar}
+                disabled={enviando}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmarEnvio}
+                disabled={enviando || filas.length === 0}
+                className="btn-primary disabled:opacity-50"
+              >
+                {enviando ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                    </svg>
+                    Importando…
+                  </span>
+                ) : (
+                  `Confirmar importación (${filas.length - erroresValidacion.length} válidas)`
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════
+            PASO 3 — RESULTADO
+        ══════════════════════════════════════════ */}
+        {paso === "resultado" && resultado && (
+          <div className="space-y-4">
+            {/* Resumen */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-center">
+                <p className="text-2xl font-bold text-emerald-700">{resultado.creadas}</p>
+                <p className="text-xs font-medium text-emerald-600">Creadas</p>
+              </div>
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-center">
+                <p className="text-2xl font-bold text-amber-700">{resultado.omitidas}</p>
+                <p className="text-xs font-medium text-amber-600">Omitidas</p>
+              </div>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-center">
+                <p className="text-2xl font-bold text-red-700">{resultado.errores}</p>
+                <p className="text-xs font-medium text-red-600">Errores</p>
+              </div>
+            </div>
+
+            {/* Detalle fila a fila */}
+            <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <table className="w-full text-xs">
+                <thead className="bg-slate-50 text-slate-500 uppercase tracking-wide">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-semibold">N° empleado</th>
+                    <th className="px-3 py-2 text-left font-semibold">Nombre</th>
+                    <th className="px-3 py-2 text-left font-semibold">Estado</th>
+                    <th className="px-3 py-2 text-left font-semibold">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {resultado.resultados.map((r, idx) => (
+                    <tr
+                      key={idx}
+                      className={clsx(
+                        r.status === "created" && "text-emerald-700 bg-emerald-50/40",
+                        r.status === "skipped" && "text-amber-700 bg-amber-50/40",
+                        r.status === "error" && "text-red-700 bg-red-50/40",
+                      )}
+                    >
+                      <td className="px-3 py-2 font-mono">{r.numero_empleado}</td>
+                      <td className="px-3 py-2">{r.nombre}</td>
+                      <td className="px-3 py-2">
+                        <span
+                          className={clsx(
+                            "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                            r.status === "created" && "bg-emerald-100 text-emerald-700",
+                            r.status === "skipped" && "bg-amber-100 text-amber-700",
+                            r.status === "error" && "bg-red-100 text-red-700",
+                          )}
+                        >
+                          {r.status === "created" ? "Creada" : r.status === "skipped" ? "Omitida" : "Error"}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-slate-500">{r.detail || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-1">
+              <button
+                type="button"
+                onClick={reiniciar}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+              >
+                Nueva carga
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-primary"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
 // ── Página ────────────────────────────────────────────────────────────────────
 export default function Personas() {
   const [search, setSearch] = useState("");
@@ -1117,6 +1641,7 @@ export default function Personas() {
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
   const [gestionandoOfertas, setGestionandoOfertas] = useState(false);
+  const [cargandoMasivo, setCargandoMasivo] = useState(false);
   const [vista, setVista] = useState("list");
   const [cvDetalle, setCvDetalle] = useState(null);
   const [cvEditando, setCvEditando] = useState(null);
@@ -1152,21 +1677,22 @@ export default function Personas() {
 
   const ofertasActivas = ofertasValor.filter((oferta) => oferta.activa);
 
-  const ofertasPorNombre = new Map(
+  // Los índices solo cambian cuando llegan datos, no al escribir en un filtro.
+  const ofertasPorNombre = useMemo(() => new Map(
     ofertasValor.map((oferta) => [oferta.nombre, oferta]),
-  );
+  ), [ofertasValor]);
 
   const { data: curriculums = [] } = useQuery({
     queryKey: ["curriculums"],
     queryFn: () => curriculumsApi.list(),
   });
 
-  const curriculumPorPersona = new Map(
+  const curriculumPorPersona = useMemo(() => new Map(
     curriculums.map((curriculum) => [
       String(curriculum.persona_id),
       curriculum,
     ]),
-  );
+  ), [curriculums]);
 
   const descargarPdf = async (curriculum) => {
     if (!curriculum || !tieneContenidoCurriculum(curriculum)) return;
@@ -1212,11 +1738,12 @@ export default function Personas() {
     a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }),
   );
 
-  const filtered = personas.filter((p) => {
+  // Normaliza la búsqueda una sola vez y evita recalcular al abrir/cerrar paneles.
+  const filtered = useMemo(() => {
     const terminosBusqueda = normalizarTexto(search)
       .split(/\s+/)
       .filter(Boolean);
-
+    return personas.filter((p) => {
     const contenidoPersona = normalizarTexto(
       [p.nombre, p.numero_empleado].filter(Boolean).join(" "),
     );
@@ -1247,7 +1774,8 @@ export default function Personas() {
       coincideOferta &&
       coincideResponsable
     );
-  });
+    });
+  }, [personas, search, nivelFilter, ofertaFilter, responsableFilter, ofertasPorNombre]);
 
   const resumenOferta = (() => {
     if (!ofertaFilter) {
@@ -1352,6 +1880,14 @@ export default function Personas() {
                 className="btn-primary w-full justify-center !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20 sm:w-auto"
               >
                 Gestionar ofertas de valor
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCargandoMasivo(true)}
+                className="btn-primary w-full justify-center !border-white/25 !bg-white/10 !text-white !shadow-sm backdrop-blur-sm hover:!bg-white/20 sm:w-auto"
+              >
+                Carga masiva
               </button>
 
               <button
@@ -1818,6 +2354,13 @@ export default function Personas() {
               }}
             />
           </Panel>
+        )}
+
+        {cargandoMasivo && (
+          <CargaMasivaPanel
+            onClose={() => setCargandoMasivo(false)}
+            onSuccess={() => setCargandoMasivo(false)}
+          />
         )}
       </div>
     </div>

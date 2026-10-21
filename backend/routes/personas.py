@@ -14,6 +14,110 @@ router = APIRouter(prefix="/personas", tags=["personas"])
 logger = logging.getLogger("uvicorn.error")
 
 
+# ── Carga masiva ──────────────────────────────────────────────────────────────
+# IMPORTANTE: debe declararse ANTES de las rutas con {persona_id} para que
+# FastAPI no confunda /bulk con un persona_id.
+
+@router.post(
+    "/bulk",
+    response_model=schemas.PersonaBulkResponse,
+    status_code=200,
+    summary="Crear personas en lote (carga masiva desde CSV)",
+)
+def bulk_create_personas(
+    data: schemas.PersonaBulkRequest,
+    _usuario: dict = Depends(require_editor_or_higher),
+    db: Session = Depends(get_db),
+):
+    """
+    Recibe una lista de personas y las inserta de forma atómica por cada fila
+    (una falla no interrumpe las demás). Devuelve un resumen con el resultado
+    de cada fila: created, skipped (id o numero_empleado ya existe) o error.
+    """
+    resultados: list[schemas.PersonaBulkResultItem] = []
+    creadas = 0
+    omitidas = 0
+    errores = 0
+
+    for item in data.personas:
+        numero_empleado = str(item.numero_empleado).strip()
+        persona_id = f"emp-{numero_empleado}"
+
+        try:
+            if db.query(models.Persona).filter(models.Persona.id == persona_id).first():
+                resultados.append(
+                    schemas.PersonaBulkResultItem(
+                        numero_empleado=numero_empleado,
+                        nombre=item.nombre,
+                        status="skipped",
+                        detail="El número de empleado ya existe.",
+                    )
+                )
+                omitidas += 1
+                continue
+
+            persona = models.Persona(
+                id=persona_id,
+                nombre=item.nombre.strip(),
+                rol=item.rol.strip(),
+                numero_empleado=numero_empleado,
+                nivel_piramide=item.nivel_piramide,
+                fecha_ingreso_compania=item.fecha_ingreso_compania,
+                fecha_nacimiento=item.fecha_nacimiento,
+                estado_laboral=item.estado_laboral,
+                oferta_valor=item.oferta_valor or None,
+                responsable=item.responsable or None,
+                empresa_actual=item.empresa_actual or None,
+                area=item.area or None,
+                anos_experiencia=item.anos_experiencia,
+                certificaciones=item.certificaciones,
+                intereses=item.intereses,
+                disponible_mentoria=item.disponible_mentoria,
+                portfolio_link=item.portfolio_link or None,
+                habilidades=[],
+                evaluacion_ultima=None,
+                evaluacion_historico=[],
+            )
+
+            db.add(persona)
+            db.commit()
+            db.refresh(persona)
+
+            resultados.append(
+                schemas.PersonaBulkResultItem(
+                    numero_empleado=numero_empleado,
+                    nombre=item.nombre,
+                    status="created",
+                )
+            )
+            creadas += 1
+
+        except Exception as exc:
+            db.rollback()
+            logger.exception(
+                "[BULK] Error creando persona %s (%s): %s",
+                persona_id,
+                item.nombre,
+                exc,
+            )
+            resultados.append(
+                schemas.PersonaBulkResultItem(
+                    numero_empleado=numero_empleado,
+                    nombre=item.nombre,
+                    status="error",
+                    detail="Error interno al guardar la persona.",
+                )
+            )
+            errores += 1
+
+    return schemas.PersonaBulkResponse(
+        creadas=creadas,
+        omitidas=omitidas,
+        errores=errores,
+        resultados=resultados,
+    )
+
+
 @router.get("/", response_model=List[schemas.PersonaOut])
 def list_personas(
     nivel: Optional[str] = Query(None, description="Nivel de pirámide"),
