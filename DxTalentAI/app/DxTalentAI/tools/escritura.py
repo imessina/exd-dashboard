@@ -420,7 +420,7 @@ def crear_persona(
     if portfolio_link:
         body["portfolio_link"] = portfolio_link.strip()
 
-    resultado = _post("/personas/", body)
+    resultado = _post("/personas/agent-create", body)
 
     return {
         "status": "created",

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from database import get_db
-from auth import require_editor_or_higher
+from auth import require_editor_or_higher, require_api_key
 import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
@@ -116,6 +116,45 @@ def bulk_create_personas(
         errores=errores,
         resultados=resultados,
     )
+
+
+@router.post(
+    "/agent-create",
+    response_model=schemas.PersonaOut,
+    status_code=201,
+    summary="Crear persona desde el agente TalentIA (solo API key)",
+)
+def agent_create_persona(
+    data: schemas.PersonaCreate,
+    _: None = Depends(require_api_key),
+    db: Session = Depends(get_db),
+):
+    """
+    Endpoint exclusivo para que el agente TalentIA cree personas.
+    Requiere solo X-API-Key (no Bearer token de Supabase).
+    """
+    existing = (
+        db.query(models.Persona)
+        .filter(models.Persona.id == data.id)
+        .first()
+    )
+    if existing:
+        raise HTTPException(status_code=400, detail="ID ya existe")
+
+    if data.numero_empleado:
+        employee_exists = (
+            db.query(models.Persona)
+            .filter(models.Persona.numero_empleado == data.numero_empleado)
+            .first()
+        )
+        if employee_exists:
+            raise HTTPException(status_code=400, detail="Número de empleado ya existe")
+
+    persona = models.Persona(**data.model_dump())
+    db.add(persona)
+    db.commit()
+    db.refresh(persona)
+    return persona
 
 
 @router.get("/", response_model=List[schemas.PersonaOut])
