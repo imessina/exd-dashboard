@@ -322,3 +322,248 @@ def crear_persona(
         body["portfolio_link"] = portfolio_link.strip()
 
     return _proposal("crear_persona", body)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ACTUALIZAR PERSONA
+# ─────────────────────────────────────────────────────────────────────────────
+
+@tool
+def actualizar_persona(
+    persona_id: str,
+    nombre: Optional[str] = None,
+    rol: Optional[str] = None,
+    nivel_piramide: Optional[str] = None,
+    estado_laboral: Optional[str] = None,
+    oferta_valor: Optional[str] = None,
+    empresa_actual: Optional[str] = None,
+    area: Optional[str] = None,
+    anos_experiencia: Optional[int] = None,
+    fecha_ingreso_compania: Optional[str] = None,
+    disponible_mentoria: Optional[bool] = None,
+    portfolio_link: Optional[str] = None,
+) -> dict:
+    """
+    Actualiza datos de una persona existente en el equipo DX.
+
+    Prepara la propuesta cuando tengas los datos. No guarda cambios.
+    El usuario debe usar el botón Confirmar del chat para ejecutarla.
+
+    Parámetros:
+    - persona_id: ID interno de la persona (obligatorio), ej. "emp-284356".
+      Si no lo sabes, usa listar_personas o obtener_persona primero.
+    - nombre: nombre completo
+    - rol: cargo o rol
+    - nivel_piramide: "Contributor", "Key Contributor", "Lead", "Expert Lead",
+      "Top Expert Leader", "Top Leader", "Top manager", "Executive"
+    - estado_laboral: "Disponible", "Staffing", "Inactivo"
+    - oferta_valor: oferta de valor a la que pertenece
+    - empresa_actual: empresa actual
+    - area: área o práctica
+    - anos_experiencia: años de experiencia
+    - fecha_ingreso_compania: fecha de ingreso en formato YYYY-MM-DD
+    - disponible_mentoria: true/false para disponibilidad de mentoría
+    - portfolio_link: URL del portfolio
+
+    Solo envía los campos que quieres cambiar. Los demás quedan sin modificar.
+    Devuelve una propuesta pendiente; no modifica la persona.
+    """
+    body = {}
+
+    if nombre is not None:
+        body["nombre"] = nombre.strip()
+    if rol is not None:
+        body["rol"] = rol.strip()
+    if nivel_piramide is not None:
+        body["nivel_piramide"] = nivel_piramide
+    if estado_laboral is not None:
+        body["estado_laboral"] = estado_laboral
+    if oferta_valor is not None:
+        body["oferta_valor"] = oferta_valor.strip()
+    if empresa_actual is not None:
+        body["empresa_actual"] = empresa_actual.strip()
+    if area is not None:
+        body["area"] = area.strip()
+    if anos_experiencia is not None:
+        body["anos_experiencia"] = anos_experiencia
+    if fecha_ingreso_compania is not None:
+        body["fecha_ingreso_compania"] = fecha_ingreso_compania
+    if disponible_mentoria is not None:
+        body["disponible_mentoria"] = disponible_mentoria
+    if portfolio_link is not None:
+        body["portfolio_link"] = portfolio_link.strip()
+
+    if not body:
+        raise ValueError(
+            "No se especificó ningún campo para actualizar. "
+            "Indica al menos un campo que quieras cambiar."
+        )
+
+    return _proposal("actualizar_persona", body, persona_id)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CREAR ASIGNACIÓN
+# ─────────────────────────────────────────────────────────────────────────────
+
+@tool
+def crear_asignacion(
+    persona_id: str,
+    proyecto_id: str,
+    fecha_inicio: str,
+    fecha_fin: Optional[str] = None,
+    porcentaje_asignacion: int = 100,
+    notas: Optional[str] = None,
+) -> dict:
+    """
+    Crea una nueva asignación de una persona a un proyecto en el Dashboard DX.
+
+    Prepara la propuesta cuando tengas los datos. No guarda cambios.
+    El usuario debe usar el botón Confirmar del chat para ejecutarla.
+
+    Parámetros:
+    - persona_id: ID interno de la persona (obligatorio), ej. "emp-284356"
+    - proyecto_id: ID interno del proyecto (obligatorio), ej. "proyecto-cliente-x"
+    - fecha_inicio: fecha de inicio de la asignación en formato YYYY-MM-DD (obligatorio)
+    - fecha_fin: fecha de fin de la asignación en formato YYYY-MM-DD (opcional)
+    - porcentaje_asignacion: porcentaje de dedicación, 0-100 (default: 100)
+    - notas: notas adicionales sobre la asignación
+
+    Si no conoces los IDs, usa listar_personas y listar_proyectos primero.
+    Devuelve una propuesta pendiente; no crea la asignación.
+    """
+    body = {
+        "persona_id": persona_id.strip(),
+        "proyecto_id": proyecto_id.strip(),
+        "fecha_inicio": fecha_inicio,
+        "porcentaje_asignacion": max(0, min(100, porcentaje_asignacion)),
+    }
+
+    if fecha_fin:
+        body["fecha_fin"] = fecha_fin
+    if notas:
+        body["notas"] = notas.strip()
+
+    return _proposal("crear_asignacion", body)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ACTUALIZAR ASIGNACIÓN
+# ─────────────────────────────────────────────────────────────────────────────
+
+@tool
+def actualizar_asignacion(
+    asignacion_id: int,
+    fecha_inicio: Optional[str] = None,
+    fecha_fin: Optional[str] = None,
+    porcentaje_asignacion: Optional[int] = None,
+    notas: Optional[str] = None,
+) -> dict:
+    """
+    Actualiza una asignación existente en el Dashboard DX.
+
+    Prepara la propuesta cuando tengas los datos. No guarda cambios.
+    El usuario debe usar el botón Confirmar del chat para ejecutarla.
+
+    Parámetros:
+    - asignacion_id: ID numérico de la asignación (obligatorio).
+      Si no lo sabes, usa listar_asignaciones primero.
+    - fecha_inicio: nueva fecha de inicio en formato YYYY-MM-DD
+    - fecha_fin: nueva fecha de fin en formato YYYY-MM-DD
+    - porcentaje_asignacion: nuevo porcentaje de dedicación, 0-100
+    - notas: nuevas notas
+
+    Solo envía los campos que quieres cambiar. Los demás quedan sin modificar.
+    Devuelve una propuesta pendiente; no modifica la asignación.
+    """
+    body = {}
+
+    if fecha_inicio is not None:
+        body["fecha_inicio"] = fecha_inicio
+    if fecha_fin is not None:
+        body["fecha_fin"] = fecha_fin
+    if porcentaje_asignacion is not None:
+        body["porcentaje_asignacion"] = max(0, min(100, porcentaje_asignacion))
+    if notas is not None:
+        body["notas"] = notas.strip()
+
+    if not body:
+        raise ValueError(
+            "No se especificó ningún campo para actualizar. "
+            "Indica al menos un campo que quieras cambiar."
+        )
+
+    return _proposal("actualizar_asignacion", body, str(asignacion_id))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ACTUALIZAR OPORTUNIDAD
+# ─────────────────────────────────────────────────────────────────────────────
+
+@tool
+def actualizar_oportunidad(
+    oportunidad_id: int,
+    nombre: Optional[str] = None,
+    cliente: Optional[str] = None,
+    alcance: Optional[str] = None,
+    vacantes: Optional[int] = None,
+    nivel_requerido: Optional[str] = None,
+    competencias_requeridas: Optional[list] = None,
+    timeline_start: Optional[str] = None,
+    timeline_end: Optional[str] = None,
+    status: Optional[str] = None,
+    owner: Optional[str] = None,
+) -> dict:
+    """
+    Actualiza una oportunidad existente en el Dashboard DX.
+
+    Prepara la propuesta cuando tengas los datos. No guarda cambios.
+    El usuario debe usar el botón Confirmar del chat para ejecutarla.
+
+    Parámetros:
+    - oportunidad_id: ID numérico de la oportunidad (obligatorio).
+      Si no lo sabes, usa listar_oportunidades primero.
+    - nombre: nuevo nombre de la oportunidad
+    - cliente: nuevo nombre del cliente
+    - alcance: nueva descripción del alcance
+    - vacantes: nuevo número de vacantes
+    - nivel_requerido: nuevo nivel requerido ("Contributor", "Lead", etc.)
+    - competencias_requeridas: nueva lista de competencias
+    - timeline_start: nueva fecha de inicio en formato YYYY-MM-DD
+    - timeline_end: nueva fecha de fin en formato YYYY-MM-DD
+    - status: nuevo estado ("opportunity", "approved", "bidding", "signed", "executing")
+    - owner: nuevo responsable
+
+    Solo envía los campos que quieres cambiar. Los demás quedan sin modificar.
+    Devuelve una propuesta pendiente; no modifica la oportunidad.
+    """
+    body = {}
+
+    if nombre is not None:
+        body["nombre"] = nombre.strip()
+    if cliente is not None:
+        body["cliente"] = cliente.strip()
+    if alcance is not None:
+        body["alcance"] = alcance.strip()
+    if vacantes is not None:
+        body["vacantes"] = vacantes
+    if nivel_requerido is not None:
+        body["nivel_requerido"] = nivel_requerido
+    if competencias_requeridas is not None:
+        body["competencias_requeridas"] = competencias_requeridas
+    if timeline_start is not None:
+        body["timeline_start"] = timeline_start
+    if timeline_end is not None:
+        body["timeline_end"] = timeline_end
+    if status is not None:
+        body["status"] = status
+    if owner is not None:
+        body["owner"] = owner.strip()
+
+    if not body:
+        raise ValueError(
+            "No se especificó ningún campo para actualizar. "
+            "Indica al menos un campo que quieras cambiar."
+        )
+
+    return _proposal("actualizar_oportunidad", body, str(oportunidad_id))

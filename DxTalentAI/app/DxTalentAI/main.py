@@ -36,9 +36,13 @@ from tools.curriculums import (
 )
 from tools.escritura import (
     crear_oportunidad,
+    actualizar_oportunidad,
     crear_proyecto,
     actualizar_proyecto,
     crear_persona,
+    actualizar_persona,
+    crear_asignacion,
+    actualizar_asignacion,
 )
 
 
@@ -77,25 +81,39 @@ asignaciones, proyectos, oportunidades y estructura de talento del equipo DX.
 - Usa obtener_capacidades_persona para ver las skills con nivel de una persona concreta.
 - Usa buscar_personas_por_capacidad para preguntas del tipo "¿quién sabe X?",
   "¿quién tiene Figma nivel 3 o más?".
-- Usa crear_persona para agregar una nueva persona al equipo DX (requiere confirmación previa).
+- Usa crear_persona para proponer una nueva persona al equipo DX (se confirma con el botón).
   Campos obligatorios: nombre, rol, numero_empleado.
+- Usa actualizar_persona para proponer cambios en los datos de una persona existente
+  (se confirma con el botón). Requiere el persona_id; si no lo sabes, usa listar_personas
+  u obtener_persona primero.
 
 ## Asignaciones
 - Usa listar_asignaciones para saber quién está asignado a proyectos,
   qué asignaciones tiene una persona, o cuántas asignaciones activas hay.
 - Usa proximas_liberaciones para saber quién se libera próximamente
   (por defecto en los próximos 14 días, el parámetro "dias" es configurable).
+- Usa crear_asignacion para proponer una nueva asignación de persona a proyecto
+  (se confirma con el botón). Requiere persona_id, proyecto_id y fecha_inicio.
+- Usa actualizar_asignacion para proponer cambios en una asignación existente
+  (se confirma con el botón). Requiere asignacion_id; si no lo sabes, usa
+  listar_asignaciones primero.
 
 ## Proyectos
 - Usa listar_proyectos para ver todos los proyectos, filtrar por fase o estado de salud.
 - Usa obtener_proyecto para ver el detalle de un proyecto específico.
-- Usa crear_proyecto para crear un nuevo proyecto (requiere confirmación previa).
-- Usa actualizar_proyecto para modificar campos de un proyecto existente (requiere confirmación previa).
+- Usa crear_proyecto para proponer un nuevo proyecto (se confirma con el botón).
+  Campos obligatorios: nombre y cliente.
+- Usa actualizar_proyecto para proponer cambios de un proyecto (se confirman con el botón).
+  Requiere proyecto_id; si no lo sabes, usa listar_proyectos primero.
 
 ## Oportunidades
 - Usa listar_oportunidades para ver el pipeline comercial, filtrar por status o nivel.
 - Usa obtener_oportunidad para ver el detalle de una oportunidad específica.
-- Usa crear_oportunidad para crear una nueva oportunidad (requiere confirmación previa).
+- Usa crear_oportunidad para proponer una nueva oportunidad (se confirma con el botón).
+  Campos obligatorios: nombre y cliente.
+- Usa actualizar_oportunidad para proponer cambios en una oportunidad existente
+  (se confirma con el botón). Requiere oportunidad_id; si no lo sabes, usa
+  listar_oportunidades primero.
 
 ## Currículums
 - Usa buscar_curriculums para ver qué personas tienen CV registrado, con búsqueda
@@ -105,45 +123,44 @@ asignaciones, proyectos, oportunidades y estructura de talento del equipo DX.
 
 # REGLAS PARA OPERACIONES DE ESCRITURA (CREAR Y ACTUALIZAR)
 
-Estas reglas aplican a crear_oportunidad, crear_proyecto y actualizar_proyecto.
-Son OBLIGATORIAS y no tienen excepciones.
+Estas reglas aplican a crear_persona, actualizar_persona, crear_asignacion,
+actualizar_asignacion, crear_proyecto, actualizar_proyecto, crear_oportunidad
+y actualizar_oportunidad. Son OBLIGATORIAS y no tienen excepciones.
 
 ## Flujo obligatorio antes de ejecutar cualquier escritura
 
 1. RECOPILAR: Si el usuario no proporcionó todos los datos necesarios, pregunta
-   por los campos faltantes obligatorios (nombre y cliente para proyectos y
-   oportunidades; proyecto_id para actualizaciones).
+   por los campos faltantes obligatorios:
+   - crear_persona: nombre, rol, numero_empleado
+   - actualizar_persona: persona_id
+   - crear_asignacion: persona_id, proyecto_id, fecha_inicio
+   - actualizar_asignacion: asignacion_id
+   - crear_proyecto: nombre, cliente
+   - actualizar_proyecto: proyecto_id
+   - crear_oportunidad: nombre, cliente
+   - actualizar_oportunidad: oportunidad_id
 
-2. RESUMIR: Antes de ejecutar la herramienta, muestra un resumen claro con
-   todos los datos que se van a guardar. Usa este formato:
+2. PROPONER: Cuando tengas los datos, llama la herramienta para preparar una
+   propuesta. Esto no guarda registros. El chat mostrará los datos y los botones.
 
-   Voy a crear/actualizar lo siguiente:
-   - **Nombre:** ...
-   - **Cliente:** ...
-   - **[Campo]:** ...
-   ¿Confirmas?
+3. CONFIRMAR: Indica que el usuario debe pulsar Confirmar o Cancelar en la tarjeta.
+   Escribir "sí" no ejecuta cambios. No repitas la herramienta para confirmar.
 
-3. ESPERAR: No ejecutes la herramienta hasta recibir una confirmación explícita
-   del usuario. Palabras que cuentan como confirmación:
-   "sí", "si", "confirmo", "adelante", "ok", "dale", "hazlo", "perfecto",
-   "correcto", "listo", "procede", "confirmar".
-
-4. Si el usuario dice "no", "cancela", "espera", "modifica" u otro rechazo,
-   NO ejecutes la herramienta. Pregunta qué quiere cambiar.
-
-5. CONFIRMAR RESULTADO: Después de ejecutar con éxito, informa al usuario
-   que el registro fue creado/actualizado y menciona el ID si aplica.
-   El cambio se refleja inmediatamente en el Dashboard DX.
+4. RESULTADO: pending_confirmation significa que aún no se ha guardado nada.
+   La interfaz comunica el resultado de la ejecución; no afirmes éxito sin verificarlo.
 
 ## Reglas adicionales de escritura
 
-- Nunca ejecutes una herramienta de escritura sin confirmación previa,
-  aunque el usuario haya dado todos los datos en un solo mensaje.
-- Si el usuario pide crear varios registros a la vez, solicita confirmación
-  para cada uno por separado.
+- Las herramientas solo proponen; el backend ejecuta tras confirmar cada tarjeta.
+- Para datos de prueba, utiliza nombres claramente ficticios y omite portfolios
+  y contactos inventados. No presentes valores de prueba como datos reales.
 - Si la herramienta devuelve un error, explícalo claramente y ofrece corregirlo.
-- No inventes IDs. Para actualizar_proyecto, usa listar_proyectos primero
-  si no conoces el ID del proyecto.
+- No inventes IDs. Para actualizar operaciones, usa la herramienta de listado
+  correspondiente primero si no conoces el ID:
+  - actualizar_persona → listar_personas u obtener_persona
+  - actualizar_asignacion → listar_asignaciones
+  - actualizar_proyecto → listar_proyectos
+  - actualizar_oportunidad → listar_oportunidades
 
 # REGLAS PARA CONTEOS Y LISTADOS
 
@@ -230,9 +247,12 @@ tools = [
     obtener_capacidades_persona,
     buscar_personas_por_capacidad,
     crear_persona,
-    # Asignaciones
+    actualizar_persona,
+    # Asignaciones (lectura + escritura)
     listar_asignaciones,
     proximas_liberaciones,
+    crear_asignacion,
+    actualizar_asignacion,
     # Proyectos (lectura + escritura)
     listar_proyectos,
     obtener_proyecto,
@@ -242,7 +262,8 @@ tools = [
     listar_oportunidades,
     obtener_oportunidad,
     crear_oportunidad,
-    # Currículums
+    actualizar_oportunidad,
+    # Currículums (solo lectura)
     obtener_curriculum_persona,
     buscar_curriculums,
 ]
@@ -250,7 +271,8 @@ tools = [
 # El protocolo de confirmación es externo al modelo y prevalece sobre el flujo conversacional.
 DEFAULT_SYSTEM_PROMPT += """
 PROTOCOLO DE PROPUESTAS:
-Las herramientas crear_persona, crear_proyecto, crear_oportunidad y actualizar_proyecto
+Las herramientas crear_persona, actualizar_persona, crear_asignacion, actualizar_asignacion,
+crear_proyecto, actualizar_proyecto, crear_oportunidad y actualizar_oportunidad
 solo preparan propuestas y nunca guardan datos. Llámalas cuando tengas los datos necesarios.
 El usuario revisará el contenido exacto y pulsará Confirmar o Cancelar en el chat.
 Un 'sí' escrito no ejecuta una propuesta. No afirmes que se guardó nada por recibir
