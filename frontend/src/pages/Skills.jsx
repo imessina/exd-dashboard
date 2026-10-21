@@ -839,30 +839,47 @@ export default function Skills() {
   return (
     <div className="pt-0 pl-[1px] pr-[2px] pb-8 space-y-8 w-full">
       {/* Header */}
-      <div
-        className="p-8 text-white flex items-center justify-between gap-4"
-        style={{
-          background: "linear-gradient(195deg, #101a2e 0%, #0c1424 100%)",
-        }}
-      >
-        <div>
-          <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">
-            Somos DX
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight">
-            Mantenedor capacidades
-          </h2>
-          <p className="text-sm text-white/60 mt-1 font-medium">
-            {skills.length} {skills.length === 1 ? "capacidad" : "capacidades"}
-            {totalSinCat > 0 && ` · ${totalSinCat} sin categoría`}
-          </p>
-        </div>
-
-        <div className="flex items-center justify-end">
+      <div className="relative min-h-[190px] overflow-hidden text-white sm:min-h-[170px]">
+        <img
+          src="/banner-personas.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "center" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,18,40,0.88) 0%, rgba(6,18,40,0.72) 24%, rgba(6,18,40,0.34) 50%, rgba(6,18,40,0.10) 72%, rgba(6,18,40,0.03) 100%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            boxShadow:
+              "inset 0 -1px 0 rgba(125,211,252,0.10), inset 0 -26px 42px rgba(6,18,40,0.08)",
+          }}
+        />
+        <div className="relative z-10 flex min-h-[190px] flex-col items-start justify-center gap-5 px-4 py-6 sm:min-h-[170px] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/70">
+              Somos DX
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Mantenedor capacidades
+            </h2>
+            <p className="mt-1 text-sm font-medium text-white/70">
+              {skills.length} {skills.length === 1 ? "capacidad" : "capacidades"}
+              {totalSinCat > 0 && ` · ${totalSinCat} sin categoría`}
+            </p>
+          </div>
           <button
             type="button"
             onClick={() => setManagingCats(true)}
-            className="btn-primary"
+            className="btn-primary w-full justify-center shadow-[0_8px_24px_rgba(14,165,233,0.22)] sm:w-auto sm:shrink-0"
           >
             Gestionar Categorías
           </button>
