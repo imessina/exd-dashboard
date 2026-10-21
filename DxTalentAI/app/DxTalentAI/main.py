@@ -36,6 +36,7 @@ from tools.escritura import (
     crear_oportunidad,
     crear_proyecto,
     actualizar_proyecto,
+    crear_persona,
 )
 
 
@@ -74,6 +75,8 @@ asignaciones, proyectos, oportunidades y estructura de talento del equipo DX.
 - Usa obtener_capacidades_persona para ver las skills con nivel de una persona concreta.
 - Usa buscar_personas_por_capacidad para preguntas del tipo "¿quién sabe X?",
   "¿quién tiene Figma nivel 3 o más?".
+- Usa crear_persona para agregar una nueva persona al equipo DX (requiere confirmación previa).
+  Campos obligatorios: nombre, rol, numero_empleado.
 
 ## Asignaciones
 - Usa listar_asignaciones para saber quién está asignado a proyectos,
@@ -219,11 +222,12 @@ Son OBLIGATORIAS y no tienen excepciones.
 
 
 tools = [
-    # Personas y capacidades
+    # Personas y capacidades (lectura + escritura)
     listar_personas,
     obtener_persona,
     obtener_capacidades_persona,
     buscar_personas_por_capacidad,
+    crear_persona,
     # Asignaciones
     listar_asignaciones,
     proximas_liberaciones,

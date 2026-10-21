@@ -344,3 +344,91 @@ def actualizar_proyecto(
         "next_milestone": resultado.get("next_milestone"),
         "issues": resultado.get("issues"),
     }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CREAR PERSONA (miembro del equipo)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@tool
+def crear_persona(
+    nombre: str,
+    rol: str,
+    numero_empleado: str,
+    nivel_piramide: Optional[str] = None,
+    estado_laboral: str = "Disponible",
+    oferta_valor: Optional[str] = None,
+    empresa_actual: Optional[str] = None,
+    area: Optional[str] = None,
+    anos_experiencia: Optional[int] = None,
+    fecha_ingreso_compania: Optional[str] = None,
+    disponible_mentoria: bool = False,
+    portfolio_link: Optional[str] = None,
+) -> dict:
+    """
+    Agrega una nueva persona al equipo DX en el Dashboard.
+
+    IMPORTANTE: Antes de llamar esta herramienta DEBES mostrar al usuario
+    un resumen con todos los datos y esperar su confirmación explícita
+    ("sí", "confirmo", "adelante", etc.).
+
+    Parámetros:
+    - nombre: nombre completo de la persona (obligatorio)
+    - rol: cargo o rol, ej. "UX Designer", "Lead Engineer" (obligatorio)
+    - numero_empleado: número de empleado único, solo dígitos, ej. "284356" (obligatorio)
+    - nivel_piramide: nivel en la pirámide. Valores válidos:
+      "Contributor", "Key Contributor", "Lead", "Expert Lead",
+      "Top Expert Leader", "Top Leader", "Top manager", "Executive"
+    - estado_laboral: "Disponible" (default), "Staffing", "Inactivo"
+    - oferta_valor: nombre de la oferta de valor a la que pertenece
+    - empresa_actual: empresa donde trabaja actualmente (default: NTT DATA)
+    - area: área o práctica, ej. "Diseño", "Desarrollo"
+    - anos_experiencia: años de experiencia profesional
+    - fecha_ingreso_compania: fecha de ingreso en formato YYYY-MM-DD
+    - disponible_mentoria: true si está disponible para mentoría
+    - portfolio_link: URL del portfolio personal
+
+    Devuelve los datos de la persona creada incluyendo su ID interno.
+    """
+    numero_empleado = str(numero_empleado).strip()
+    persona_id = f"emp-{numero_empleado}"
+
+    body = {
+        "id": persona_id,
+        "nombre": nombre.strip(),
+        "rol": rol.strip(),
+        "numero_empleado": numero_empleado,
+        "estado_laboral": estado_laboral,
+        "disponible_mentoria": disponible_mentoria,
+        "habilidades": [],
+        "certificaciones": [],
+        "intereses": [],
+    }
+
+    if nivel_piramide:
+        body["nivel_piramide"] = nivel_piramide
+    if oferta_valor:
+        body["oferta_valor"] = oferta_valor.strip()
+    if empresa_actual:
+        body["empresa_actual"] = empresa_actual.strip()
+    if area:
+        body["area"] = area.strip()
+    if anos_experiencia is not None:
+        body["anos_experiencia"] = anos_experiencia
+    if fecha_ingreso_compania:
+        body["fecha_ingreso_compania"] = fecha_ingreso_compania
+    if portfolio_link:
+        body["portfolio_link"] = portfolio_link.strip()
+
+    resultado = _post("/personas/", body)
+
+    return {
+        "status": "created",
+        "id": resultado.get("id"),
+        "nombre": resultado.get("nombre"),
+        "rol": resultado.get("rol"),
+        "numero_empleado": resultado.get("numero_empleado"),
+        "nivel_piramide": resultado.get("nivel_piramide"),
+        "estado_laboral": resultado.get("estado_laboral"),
+        "oferta_valor": resultado.get("oferta_valor"),
+    }
