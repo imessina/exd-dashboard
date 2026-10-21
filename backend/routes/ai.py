@@ -1,4 +1,4 @@
-import asyncio
+"""Transmite respuestas y vincula propuestas validadas al usuario y conversación autenticados."""
 import json
 import logging
 import os
@@ -7,10 +7,15 @@ from typing import Any, AsyncGenerator
 import boto3
 import httpx
 from botocore.exceptions import BotoCoreError, ClientError
+from botocore.config import Config
 from dotenv import load_dotenv
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+from starlette.concurrency import iterate_in_threadpool, run_in_threadpool
+
+from auth import require_authorized_user
+from services.agent_actions import prepare_action, scoped_session
 
 load_dotenv()
 
@@ -77,6 +82,7 @@ def _extract_text(value: Any) -> list[str]:
 
         for key, child in value.items():
             if key in {
+                "action_proposal",
                 "contentBlockDelta",
                 "response",
                 "text",
@@ -122,7 +128,7 @@ def _extract_text_from_raw_json(raw: bytes) -> str:
 def _invoke_agentcore_aws_sync(
     message: str,
     session_id: str,
-) -> tuple[str, list[str]]:
+) -> tuple[str, Any]:
     if not AGENTCORE_RUNTIME_ARN:
         raise RuntimeError(
             "AGENTCORE_RUNTIME_ARN no está configurado."
@@ -131,6 +137,11 @@ def _invoke_agentcore_aws_sync(
     client = boto3.client(
         "bedrock-agentcore",
         region_name=AWS_REGION,
+        config=Config(
+            connect_timeout=10,
+            read_timeout=120,
+            retries={"total_max_attempts": 1},
+        ),
     )
 
     payload = json.dumps(
@@ -141,10 +152,10 @@ def _invoke_agentcore_aws_sync(
     ).encode("utf-8")
 
     logger.info(
-    "Invocando AgentCore runtime=%s region=%s",
-    AGENTCORE_RUNTIME_ARN,
-    AWS_REGION,
-)
+        "Invocando AgentCore runtime=%s region=%s",
+        AGENTCORE_RUNTIME_ARN,
+        AWS_REGION,
+    )
 
 
     response = client.invoke_agent_runtime(
@@ -170,31 +181,17 @@ def _invoke_agentcore_aws_sync(
 
     body = response.get("response")
 
-    if body is None:
-        return content_type, []
-
-    lines: list[str] = []
-
-    for raw_line in body.iter_lines(chunk_size=10):
-        if not raw_line:
-            continue
-
-        line = raw_line.decode("utf-8").strip()
-
-        if not line:
-            continue
-
-        lines.append(line)
-
-    return content_type, lines
+    return content_type, body
 
 
 async def _stream_agentcore_aws(
     message: str,
     session_id: str,
+    user: dict | None = None,
 ) -> AsyncGenerator[str, None]:
+    body = None
     try:
-        content_type, lines = await asyncio.to_thread(
+        content_type, body = await run_in_threadpool(
             _invoke_agentcore_aws_sync,
             message,
             session_id,
@@ -202,8 +199,9 @@ async def _stream_agentcore_aws(
 
         sent_text = False
 
-        if "text/event-stream" in content_type:
-            for line in lines:
+        if body is not None and "text/event-stream" in content_type:
+            async for raw_line in iterate_in_threadpool(body.iter_lines(chunk_size=10)):
+                line = raw_line.decode("utf-8").strip()
                 if not line.startswith("data:"):
                     continue
 
@@ -214,6 +212,12 @@ async def _stream_agentcore_aws(
 
                 try:
                     payload = json.loads(data)
+                    if isinstance(payload, dict) and "action_proposal" in payload:
+                        if user is not None:
+                            action_event = await run_in_threadpool(prepare_action, payload["action_proposal"], user, session_id)
+                            yield _encode_sse(action_event)
+                            sent_text = True
+                        continue
                     fragments = _extract_text(payload)
                 except json.JSONDecodeError:
                     fragments = [data]
@@ -232,7 +236,8 @@ async def _stream_agentcore_aws(
                     )
 
         else:
-            raw_text = "\n".join(lines).strip()
+            raw = await run_in_threadpool(body.read) if body is not None else b""
+            raw_text = raw.decode("utf-8").strip()
 
             if raw_text:
                 try:
@@ -272,7 +277,7 @@ async def _stream_agentcore_aws(
     except (BotoCoreError, ClientError) as exc:
         logger.exception(
             "Error invocando AgentCore AWS: %s",
-        exc,
+            exc,
         )
 
         yield _encode_sse(
@@ -301,8 +306,15 @@ async def _stream_agentcore_aws(
         )
 
 
+    finally:
+        if body is not None:
+            body.close()
+
+
 async def _stream_agentcore_local(
     message: str,
+    session_id: str,
+    user: dict | None = None,
 ) -> AsyncGenerator[str, None]:
     timeout = httpx.Timeout(
         connect=10.0,
@@ -326,6 +338,7 @@ async def _stream_agentcore_local(
                 headers={
                     "Content-Type": "application/json",
                     "Accept": "text/event-stream",
+                    "X-Amzn-Bedrock-AgentCore-Runtime-Session-Id": session_id,
                 },
             ) as response:
                 response.raise_for_status()
@@ -353,6 +366,13 @@ async def _stream_agentcore_local(
                         try:
                             payload = json.loads(data)
                         except json.JSONDecodeError:
+                            continue
+
+                        if isinstance(payload, dict) and "action_proposal" in payload:
+                            if user is not None:
+                                action_event = await run_in_threadpool(prepare_action, payload["action_proposal"], user, session_id)
+                                yield _encode_sse(action_event)
+                                sent_text = True
                             continue
 
                         fragments = _extract_text(payload)
@@ -458,22 +478,25 @@ async def _stream_agentcore_local(
 async def _stream_agentcore(
     message: str,
     session_id: str,
+    user: dict | None = None,
 ) -> AsyncGenerator[str, None]:
     if AGENTCORE_MODE == "aws":
         async for event in _stream_agentcore_aws(
             message,
             session_id,
+            user,
         ):
             yield event
         return
 
-    async for event in _stream_agentcore_local(message):
+    async for event in _stream_agentcore_local(message, session_id, user):
         yield event
 
 
 @router.post("/chat")
 async def chat_with_talentia(
     data: AiChatRequest,
+    usuario: dict = Depends(require_authorized_user),
 ):
     message = data.message.strip()
     session_id = data.session_id.strip()
@@ -490,10 +513,13 @@ async def chat_with_talentia(
             detail="El session_id no puede estar vacío.",
         )
 
+    session_id = scoped_session(usuario["auth_user_id"], session_id)
+
     return StreamingResponse(
         _stream_agentcore(
             message,
             session_id,
+            usuario,
         ),
         media_type="text/event-stream",
         headers={

@@ -1,4 +1,6 @@
+"""Consulta proyectos y exige un usuario editor activo en todas las modificaciones."""
 from fastapi import APIRouter, Depends, HTTPException, Query
+from auth import require_editor_or_higher
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from database import get_db
@@ -29,7 +31,7 @@ def get_proyecto(proyecto_id: str, db: Session = Depends(get_db)):
     return p
 
 
-@router.post("/", response_model=schemas.ProyectoOut, status_code=201)
+@router.post("/", response_model=schemas.ProyectoOut, status_code=201, dependencies=[Depends(require_editor_or_higher)])
 def create_proyecto(data: schemas.ProyectoCreate, db: Session = Depends(get_db)):
     existing = db.query(models.Proyecto).filter(models.Proyecto.id == data.id).first()
     if existing:
@@ -41,7 +43,7 @@ def create_proyecto(data: schemas.ProyectoCreate, db: Session = Depends(get_db))
     return proyecto
 
 
-@router.put("/{proyecto_id}", response_model=schemas.ProyectoOut)
+@router.put("/{proyecto_id}", response_model=schemas.ProyectoOut, dependencies=[Depends(require_editor_or_higher)])
 def update_proyecto(proyecto_id: str, data: schemas.ProyectoUpdate, db: Session = Depends(get_db)):
     p = db.query(models.Proyecto).filter(models.Proyecto.id == proyecto_id).first()
     if not p:
@@ -81,7 +83,7 @@ def list_hitos(proyecto_id: str, db: Session = Depends(get_db)):
     )
 
 
-@router.patch("/{proyecto_id}/hitos/{hito_id}", response_model=schemas.HitoLogOut)
+@router.patch("/{proyecto_id}/hitos/{hito_id}", response_model=schemas.HitoLogOut, dependencies=[Depends(require_editor_or_higher)])
 def update_hito(proyecto_id: str, hito_id: str, data: schemas.HitoUpdate, db: Session = Depends(get_db)):
     """Gestiona una entrada del log: marcar cumplido/pendiente, reclasificar, editar."""
     h = (
@@ -98,7 +100,7 @@ def update_hito(proyecto_id: str, hito_id: str, data: schemas.HitoUpdate, db: Se
     return h
 
 
-@router.delete("/{proyecto_id}", status_code=204)
+@router.delete("/{proyecto_id}", status_code=204, dependencies=[Depends(require_editor_or_higher)])
 def delete_proyecto(proyecto_id: str, db: Session = Depends(get_db)):
     p = db.query(models.Proyecto).filter(models.Proyecto.id == proyecto_id).first()
     if not p:

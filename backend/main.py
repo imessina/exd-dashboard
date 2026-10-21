@@ -1,6 +1,9 @@
+"""Configura FastAPI, sus rutas, controles de acceso y operaciones administrativas."""
 import logging
 
 from fastapi import Depends, FastAPI
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from auth import require_admin_key, require_api_key
@@ -17,6 +20,8 @@ from routes import (
     ofertas_valor,
     ai,
     usuarios,
+    passwords,
+    agent_actions,
 )
 import models  # noqa: F401  -- needed by /api/admin/* endpoints
 
@@ -36,6 +41,17 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_without_inputs(request, exc):
+    """Evita devolver contraseñas u otros valores enviados en errores de validación."""
+    return JSONResponse(status_code=422, content={
+        "detail": [
+            {"loc": error["loc"], "msg": error["msg"], "type": error["type"]}
+            for error in exc.errors()
+        ],
+    })
 
 cors_origins = list(
     dict.fromkeys(
@@ -70,6 +86,8 @@ app.include_router(
     dependencies=_protegido,
 )
 app.include_router(usuarios.router, prefix="/api")
+app.include_router(passwords.router, prefix="/api")
+app.include_router(agent_actions.router, prefix="/api")
 
 @app.get("/")
 def root():

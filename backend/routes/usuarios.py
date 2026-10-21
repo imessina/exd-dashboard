@@ -1,9 +1,10 @@
+"""Administra usuarios, invitaciones y alta sin correo con cambio obligatorio de contraseña temporal."""
 import json
 import logging
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, SecretStr, Field
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from urllib.error import HTTPError, URLError
@@ -13,6 +14,7 @@ from urllib.request import Request, urlopen
 from auth import (
     require_admin_or_higher,
     require_superadmin,
+    require_supabase_identity,
 )
 from config import settings
 from database import get_db
@@ -32,6 +34,7 @@ logger = logging.getLogger("uvicorn.error")
 
 
 class UsuarioCreate(BaseModel):
+    password_temporal: SecretStr | None = Field(default=None, min_length=8, max_length=128)
     email: EmailStr
     nombre: str
     apellido: str
@@ -145,10 +148,22 @@ def crear_usuario(
         }
     )
 
+    # El alta administrativa confirma el correo sin enviar una invitación.
+    # app_metadata solo puede modificarlo el servidor, nunca el propio usuario.
+    if data.password_temporal is not None:
+        payload = json.dumps({
+            "email": email,
+            "password": data.password_temporal.get_secret_value(),
+            "email_confirm": True,
+            "user_metadata": {"nombre": nombre, "apellido": apellido},
+            "app_metadata": {"must_change_password": True},
+        }).encode("utf-8")
+
+    auth_path = "/auth/v1/admin/users" if data.password_temporal is not None else f"/auth/v1/invite?{query}"
     request = Request(
         (
             f"{settings.SUPABASE_URL.rstrip('/')}"
-            f"/auth/v1/invite?{query}"
+            f"{auth_path}"
         ),
         data=payload,
         method="POST",
@@ -186,15 +201,11 @@ def crear_usuario(
                 "No fue posible invitar al usuario"
             )
 
-        logger.warning(
-            "Supabase rechazó invitación para %s: %s",
-            email,
-            message,
-        )
+        logger.warning("Supabase rechazó el alta de usuario (HTTP %s)", exc.code)
 
         raise HTTPException(
             status_code=400,
-            detail=message,
+            detail="No fue posible crear el usuario. Revisa si el correo ya existe o si la contraseña cumple la política configurada.",
         )
 
     except (URLError, TimeoutError):
@@ -278,7 +289,7 @@ def crear_usuario(
         raise HTTPException(
             status_code=500,
             detail=(
-                "La invitación fue creada, "
+                "La cuenta fue creada en Auth, "
                 "pero ocurrió un error guardando "
                 "los permisos del usuario"
             ),

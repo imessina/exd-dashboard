@@ -1,4 +1,6 @@
+/** Chat con respuestas progresivas y confirmaciones explícitas independientes del texto del modelo. */
 import { useEffect, useRef, useState } from "react";
+import AgentAction from "./AgentAction";
 import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -274,11 +276,18 @@ export default function DxAiChat() {
     abortControllerRef.current = controller;
 
     let receivedText = false;
+    let receivedAction = false;
 
     try {
       const data = await aiApi.chatStream(cleanMessage, {
         sessionId: sessionIdRef.current,
         signal: controller.signal,
+        onAction: (action) => {
+          receivedAction = true;
+          setMessages((current) => current.some((item) => item.id === action.id) ? current : [
+            ...current, { id: action.id, role: "action", action },
+          ]);
+        },
 
         onDelta: (delta, fullText) => {
           if (!delta) {
@@ -302,7 +311,7 @@ export default function DxAiChat() {
         },
       });
 
-      if (!receivedText) {
+      if (!receivedText && !receivedAction) {
         setMessages((current) =>
           current.map((item) =>
             item.id === assistantMessageId
@@ -481,7 +490,9 @@ export default function DxAiChat() {
                             : "rounded-bl-md border border-slate-200 bg-white text-slate-700 shadow-sm",
                       ].join(" ")}
                     >
-                      {isUser || isError ? (
+                      {item.role === "action" ? (
+                        <AgentAction action={item.action} sessionId={sessionIdRef.current} disabled={loading} />
+                      ) : isUser || isError ? (
                         <span className="whitespace-pre-wrap">
                           {item.content}
                         </span>

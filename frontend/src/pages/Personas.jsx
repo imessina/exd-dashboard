@@ -1131,8 +1131,8 @@ const CSV_COLUMNAS = [
 
 const CSV_EJEMPLO = [
   CSV_COLUMNAS.join(","),
-  '284356,Ana García,UX Designer,Contributor,2023-03-15,1990-07-22,Disponible,Digital Experience,María López,NTT DATA,Diseño,4,"Design Thinking,Figma","UX Research,Accesibilidad",false,',
-  '291045,Carlos Ruiz,Lead Engineer,Lead,2021-09-01,1988-11-10,Disponible,Technology,,NTT DATA,Desarrollo,7,"React,Node.js","Backend,APIs",true,https://carlosruiz.dev',
+  '284356,Ana García,UX Designer,Contributor,2023-03-15,1990-07-22,Disponible,Digital Experience,María López,NTT DATA,Diseño,4,Design Thinking;Figma,UX Research;Accesibilidad,false,',
+  '291045,Carlos Ruiz,Lead Engineer,Lead,2021-09-01,1988-11-10,Disponible,Technology,,NTT DATA,Desarrollo,7,React;Node.js,Backend;APIs,true,https://carlosruiz.dev',
 ].join("\n");
 
 function descargarPlantillaCSV() {
@@ -1210,6 +1210,7 @@ function parsearCSV(texto) {
       anos_experiencia: fila.anos_experiencia
         ? parseInt(fila.anos_experiencia, 10) || null
         : null,
+      // Dentro de una columna, las listas usan punto y coma, igual que la plantilla.
       certificaciones: fila.certificaciones
         ? fila.certificaciones.split(";").map((s) => s.trim()).filter(Boolean)
         : [],

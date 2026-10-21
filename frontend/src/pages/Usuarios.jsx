@@ -1,5 +1,8 @@
+/** Administra usuarios y conserva el listado en memoria al navegar; las mutaciones lo actualizan. */
 import { useCallback, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
+import { clearAuthorizedUserCache } from "../lib/authUser";
 import EditarUsuarioModal from "../components/EditarUsuarioModal";
 
 const API_URL =
@@ -10,6 +13,8 @@ const FORM_INICIAL = {
   apellido: "",
   email: "",
   rol: "viewer",
+  metodo_acceso: "temporal",
+  password_temporal: "",
 };
 
 const ROLE_LABELS = {
@@ -20,11 +25,22 @@ const ROLE_LABELS = {
 };
 
 export default function Usuarios() {
-  const [usuarios, setUsuarios] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const queryClient = useQueryClient();
+  const { data: usuarios = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ["usuarios"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("usuarios_autorizados")
+        .select("id, auth_user_id, email, nombre, apellido, rol, activo")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+  const error = queryError?.message || "";
 
   const [showForm, setShowForm] = useState(false);
+  const [showTemporaryPassword, setShowTemporaryPassword] = useState(false);
   const [form, setForm] = useState(FORM_INICIAL);
 
   const [creating, setCreating] = useState(false);
@@ -41,43 +57,21 @@ export default function Usuarios() {
 
   const cargarUsuarioActual = useCallback(async () => {
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    setCurrentAuthUserId(user?.id ?? null);
+    setCurrentAuthUserId(session?.user?.id ?? null);
   }, []);
 
-  const cargarUsuarios = useCallback(async () => {
-    setLoading(true);
-    setError("");
-
-    const { data, error } = await supabase
-      .from("usuarios_autorizados")
-      .select(`
-        id,
-        auth_user_id,
-        email,
-        nombre,
-        apellido,
-        rol,
-        activo
-      `)
-      .order("created_at", { ascending: true });
-
-    if (error) {
-      setError(error.message);
-      setUsuarios([]);
-    } else {
-      setUsuarios(data ?? []);
-    }
-
-    setLoading(false);
-  }, []);
+  // Refresca después de una mutación sin desmontar el listado visible.
+  const cargarUsuarios = useCallback(() => {
+    clearAuthorizedUserCache();
+    return queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+  }, [queryClient]);
 
   useEffect(() => {
     cargarUsuarioActual();
-    cargarUsuarios();
-  }, [cargarUsuarioActual, cargarUsuarios]);
+  }, [cargarUsuarioActual]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -93,6 +87,7 @@ export default function Usuarios() {
 
     setShowForm(false);
     setForm(FORM_INICIAL);
+    setShowTemporaryPassword(false);
     setFormError("");
   };
 
@@ -141,6 +136,7 @@ export default function Usuarios() {
             apellido,
             email,
             rol: form.rol,
+            ...(form.metodo_acceso === "temporal" ? { password_temporal: form.password_temporal } : {}),
           }),
         }
       );
@@ -179,10 +175,13 @@ export default function Usuarios() {
       }
 
       setSuccess(
-        `Usuario ${nombre} ${apellido} creado correctamente. Se envió una invitación a ${email}.`
+        form.metodo_acceso === "temporal"
+          ? `Usuario ${nombre} ${apellido} creado. Comparte la contraseña temporal por un canal seguro; deberá cambiarla al ingresar.`
+          : `Usuario ${nombre} ${apellido} creado correctamente. Se envió una invitación a ${email}.`
       );
 
       setForm(FORM_INICIAL);
+      setShowTemporaryPassword(false);
       setShowForm(false);
 
       await cargarUsuarios();
@@ -387,7 +386,7 @@ export default function Usuarios() {
                 </h2>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  El usuario recibirá una invitación en su correo.
+                  Puedes asignar una contraseña temporal o enviar una invitación por correo.
                 </p>
               </div>
 
@@ -411,6 +410,43 @@ export default function Usuarios() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="metodo_acceso" className="text-sm font-medium text-slate-700">Método de acceso</label>
+                <select id="metodo_acceso" name="metodo_acceso" value={form.metodo_acceso}
+                  onChange={(event) => {
+                    setForm((previous) => ({ ...previous, metodo_acceso: event.target.value, password_temporal: "" }));
+                    setShowTemporaryPassword(false);
+                  }}
+                  disabled={creating} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+                  <option value="temporal">Contraseña temporal (sin correo)</option>
+                  <option value="correo">Invitación por correo</option>
+                </select>
+              </div>
+              {form.metodo_acceso === "temporal" && (
+                <div>
+                  <label htmlFor="password_temporal" className="text-sm font-medium text-slate-700">Contraseña temporal</label>
+                  {/* Alterna solo la visibilidad; el botón no envía el formulario. */}
+                  <div className="relative mt-1">
+                  <input id="password_temporal" name="password_temporal" type={showTemporaryPassword ? "text" : "password"} autoComplete="new-password"
+                    value={form.password_temporal} onChange={handleChange} minLength={8} maxLength={128}
+                    required disabled={creating} className="w-full rounded-lg border border-slate-300 py-2 pl-3 pr-12 text-sm" />
+                    <button type="button" disabled={creating}
+                      onClick={() => setShowTemporaryPassword((visible) => !visible)}
+                      aria-label={showTemporaryPassword ? "Ocultar contraseña temporal" : "Mostrar contraseña temporal"}
+                      aria-pressed={showTemporaryPassword}
+                      aria-controls="password_temporal"
+                      className="absolute inset-y-0 right-0 flex items-center rounded-r-lg px-3 text-slate-400 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 disabled:opacity-50">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+                        strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+                        <path d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5Z" />
+                        <circle cx="12" cy="12" r="2" />
+                        {showTemporaryPassword && <path d="m3 3 18 18" />}
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-500">Mínimo 8 caracteres. El usuario deberá reemplazarla al ingresar.</p>
+                </div>
+              )}
               <div>
                 <label
                   htmlFor="nombre"

@@ -1,4 +1,6 @@
+"""Consulta oportunidades y exige un usuario editor activo en todas las modificaciones."""
 from fastapi import APIRouter, Depends, HTTPException, Query
+from auth import require_editor_or_higher
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from database import get_db
@@ -30,7 +32,7 @@ def get_oportunidad(oportunidad_id: str, db: Session = Depends(get_db)):
     return o
 
 
-@router.post("/", response_model=schemas.OportunidadOut, status_code=201)
+@router.post("/", response_model=schemas.OportunidadOut, status_code=201, dependencies=[Depends(require_editor_or_higher)])
 def create_oportunidad(data: schemas.OportunidadCreate, db: Session = Depends(get_db)):
     oportunidad = models.Oportunidad(**data.model_dump())
     db.add(oportunidad)
@@ -39,7 +41,7 @@ def create_oportunidad(data: schemas.OportunidadCreate, db: Session = Depends(ge
     return oportunidad
 
 
-@router.put("/{oportunidad_id}", response_model=schemas.OportunidadOut)
+@router.put("/{oportunidad_id}", response_model=schemas.OportunidadOut, dependencies=[Depends(require_editor_or_higher)])
 def update_oportunidad(oportunidad_id: str, data: schemas.OportunidadUpdate, db: Session = Depends(get_db)):
     o = db.query(models.Oportunidad).filter(models.Oportunidad.id == oportunidad_id).first()
     if not o:
@@ -51,7 +53,7 @@ def update_oportunidad(oportunidad_id: str, data: schemas.OportunidadUpdate, db:
     return o
 
 
-@router.delete("/{oportunidad_id}", status_code=204)
+@router.delete("/{oportunidad_id}", status_code=204, dependencies=[Depends(require_editor_or_higher)])
 def delete_oportunidad(oportunidad_id: str, db: Session = Depends(get_db)):
     o = db.query(models.Oportunidad).filter(models.Oportunidad.id == oportunidad_id).first()
     if not o:

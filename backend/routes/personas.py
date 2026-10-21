@@ -1,3 +1,4 @@
+"""Consulta personas y administra altas y cambios con permisos de editor o superiores."""
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from database import get_db
-from auth import require_editor_or_higher, require_api_key
+from auth import require_editor_or_higher
 import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
@@ -122,16 +123,16 @@ def bulk_create_personas(
     "/agent-create",
     response_model=schemas.PersonaOut,
     status_code=201,
-    summary="Crear persona desde el agente TalentIA (solo API key)",
+    summary="Crear persona con permisos de edición",
 )
 def agent_create_persona(
     data: schemas.PersonaCreate,
-    _: None = Depends(require_api_key),
+    _usuario: dict = Depends(require_editor_or_higher),
     db: Session = Depends(get_db),
 ):
     """
-    Endpoint exclusivo para que el agente TalentIA cree personas.
-    Requiere solo X-API-Key (no Bearer token de Supabase).
+    Alias compatible de creación; exige la misma sesión y rol que el alta normal.
+    La API key por sí sola nunca autoriza una escritura.
     """
     existing = (
         db.query(models.Persona)

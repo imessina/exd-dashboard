@@ -1,3 +1,4 @@
+/** Inicia sesión y dirige las cuentas con clave temporal al cambio obligatorio. */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -18,7 +19,7 @@ export default function Login() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -30,7 +31,8 @@ export default function Login() {
       return;
     }
 
-    navigate("/personas", { replace: true });
+    setPassword("");
+    navigate(data.user?.app_metadata?.must_change_password ? "/cambiar-password-inicial" : "/personas", { replace: true });
   };
 
   return (

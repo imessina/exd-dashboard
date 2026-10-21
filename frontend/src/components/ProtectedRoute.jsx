@@ -1,3 +1,4 @@
+/** Valida la sesión y el perfil sin ejecutar consultas dentro del callback bloqueante de Supabase. */
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -10,15 +11,18 @@ export default function ProtectedRoute({ children }) {
 
   useEffect(() => {
     let mounted = true;
+    let refreshTimer;
+    let revision = 0;
 
     const validarAccesoInicial = async () => {
+      const currentRevision = ++revision;
       try {
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
 
-        if (!mounted) return;
+        if (!mounted || currentRevision !== revision) return;
 
         if (error || !session) {
           setSession(null);
@@ -30,18 +34,18 @@ export default function ProtectedRoute({ children }) {
 
         const usuario = await getAuthorizedUser();
 
-        if (!mounted) return;
+        if (!mounted || currentRevision !== revision) return;
 
         setAuthorizedUser(usuario);
       } catch (error) {
         console.error("Error validando acceso inicial:", error);
 
-        if (!mounted) return;
+        if (!mounted || currentRevision !== revision) return;
 
         setSession(null);
         setAuthorizedUser(null);
       } finally {
-        if (mounted) {
+        if (mounted && currentRevision === revision) {
           setInitialLoading(false);
         }
       }
@@ -52,46 +56,32 @@ export default function ProtectedRoute({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      async (event, nuevaSession) => {
+      (event, nuevaSession) => {
         if (!mounted) return;
 
-        console.log("AUTH STATE CHANGE:", event);
-
         if (!nuevaSession) {
+          revision += 1;
+          clearTimeout(refreshTimer);
           setSession(null);
           setAuthorizedUser(null);
+          setInitialLoading(false);
           return;
         }
 
+        // Una respuesta de la sesión anterior no debe sobrescribir este evento.
+        revision += 1;
         setSession(nuevaSession);
 
-        /*
-          Importante:
-          No volvemos a activar el loader global.
-
-          Eventos como TOKEN_REFRESHED, SIGNED_IN o INITIAL_SESSION
-          pueden ocurrir mientras el usuario ya está trabajando.
-
-          Si activáramos el loader aquí, desmontaríamos toda la app
-          innecesariamente.
-        */
-        try {
-          const usuario = await getAuthorizedUser();
-
-          if (!mounted) return;
-
-          setAuthorizedUser(usuario);
-        } catch (error) {
-          console.error(
-            "Error actualizando usuario autorizado:",
-            error
-          );
-        }
+        // Supabase libera su bloqueo al retornar el callback. Revalida después,
+        // conservando la pantalla visible y agrupando eventos consecutivos.
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(validarAccesoInicial, 0);
       }
     );
 
     return () => {
       mounted = false;
+      clearTimeout(refreshTimer);
       subscription.unsubscribe();
     };
   }, []);
@@ -118,6 +108,10 @@ export default function ProtectedRoute({ children }) {
 
   if (!session) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (session.user?.app_metadata?.must_change_password || authorizedUser?.must_change_password) {
+    return <Navigate to="/cambiar-password-inicial" replace />;
   }
 
   if (!authorizedUser || !authorizedUser.activo) {

@@ -187,9 +187,13 @@ export const dashboardApi = {
 
 // TalentIA
 export const aiApi = {
+  // El contenido de la propuesta no se acepta en la confirmación: solo su ID y la decisión.
+  decideAction: (actionId, sessionId, confirm) => api.post(`/ai/actions/${actionId}/decision`, {
+    session_id: sessionId, confirm,
+  }).then((response) => response.data),
   chatStream: async (
     message,
-    { sessionId, onDelta, signal } = {},
+    { sessionId, onDelta, onAction, signal } = {},
   ) => {
     const { data: { session } } = await supabase.auth.getSession();
 
@@ -274,6 +278,11 @@ export const aiApi = {
 
       if (payload.type === "done") {
         completed = true;
+        return;
+      }
+
+      if (payload.type === "action") {
+        onAction?.(payload.action);
         return;
       }
 

@@ -1,0 +1,6 @@
+numero_empleado,nombre,rol,nivel_piramide,fecha_ingreso_compania,fecha_nacimiento,estado_laboral,oferta_valor,responsable,empresa_actual,area,anos_experiencia,certificaciones,intereses,disponible_mentoria,portfolio_link
+999001,Ana Test,UX Designer,Contributor,2024-01-10,,Disponible,,,NTT DATA,Diseño,3,Figma,UX Research,false,
+999002,Carlos Test,Lead Engineer,Lead,2024-01-10,,Disponible,,,NTT DATA,Desarrollo,8,React;Node.js,Backend,true,
+999003,María Test,Service Designer,Contributor,2024-01-10,,Disponible,,,NTT DATA,Diseño,5,Service Design,CX,false,
+999004,Diego Test,UX Researcher,Contributor,2024-01-10,,Staffing,,,NTT DATA,Diseño,2,User Research,Research,false,
+999005,Valentina Test,Lead Designer,Lead,2024-01-10,,Disponible,,,NTT DATA,Diseño,7,Design Systems,Liderazgo,true,

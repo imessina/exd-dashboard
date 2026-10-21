@@ -1,3 +1,5 @@
+"""Administra ofertas de valor y carga responsables/conteos en lote para evitar consultas por fila."""
+
 import re
 import unicodedata
 
@@ -50,15 +52,22 @@ def _personas_count(db: Session, nombre: str) -> int:
     )
 
 
-def _serialize(db: Session, oferta: models.OfertaValor):
+def _serialize(db: Session, oferta: models.OfertaValor, responsables=None, conteos=None):
+    """Conserva el contrato de respuesta; reutiliza los mapas precargados en listados."""
     return {
         "id": oferta.id,
         "nombre": oferta.nombre,
         "responsable_persona_id": oferta.responsable_persona_id,
-        "responsable": _responsable(db, oferta.responsable_persona_id),
+        "responsable": (
+            responsables.get(oferta.responsable_persona_id)
+            if responsables is not None else _responsable(db, oferta.responsable_persona_id)
+        ),
         "descripcion": oferta.descripcion,
         "activa": oferta.activa,
-        "personas_count": _personas_count(db, oferta.nombre),
+        "personas_count": (
+            conteos.get(oferta.nombre, 0)
+            if conteos is not None else _personas_count(db, oferta.nombre)
+        ),
         "created_at": oferta.created_at,
         "updated_at": oferta.updated_at,
     }
@@ -102,6 +111,7 @@ def listar_ofertas_valor(
     solo_activas: bool = Query(default=False),
     db: Session = Depends(get_db),
 ):
+    """Devuelve el catálogo con un máximo de tres consultas, independiente de su tamaño."""
     query = db.query(models.OfertaValor)
 
     if solo_activas:
@@ -109,7 +119,30 @@ def listar_ofertas_valor(
 
     ofertas = query.order_by(models.OfertaValor.nombre.asc()).all()
 
-    return [_serialize(db, oferta) for oferta in ofertas]
+    if not ofertas:
+        return []
+
+    # Carga únicamente los responsables necesarios y cuenta personas en la BD.
+    responsable_ids = {oferta.responsable_persona_id for oferta in ofertas if oferta.responsable_persona_id}
+    responsables = {
+        persona.id: {
+            "id": persona.id,
+            "nombre": persona.nombre,
+            "rol": persona.rol,
+            "nivel_piramide": persona.nivel_piramide,
+        }
+        for persona in db.query(
+            models.Persona.id, models.Persona.nombre,
+            models.Persona.rol, models.Persona.nivel_piramide,
+        ).filter(models.Persona.id.in_(responsable_ids)).all()
+    } if responsable_ids else {}
+    conteos = dict(db.query(
+        models.Persona.oferta_valor, func.count(models.Persona.id),
+    ).filter(
+        models.Persona.oferta_valor.in_([oferta.nombre for oferta in ofertas]),
+    ).group_by(models.Persona.oferta_valor).all())
+
+    return [_serialize(db, oferta, responsables, conteos) for oferta in ofertas]
 
 
 @router.get("/{oferta_id}", response_model=schemas.OfertaValorOut)

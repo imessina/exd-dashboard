@@ -1,0 +1,12 @@
+[
+  {
+    "id": "TAL-001",
+    "question": "¿Quién tiene conocimientos de Python?",
+    "category": "busqueda_por_capacidad",
+    "expected_tool": "buscar_personas_por_capacidad",
+    "expected_parameters": {
+      "capacidad": "Python",
+      "nivel_minimo": 1
+    }
+  }
+]

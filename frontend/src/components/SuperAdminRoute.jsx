@@ -1,10 +1,11 @@
+/** Restringe la administración por rol reutilizando el perfil validado durante la navegación. */
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { getAuthorizedUser } from "../lib/authUser";
+import { getAuthorizedUser, getCachedAuthorizedUser } from "../lib/authUser";
 
 export default function SuperAdminRoute({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [authorizedUser, setAuthorizedUser] = useState(null);
+  const [loading, setLoading] = useState(() => !getCachedAuthorizedUser());
+  const [authorizedUser, setAuthorizedUser] = useState(getCachedAuthorizedUser);
 
   useEffect(() => {
     let mounted = true;

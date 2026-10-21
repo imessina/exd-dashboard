@@ -1,3 +1,4 @@
+"""Valida sesiones y roles; las cuentas con contraseña temporal solo pueden completar su cambio."""
 import json
 import secrets
 from typing import Optional
@@ -53,7 +54,7 @@ def require_admin_key(
     _verify(x_api_key, settings.ADMIN_API_KEY)
 
 
-def require_supabase_user(
+def require_supabase_identity(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
 ):
     """
@@ -127,6 +128,13 @@ def require_supabase_user(
     return user
 
 
+def require_supabase_user(user: dict = Depends(require_supabase_identity)):
+    """No concede acceso operativo hasta reemplazar la contraseña temporal."""
+    if user.get("app_metadata", {}).get("must_change_password"):
+        raise HTTPException(status_code=403, detail="Debes cambiar tu contraseña temporal antes de continuar")
+    return user
+
+
 def require_superadmin(
     user: dict = Depends(require_supabase_user),
     db: Session = Depends(get_db),
@@ -165,71 +173,6 @@ def require_superadmin(
 
     return dict(result)
 
-
-def require_authorized_user(
-    user: dict = Depends(require_supabase_user),
-    db: Session = Depends(get_db),
-):
-    result = db.execute(
-        text(
-            """
-            SELECT
-                id,
-                auth_user_id,
-                email,
-                nombre,
-                apellido,
-                rol,
-                activo
-            FROM public.usuarios_autorizados
-            WHERE auth_user_id = :auth_user_id
-              AND activo = true
-            LIMIT 1
-            """
-        ),
-        {
-            "auth_user_id": user["id"],
-        },
-    ).mappings().first()
-
-    if not result:
-        raise HTTPException(
-            status_code=403,
-            detail="Usuario no autorizado o inactivo",
-        )
-
-    return dict(result)
-
-
-def require_editor_or_higher(
-    usuario: dict = Depends(require_authorized_user),
-):
-    if usuario["rol"] not in {
-        "superadmin",
-        "admin",
-        "editor",
-    }:
-        raise HTTPException(
-            status_code=403,
-            detail="No tienes permisos para realizar esta acción",
-        )
-
-    return usuario
-
-
-def require_admin_or_higher(
-    usuario: dict = Depends(require_authorized_user),
-):
-    if usuario["rol"] not in {
-        "superadmin",
-        "admin",
-    }:
-        raise HTTPException(
-            status_code=403,
-            detail="Acceso reservado a administradores",
-        )
-
-    return usuario
 
 def require_authorized_user(
     user: dict = Depends(require_supabase_user),

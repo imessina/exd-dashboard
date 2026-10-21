@@ -1,6 +1,8 @@
+/** Gestiona invitaciones, recuperación y cambio obligatorio de contraseña temporal con el mismo diseño. */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { clearAuthorizedUserCache } from "../lib/authUser";
 
 function traducirErrorSupabase(error) {
   const mensaje = String(error?.message || "").trim();
@@ -19,6 +21,8 @@ function traducirErrorSupabase(error) {
 export default function EstablecerPassword({ modo = "invite" }) {
   const navigate = useNavigate();
   const esRecuperacion = modo === "recovery";
+  const esInicial = modo === "initial";
+  const [passwordActual, setPasswordActual] = useState("");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,6 +50,33 @@ export default function EstablecerPassword({ modo = "invite" }) {
 
     setLoading(true);
 
+    // El servidor verifica la contraseña temporal y quita el requisito de cambio.
+    if (esInicial) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error("Inicia sesión con tu contraseña temporal para continuar.");
+        const baseUrl = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/\/$/, "");
+        const response = await fetch(`${baseUrl}/api/usuarios/password-inicial`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify({ password_actual: passwordActual, password_nueva: password }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "No fue posible actualizar la contraseña.");
+        clearAuthorizedUserCache();
+        await supabase.auth.signOut();
+        setPasswordActual("");
+        setPassword("");
+        setConfirmPassword("");
+        setSuccess("Contraseña actualizada. Inicia sesión con tu nueva contraseña.");
+      } catch (failure) {
+        setError(failure.message || "No fue posible actualizar la contraseña.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     const { error } = await supabase.auth.updateUser({
       password,
     });
@@ -71,8 +102,10 @@ export default function EstablecerPassword({ modo = "invite" }) {
     }, 1000);
   };
 
-  const titulo = esRecuperacion ? "Nueva contraseña" : "Crear contraseña";
-  const descripcion = esRecuperacion
+  const titulo = esInicial ? "Cambia tu contraseña temporal" : esRecuperacion ? "Nueva contraseña" : "Crear contraseña";
+  const descripcion = esInicial
+    ? "Para continuar, reemplaza la contraseña temporal por una nueva que solo tú conozcas."
+    : esRecuperacion
     ? "Define una nueva contraseña para volver a ingresar a Somos DX."
     : "Define una contraseña para activar tu acceso a Somos DX.";
   const textoBoton = esRecuperacion
@@ -139,7 +172,7 @@ export default function EstablecerPassword({ modo = "invite" }) {
                 </p>
               </div>
 
-              {esRecuperacion && (
+              {(esRecuperacion || esInicial) && (
                 <button
                   type="button"
                   onClick={() => navigate("/login", { replace: true })}
@@ -151,6 +184,14 @@ export default function EstablecerPassword({ modo = "invite" }) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              {esInicial && (
+                <div>
+                  <label htmlFor="passwordActual" className="text-sm font-semibold text-slate-700">Contraseña temporal</label>
+                  <input id="passwordActual" type="password" autoComplete="current-password" required
+                    value={passwordActual} onChange={(event) => setPasswordActual(event.target.value)} maxLength={128}
+                    className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900" />
+                </div>
+              )}
               <div>
                 <label
                   htmlFor="password"

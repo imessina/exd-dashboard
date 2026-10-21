@@ -1,4 +1,6 @@
+"""Ejecuta TalentIA y transmite texto y propuestas; la ejecución de cambios pertenece al backend confirmado."""
 import time
+from tools.proposals import action_proposals
 from collections import OrderedDict
 from typing import Any
 
@@ -245,6 +247,17 @@ tools = [
     buscar_curriculums,
 ]
 
+# El protocolo de confirmación es externo al modelo y prevalece sobre el flujo conversacional.
+DEFAULT_SYSTEM_PROMPT += """
+PROTOCOLO DE PROPUESTAS:
+Las herramientas crear_persona, crear_proyecto, crear_oportunidad y actualizar_proyecto
+solo preparan propuestas y nunca guardan datos. Llámalas cuando tengas los datos necesarios.
+El usuario revisará el contenido exacto y pulsará Confirmar o Cancelar en el chat.
+Un 'sí' escrito no ejecuta una propuesta. No afirmes que se guardó nada por recibir
+pending_confirmation. No repitas una propuesta para intentar ejecutarla: indica que use
+su botón. Puedes consultar las herramientas de lectura para comprobar el estado actual.
+"""
+
 
 def _make_conversation_manager():
     return NullConversationManager()
@@ -481,10 +494,15 @@ async def invoke(payload, context):
     first_yielded_event_logged = False
     raw_event_count = 0
     yielded_event_count = 0
+    seen_proposals = set()
 
     try:
         async for event in agent.stream_async(prompt):
             raw_event_count += 1
+
+            if isinstance(event, dict):
+                for proposal in action_proposals(event, seen_proposals):
+                    yield proposal
 
             if not first_raw_event_logged:
                 first_raw_elapsed = time.perf_counter() - stream_start
