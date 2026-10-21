@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+/** Compone la navegación y el diseño compartido; descarga cada menú cuando se necesita. */
+import { lazy, Suspense, useEffect, useState } from "react";
+import { routeModules, preloadRoute } from "./lib/routeModules";
 import { getAuthorizedUser } from "./lib/authUser";
 import SuperAdminRoute from "./components/SuperAdminRoute";
 import EstablecerPassword from "./pages/EstablecerPassword";
@@ -14,22 +16,21 @@ import {
 
 import IdleSessionTimeout from "./components/IdleSessionTimeout";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-import Dashboard from "./pages/Dashboard";
-import Personas from "./pages/Personas";
-import Asignaciones from "./pages/Asignaciones";
-import Proyectos from "./pages/Proyectos";
-import Oportunidades from "./pages/Oportunidades";
-import SkillMatrix from "./pages/SkillMatrix";
-import Piramide from "./pages/Piramide";
-import Usuarios from "./pages/Usuarios";
-import Skills from "./pages/Skills";
-import Curriculums from "./pages/Curriculums";
 import Login from "./pages/Login";
-
 import { supabase } from "./lib/supabase";
 import DxAiChat from "./components/DxAiChat";
 
+// Mantiene las rutas existentes sin incluir todas las pantallas en la descarga inicial.
+const Dashboard = lazy(routeModules["/dashboard"]);
+const Personas = lazy(routeModules["/personas"]);
+const Asignaciones = lazy(routeModules["/asignaciones"]);
+const Proyectos = lazy(routeModules["/proyectos"]);
+const Oportunidades = lazy(routeModules["/oportunidades"]);
+const SkillMatrix = lazy(routeModules["/skill-matrix"]);
+const Piramide = lazy(routeModules["/piramide"]);
+const Usuarios = lazy(routeModules["/usuarios"]);
+const Skills = lazy(routeModules["/skills"]);
+const Curriculums = lazy(routeModules["/curriculums"]);
 const AUTHORIZED_USER_CACHE_KEY =
   "somosdx_authorized_user";
 
@@ -104,6 +105,66 @@ const Icon = {
       <path d="M21 12H9" />
     </svg>
   ),
+
+  briefcase: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+      <path d="M12 12v3m0 0h3m-3 0H9" />
+    </svg>
+  ),
+
+  folder: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    </svg>
+  ),
+
+  target: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+
+  star: (p) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...p}
+    >
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+    </svg>
+  ),
 };
 
 const NAV = [
@@ -123,9 +184,29 @@ const NAV = [
     icon: Icon.grid,
   },
   {
+    to: "/asignaciones",
+    label: "Asignaciones",
+    icon: Icon.briefcase,
+  },
+  {
+    to: "/proyectos",
+    label: "Proyectos",
+    icon: Icon.folder,
+  },
+  {
+    to: "/oportunidades",
+    label: "Oportunidades",
+    icon: Icon.target,
+  },
+  {
     to: "/curriculums",
     label: "Currículums",
     icon: Icon.document,
+  },
+  {
+    to: "/skills",
+    label: "Skills",
+    icon: Icon.star,
   },
 ];
 
@@ -332,6 +413,8 @@ function Sidebar({
               key={to}
               to={to}
               onClick={onNavigate}
+              onMouseEnter={() => preloadRoute(to)}
+              onFocus={() => preloadRoute(to)}
               className={({
                 isActive,
               }) =>
@@ -627,6 +710,7 @@ function MainLayout() {
           </div>
 
           {/* RUTAS */}
+          <Suspense fallback={<p role="status" className="p-6 text-sm text-slate-500">Cargando tu espacio de trabajo...</p>}>
           <Routes>
             <Route
               path="/"
@@ -692,6 +776,7 @@ function MainLayout() {
               element={<Curriculums />}
             />
           </Routes>
+          </Suspense>
         </main>
       </div>
 
@@ -718,6 +803,8 @@ export default function App() {
           path="/establecer-password"
           element={<EstablecerPassword />}
         />
+
+        <Route path="/cambiar-password-inicial" element={<EstablecerPassword modo="initial" />} />
 
         <Route
           path="/restablecer-password"
