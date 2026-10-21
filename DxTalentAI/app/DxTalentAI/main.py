@@ -32,6 +32,11 @@ from tools.curriculums import (
     obtener_curriculum_persona,
     buscar_curriculums,
 )
+from tools.escritura import (
+    crear_oportunidad,
+    crear_proyecto,
+    actualizar_proyecto,
+)
 
 
 app = BedrockAgentCoreApp()
@@ -79,16 +84,61 @@ asignaciones, proyectos, oportunidades y estructura de talento del equipo DX.
 ## Proyectos
 - Usa listar_proyectos para ver todos los proyectos, filtrar por fase o estado de salud.
 - Usa obtener_proyecto para ver el detalle de un proyecto específico.
+- Usa crear_proyecto para crear un nuevo proyecto (requiere confirmación previa).
+- Usa actualizar_proyecto para modificar campos de un proyecto existente (requiere confirmación previa).
 
 ## Oportunidades
 - Usa listar_oportunidades para ver el pipeline comercial, filtrar por status o nivel.
 - Usa obtener_oportunidad para ver el detalle de una oportunidad específica.
+- Usa crear_oportunidad para crear una nueva oportunidad (requiere confirmación previa).
 
 ## Currículums
 - Usa buscar_curriculums para ver qué personas tienen CV registrado, con búsqueda
   opcional por nombre o rol.
 - Usa obtener_curriculum_persona para ver el currículum completo de una persona:
   resumen, experiencias, clientes, estudios, idiomas, certificaciones y skills.
+
+# REGLAS PARA OPERACIONES DE ESCRITURA (CREAR Y ACTUALIZAR)
+
+Estas reglas aplican a crear_oportunidad, crear_proyecto y actualizar_proyecto.
+Son OBLIGATORIAS y no tienen excepciones.
+
+## Flujo obligatorio antes de ejecutar cualquier escritura
+
+1. RECOPILAR: Si el usuario no proporcionó todos los datos necesarios, pregunta
+   por los campos faltantes obligatorios (nombre y cliente para proyectos y
+   oportunidades; proyecto_id para actualizaciones).
+
+2. RESUMIR: Antes de ejecutar la herramienta, muestra un resumen claro con
+   todos los datos que se van a guardar. Usa este formato:
+
+   Voy a crear/actualizar lo siguiente:
+   - **Nombre:** ...
+   - **Cliente:** ...
+   - **[Campo]:** ...
+   ¿Confirmas?
+
+3. ESPERAR: No ejecutes la herramienta hasta recibir una confirmación explícita
+   del usuario. Palabras que cuentan como confirmación:
+   "sí", "si", "confirmo", "adelante", "ok", "dale", "hazlo", "perfecto",
+   "correcto", "listo", "procede", "confirmar".
+
+4. Si el usuario dice "no", "cancela", "espera", "modifica" u otro rechazo,
+   NO ejecutes la herramienta. Pregunta qué quiere cambiar.
+
+5. CONFIRMAR RESULTADO: Después de ejecutar con éxito, informa al usuario
+   que el registro fue creado/actualizado y menciona el ID si aplica.
+   El cambio se refleja inmediatamente en el Dashboard DX.
+
+## Reglas adicionales de escritura
+
+- Nunca ejecutes una herramienta de escritura sin confirmación previa,
+  aunque el usuario haya dado todos los datos en un solo mensaje.
+- Si el usuario pide crear varios registros a la vez, solicita confirmación
+  para cada uno por separado.
+- Si la herramienta devuelve un error, explícalo claramente y ofrece corregirlo.
+- No inventes IDs. Para actualizar_proyecto, usa listar_proyectos primero
+  si no conoces el ID del proyecto.
 
 # REGLAS PARA CONTEOS Y LISTADOS
 
@@ -177,12 +227,15 @@ tools = [
     # Asignaciones
     listar_asignaciones,
     proximas_liberaciones,
-    # Proyectos
+    # Proyectos (lectura + escritura)
     listar_proyectos,
     obtener_proyecto,
-    # Oportunidades
+    crear_proyecto,
+    actualizar_proyecto,
+    # Oportunidades (lectura + escritura)
     listar_oportunidades,
     obtener_oportunidad,
+    crear_oportunidad,
     # Currículums
     obtener_curriculum_persona,
     buscar_curriculums,
