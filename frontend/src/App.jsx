@@ -203,11 +203,6 @@ const NAV = [
     label: "Currículums",
     icon: Icon.document,
   },
-  {
-    to: "/skills",
-    label: "Skills",
-    icon: Icon.star,
-  },
 ];
 
 function leerUsuarioCacheado() {
