@@ -75,7 +75,10 @@ def validate_proposal(value: dict):
 def prepare_action(value: dict, user: dict, session_id: str):
     """Persiste exclusivamente una propuesta; no modifica entidades de negocio."""
     if user["rol"] not in {"admin", "superadmin"}:
-        return {"type": "delta", "text": "\nSolo administradores pueden realizar cambios en el sistema."}
+        raise HTTPException(
+            status_code=403,
+            detail="Solo administradores pueden realizar cambios en el sistema."
+        )
     try:
         proposal = validate_proposal(value)
     except (ValidationError, ValueError):
