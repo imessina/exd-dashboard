@@ -183,12 +183,17 @@ export default function DxAiChat() {
   const [chatButtonPos, setChatButtonPos] = useState({ x: null, y: null });
   const dragStateRef = useRef({
     dragging: false,
-    pointerId: null,
     startX: 0,
     startY: 0,
     originX: 0,
     originY: 0,
     moved: false,
+  });
+  const dragHandlersRef = useRef({
+    onMouseMove: null,
+    onMouseUp: null,
+    onTouchMove: null,
+    onTouchEnd: null,
   });
 
   if (!sessionIdRef.current) {
@@ -251,68 +256,17 @@ export default function DxAiChat() {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
+  // Nota: la posición NO se persiste; al recargar la página el botón
+  // vuelve siempre a su posición original (esquina inferior derecha).
 
-    try {
-      const raw = localStorage.getItem("talentia-chat-button-pos");
-      if (!raw) {
-        return;
-      }
-      const parsed = JSON.parse(raw);
-      if (
-        parsed
-        && typeof parsed.x === "number"
-        && typeof parsed.y === "number"
-      ) {
-        setChatButtonPos({ x: parsed.x, y: parsed.y });
-      }
-    } catch {
-      // Si falla parseo, usamos posición por defecto.
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    if (typeof chatButtonPos.x !== "number" || typeof chatButtonPos.y !== "number") {
-      return;
-    }
-
-    localStorage.setItem(
-      "talentia-chat-button-pos",
-      JSON.stringify(chatButtonPos),
-    );
-  }, [chatButtonPos]);
-
-  const handleChatButtonPointerDown = (event) => {
-    const target = event.currentTarget;
-    const rect = target.getBoundingClientRect();
-
-    dragStateRef.current = {
-      dragging: true,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: typeof chatButtonPos.x === "number" ? chatButtonPos.x : rect.left,
-      originY: typeof chatButtonPos.y === "number" ? chatButtonPos.y : rect.top,
-      moved: false,
-    };
-
-    target.setPointerCapture?.(event.pointerId);
-  };
-
-  const handleChatButtonPointerMove = (event) => {
+  const handleChatButtonDragMove = (clientX, clientY) => {
     const state = dragStateRef.current;
-    if (!state.dragging || state.pointerId !== event.pointerId) {
+    if (!state.dragging) {
       return;
     }
 
-    const dx = event.clientX - state.startX;
-    const dy = event.clientY - state.startY;
+    const dx = clientX - state.startX;
+    const dy = clientY - state.startY;
 
     if (!state.moved && Math.hypot(dx, dy) > 4) {
       state.moved = true;
@@ -330,24 +284,108 @@ export default function DxAiChat() {
     setChatButtonPos({ x: nextX, y: nextY });
   };
 
-  const handleChatButtonPointerUp = (event) => {
+  const handleChatButtonDragEnd = () => {
     const state = dragStateRef.current;
-    if (state.pointerId !== event.pointerId) {
-      return;
+    const handlers = dragHandlersRef.current;
+
+    if (handlers.onMouseMove) {
+      window.removeEventListener("mousemove", handlers.onMouseMove);
+    }
+    if (handlers.onMouseUp) {
+      window.removeEventListener("mouseup", handlers.onMouseUp);
+    }
+    if (handlers.onTouchMove) {
+      window.removeEventListener("touchmove", handlers.onTouchMove);
+    }
+    if (handlers.onTouchEnd) {
+      window.removeEventListener("touchend", handlers.onTouchEnd);
     }
 
-    const target = event.currentTarget;
-    target.releasePointerCapture?.(event.pointerId);
+    dragHandlersRef.current = {
+      onMouseMove: null,
+      onMouseUp: null,
+      onTouchMove: null,
+      onTouchEnd: null,
+    };
 
     dragStateRef.current = {
-      ...dragStateRef.current,
+      ...state,
       dragging: false,
-      pointerId: null,
     };
 
     if (!state.moved) {
       setIsOpen(true);
     }
+  };
+
+  const handleChatButtonMouseDown = (event) => {
+    event.preventDefault();
+
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+
+    dragStateRef.current = {
+      dragging: true,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: typeof chatButtonPos.x === "number" ? chatButtonPos.x : rect.left,
+      originY: typeof chatButtonPos.y === "number" ? chatButtonPos.y : rect.top,
+      moved: false,
+    };
+
+    const onMouseMove = (moveEvent) => {
+      handleChatButtonDragMove(moveEvent.clientX, moveEvent.clientY);
+    };
+
+    const onMouseUp = () => {
+      handleChatButtonDragEnd();
+    };
+
+    dragHandlersRef.current = {
+      ...dragHandlersRef.current,
+      onMouseMove,
+      onMouseUp,
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  };
+
+  const handleChatButtonTouchStart = (event) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+
+    dragStateRef.current = {
+      dragging: true,
+      startX: touch.clientX,
+      startY: touch.clientY,
+      originX: typeof chatButtonPos.x === "number" ? chatButtonPos.x : rect.left,
+      originY: typeof chatButtonPos.y === "number" ? chatButtonPos.y : rect.top,
+      moved: false,
+    };
+
+    const onTouchMove = (moveEvent) => {
+      const movedTouch = moveEvent.touches[0];
+      if (!movedTouch) return;
+      moveEvent.preventDefault();
+      handleChatButtonDragMove(movedTouch.clientX, movedTouch.clientY);
+    };
+
+    const onTouchEnd = () => {
+      handleChatButtonDragEnd();
+    };
+
+    dragHandlersRef.current = {
+      ...dragHandlersRef.current,
+      onTouchMove,
+      onTouchEnd,
+    };
+
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
   };
 
   const sendMessage = async () => {
@@ -720,10 +758,8 @@ export default function DxAiChat() {
         <button
           key="talentia-open"
           type="button"
-          onPointerDown={handleChatButtonPointerDown}
-          onPointerMove={handleChatButtonPointerMove}
-          onPointerUp={handleChatButtonPointerUp}
-          onPointerCancel={handleChatButtonPointerUp}
+          onMouseDown={handleChatButtonMouseDown}
+          onTouchStart={handleChatButtonTouchStart}
           className="
             fixed
             z-[9999]
@@ -756,6 +792,8 @@ export default function DxAiChat() {
             src="/talentia-chat.png"
             alt=""
             aria-hidden="true"
+            draggable={false}
+            onDragStart={(event) => event.preventDefault()}
             className="
               h-20
               w-20
@@ -763,6 +801,7 @@ export default function DxAiChat() {
               scale-125
               object-contain
               drop-shadow-[0_8px_20px_rgba(14,165,233,0.35)]
+              pointer-events-none
 
               sm:h-24
               sm:w-24
