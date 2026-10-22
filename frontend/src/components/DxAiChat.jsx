@@ -180,6 +180,16 @@ export default function DxAiChat() {
   const abortControllerRef = useRef(null);
   const messageRefs = useRef({});
   const sessionIdRef = useRef(null);
+  const [chatButtonPos, setChatButtonPos] = useState({ x: null, y: null });
+  const dragStateRef = useRef({
+    dragging: false,
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+    moved: false,
+  });
 
   if (!sessionIdRef.current) {
     const storedSessionId = sessionStorage.getItem("talentia-session-id");
@@ -240,6 +250,105 @@ export default function DxAiChat() {
       abortControllerRef.current?.abort();
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      const raw = localStorage.getItem("talentia-chat-button-pos");
+      if (!raw) {
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      if (
+        parsed
+        && typeof parsed.x === "number"
+        && typeof parsed.y === "number"
+      ) {
+        setChatButtonPos({ x: parsed.x, y: parsed.y });
+      }
+    } catch {
+      // Si falla parseo, usamos posición por defecto.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (typeof chatButtonPos.x !== "number" || typeof chatButtonPos.y !== "number") {
+      return;
+    }
+
+    localStorage.setItem(
+      "talentia-chat-button-pos",
+      JSON.stringify(chatButtonPos),
+    );
+  }, [chatButtonPos]);
+
+  const handleChatButtonPointerDown = (event) => {
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+
+    dragStateRef.current = {
+      dragging: true,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: typeof chatButtonPos.x === "number" ? chatButtonPos.x : rect.left,
+      originY: typeof chatButtonPos.y === "number" ? chatButtonPos.y : rect.top,
+      moved: false,
+    };
+
+    target.setPointerCapture?.(event.pointerId);
+  };
+
+  const handleChatButtonPointerMove = (event) => {
+    const state = dragStateRef.current;
+    if (!state.dragging || state.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const dx = event.clientX - state.startX;
+    const dy = event.clientY - state.startY;
+
+    if (!state.moved && Math.hypot(dx, dy) > 4) {
+      state.moved = true;
+    }
+
+    const size = window.innerWidth >= 640 ? 96 : 80;
+    const minX = 0;
+    const minY = 0;
+    const maxX = Math.max(minX, window.innerWidth - size);
+    const maxY = Math.max(minY, window.innerHeight - size);
+
+    const nextX = Math.min(maxX, Math.max(minX, state.originX + dx));
+    const nextY = Math.min(maxY, Math.max(minY, state.originY + dy));
+
+    setChatButtonPos({ x: nextX, y: nextY });
+  };
+
+  const handleChatButtonPointerUp = (event) => {
+    const state = dragStateRef.current;
+    if (state.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const target = event.currentTarget;
+    target.releasePointerCapture?.(event.pointerId);
+
+    dragStateRef.current = {
+      ...dragStateRef.current,
+      dragging: false,
+      pointerId: null,
+    };
+
+    if (!state.moved) {
+      setIsOpen(true);
+    }
+  };
 
   const sendMessage = async () => {
     const cleanMessage = message.trim();
@@ -611,11 +720,12 @@ export default function DxAiChat() {
         <button
           key="talentia-open"
           type="button"
-          onClick={() => setIsOpen(true)}
+          onPointerDown={handleChatButtonPointerDown}
+          onPointerMove={handleChatButtonPointerMove}
+          onPointerUp={handleChatButtonPointerUp}
+          onPointerCancel={handleChatButtonPointerUp}
           className="
             fixed
-            bottom-4
-            right-3
             z-[9999]
             flex
             h-20
@@ -632,11 +742,14 @@ export default function DxAiChat() {
             hover:-translate-y-0.5
             hover:scale-105
 
-            sm:bottom-6
-            sm:right-6
             sm:h-24
             sm:w-24
           "
+          style={
+            typeof chatButtonPos.x === "number" && typeof chatButtonPos.y === "number"
+              ? { left: `${chatButtonPos.x}px`, top: `${chatButtonPos.y}px`, touchAction: "none" }
+              : { right: "-4px", bottom: "16px", touchAction: "none" }
+          }
           aria-label="Abrir TalentIA"
         >
           <img
