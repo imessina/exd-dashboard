@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field, ConfigDict, StrictBool
 from sqlalchemy.orm import Session
 
-from auth import require_editor_or_higher
+from auth import require_admin_or_higher
 from database import get_db
 from services.agent_actions import resolve_action
 
@@ -17,6 +17,6 @@ class ActionDecision(BaseModel):
 
 
 @router.post("/{action_id}/decision")
-def decide_action(action_id: str, data: ActionDecision, user: dict = Depends(require_editor_or_higher), db: Session = Depends(get_db)):
+def decide_action(action_id: str, data: ActionDecision, user: dict = Depends(require_admin_or_higher), db: Session = Depends(get_db)):
     """El cliente solo envía la decisión; el contenido aprobado se obtiene de la base de datos."""
     return resolve_action(db, action_id, user, data.session_id, data.confirm)

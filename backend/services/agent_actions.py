@@ -37,9 +37,13 @@ class Proposal(BaseModel):
 
 ACTION_SCHEMAS = {
     "crear_persona": schemas.PersonaCreate,
+    "actualizar_persona": schemas.PersonaUpdate,
+    "crear_asignacion": schemas.AsignacionCreate,
+    "actualizar_asignacion": schemas.AsignacionUpdate,
     "crear_proyecto": schemas.ProyectoCreate,
-    "crear_oportunidad": schemas.OportunidadCreate,
     "actualizar_proyecto": schemas.ProyectoUpdate,
+    "crear_oportunidad": schemas.OportunidadCreate,
+    "actualizar_oportunidad": schemas.OportunidadUpdate,
 }
 
 
@@ -54,11 +58,15 @@ def validate_proposal(value: dict):
     schema = ACTION_SCHEMAS.get(proposal.operation)
     if schema is None or set(proposal.payload) - set(schema.model_fields):
         raise ValueError("Operación o campos no admitidos")
-    if proposal.operation == "actualizar_proyecto":
+    
+    # Operaciones de actualización requieren target_id y payload
+    if proposal.operation.startswith("actualizar_"):
         if not proposal.target_id or not proposal.payload:
-            raise ValueError("Falta el proyecto o los cambios")
+            raise ValueError(f"Falta el ID del registro o los cambios para {proposal.operation}")
+    # Operaciones de creación no deben tener target_id
     elif proposal.target_id is not None:
         raise ValueError("El alta no admite un destino existente")
+    
     validated = schema.model_validate(proposal.payload)
     proposal.payload = validated.model_dump(mode="json", exclude_unset=True)
     return proposal
@@ -66,8 +74,8 @@ def validate_proposal(value: dict):
 
 def prepare_action(value: dict, user: dict, session_id: str):
     """Persiste exclusivamente una propuesta; no modifica entidades de negocio."""
-    if user["rol"] not in {"editor", "admin", "superadmin"}:
-        return {"type": "delta", "text": "\nNo tienes permisos para guardar estos cambios."}
+    if user["rol"] not in {"admin", "superadmin"}:
+        return {"type": "delta", "text": "\nSolo administradores pueden realizar cambios en el sistema."}
     try:
         proposal = validate_proposal(value)
     except (ValidationError, ValueError):
@@ -90,6 +98,8 @@ def _apply_action(db, action):
     """Aplica datos ya validados sin commit: el registro y la confirmación son atómicos."""
     schema = ACTION_SCHEMAS[action.operation]
     data = schema.model_validate(action.payload)
+    
+    # Operaciones de actualización
     if action.operation == "actualizar_proyecto":
         entity = db.execute(select(models.Proyecto).where(models.Proyecto.id == action.target_id).with_for_update()).scalar_one_or_none()
         if entity is None:
@@ -100,22 +110,50 @@ def _apply_action(db, action):
             db.add(models.HitoLog(proyecto_id=entity.id, descripcion=milestone.strip(), tipo="hito", estado="pendiente"))
         for name, value in fields.items():
             setattr(entity, name, value)
+            
+    elif action.operation == "actualizar_persona":
+        entity = db.execute(select(models.Persona).where(models.Persona.id == action.target_id).with_for_update()).scalar_one_or_none()
+        if entity is None:
+            raise HTTPException(404, "La persona ya no existe")
+        fields = data.model_dump(exclude_unset=True)
+        for name, value in fields.items():
+            setattr(entity, name, value)
+            
+    elif action.operation == "actualizar_asignacion":
+        entity = db.execute(select(models.Asignacion).where(models.Asignacion.id == int(action.target_id)).with_for_update()).scalar_one_or_none()
+        if entity is None:
+            raise HTTPException(404, "La asignación ya no existe")
+        fields = data.model_dump(exclude_unset=True)
+        for name, value in fields.items():
+            setattr(entity, name, value)
+            
+    elif action.operation == "actualizar_oportunidad":
+        entity = db.execute(select(models.Oportunidad).where(models.Oportunidad.id == int(action.target_id)).with_for_update()).scalar_one_or_none()
+        if entity is None:
+            raise HTTPException(404, "La oportunidad ya no existe")
+        fields = data.model_dump(exclude_unset=True)
+        for name, value in fields.items():
+            setattr(entity, name, value)
+    
+    # Operaciones de creación
     else:
         entity_class = {
             "crear_persona": models.Persona,
+            "crear_asignacion": models.Asignacion,
             "crear_proyecto": models.Proyecto,
             "crear_oportunidad": models.Oportunidad,
         }[action.operation]
         entity = entity_class(**data.model_dump())
         db.add(entity)
+        
     db.flush()
     return {"status": "executed", "id": str(entity.id), "operation": action.operation}
 
 
 def resolve_action(db, action_id: str, user: dict, session_id: str, confirm: bool):
     """Revalida propietario, sesión, caducidad y estado. Un reintento nunca duplica la escritura."""
-    if user["rol"] not in {"editor", "admin", "superadmin"}:
-        raise HTTPException(403, "No tienes permisos para realizar esta acción")
+    if user["rol"] not in {"admin", "superadmin"}:
+        raise HTTPException(403, "Solo administradores pueden confirmar cambios en el sistema")
     owner_id = str(user["auth_user_id"])
     scope = scoped_session(owner_id, session_id)
     action = db.execute(select(AgentAction).where(
