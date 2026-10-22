@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { aiApi } from "../services/api";
+import { getAuthorizedUser } from "../lib/authUser";
 
 function SendIcon({ className = "w-5 h-5" }) {
   return (
@@ -271,6 +272,34 @@ export default function DxAiChat() {
     setLoading(true);
     setStreamingStarted(false);
 
+    const intentaEscritura = /\b(cre(ar|ame|arme|emos|en)|actualiz(ar|ame|arme|emos|en)|editar|modificar|agregar|insertar)\b/i.test(cleanMessage)
+      && /\b(persona|personas|asignaci[oó]n|asignaciones|proyecto|proyectos|oportunidad|oportunidades)\b/i.test(cleanMessage);
+
+    if (intentaEscritura) {
+      try {
+        const usuario = await getAuthorizedUser();
+        if (usuario?.rol === "viewer" || usuario?.rol === "usuario") {
+          setMessages((current) =>
+            current.map((item) =>
+              item.id === assistantMessageId
+                ? {
+                    ...item,
+                    content:
+                      "Gracias por tu solicitud 🙌\n\nCon tu rol actual puedes consultar información, pero no crear o modificar registros.\n\nSi necesitas hacer este cambio, te recomiendo pedir apoyo a un administrador del equipo.",
+                  }
+                : item,
+            ),
+          );
+          setLoading(false);
+          setStreamingStarted(false);
+          setActiveAssistantId(null);
+          return;
+        }
+      } catch {
+        // Si falla la consulta del perfil, continúa el flujo normal y el backend valida permisos.
+      }
+    }
+
     const controller = new AbortController();
 
     abortControllerRef.current = controller;
@@ -334,13 +363,24 @@ export default function DxAiChat() {
       const detail =
         error?.message || "No fue posible comunicarse con TalentIA.";
 
+      const normalizedDetail = String(detail).toLowerCase();
+      const forbiddenLike =
+        normalizedDetail.includes("403") ||
+        normalizedDetail.includes("forbidden") ||
+        normalizedDetail.includes("acceso reservado a administradores") ||
+        normalizedDetail.includes("solo administradores pueden realizar cambios");
+
+      const finalDetail = forbiddenLike
+        ? "Gracias por tu solicitud 🙌\n\nCon tu rol actual puedes consultar información, pero no crear o modificar registros.\n\nSi necesitas hacer este cambio, te recomiendo pedir apoyo a un administrador del equipo."
+        : detail;
+
       if (receivedText) {
         setMessages((current) => [
           ...current,
           {
             id: `error-${Date.now()}`,
             role: "error",
-            content: detail,
+            content: finalDetail,
           },
         ]);
       } else {
@@ -350,7 +390,7 @@ export default function DxAiChat() {
               ? {
                   ...item,
                   role: "error",
-                  content: detail,
+                  content: finalDetail,
                 }
               : item,
           ),

@@ -1,4 +1,6 @@
 import os
+import re
+import unicodedata
 from typing import Optional
 
 import httpx
@@ -54,6 +56,17 @@ def _clean_persona(persona: dict) -> dict:
     }
 
 
+def _normalize_text(value: str) -> str:
+    text = unicodedata.normalize("NFD", value or "")
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    return text.lower().strip()
+
+
+def _tokenize(value: str) -> list[str]:
+    normalized = _normalize_text(value)
+    return [tok for tok in re.split(r"\s+", normalized) if tok]
+
+
 def _get(
     path: str,
     params: Optional[dict] = None,
@@ -101,6 +114,7 @@ def listar_personas(
     nivel: Optional[str] = None,
     habilidad: Optional[str] = None,
     oferta_valor: Optional[str] = None,
+    buscar: Optional[str] = None,
 ) -> dict:
     """
     Lista personas reales registradas en Dashboard DX.
@@ -110,7 +124,8 @@ def listar_personas(
     que contar manualmente los elementos recibidos.
 
     Puede filtrar opcionalmente por nivel de pirámide,
-    habilidad histórica y oferta de valor.
+    habilidad histórica, oferta de valor y búsqueda flexible
+    por nombre/rol/número de empleado.
 
     Usa esta herramienta cuando el usuario quiera conocer,
     contar, buscar o filtrar personas del equipo DX.
@@ -139,6 +154,26 @@ def listar_personas(
         _clean_persona(persona)
         for persona in personas
     ]
+
+    if buscar:
+        query_tokens = _tokenize(buscar)
+        if query_tokens:
+            filtered = []
+            for persona in personas_limpias:
+                searchable = " ".join(
+                    [
+                        str(persona.get("nombre") or ""),
+                        str(persona.get("rol") or ""),
+                        str(persona.get("numero_empleado") or ""),
+                    ]
+                )
+                searchable_tokens = _tokenize(searchable)
+                if all(
+                    any(token in candidate for candidate in searchable_tokens)
+                    for token in query_tokens
+                ):
+                    filtered.append(persona)
+            personas_limpias = filtered
 
     return {
         "total": len(personas_limpias),

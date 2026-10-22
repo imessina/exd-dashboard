@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from database import get_db
-from auth import require_editor_or_higher
+from auth import require_admin_or_higher, require_editor_or_higher
 import models, schemas
 
 router = APIRouter(prefix="/personas", tags=["personas"])
@@ -27,7 +27,7 @@ logger = logging.getLogger("uvicorn.error")
 )
 def bulk_create_personas(
     data: schemas.PersonaBulkRequest,
-    _usuario: dict = Depends(require_editor_or_higher),
+    _usuario: dict = Depends(require_admin_or_higher),
     db: Session = Depends(get_db),
 ):
     """
@@ -127,7 +127,7 @@ def bulk_create_personas(
 )
 def agent_create_persona(
     data: schemas.PersonaCreate,
-    _usuario: dict = Depends(require_editor_or_higher),
+    _usuario: dict = Depends(require_admin_or_higher),
     db: Session = Depends(get_db),
 ):
     """
@@ -211,7 +211,7 @@ def get_persona(persona_id: str, db: Session = Depends(get_db)):
 @router.post("/", response_model=schemas.PersonaOut, status_code=201)
 def create_persona(
     data: schemas.PersonaCreate,
-    _usuario: dict = Depends(require_editor_or_higher),
+    _usuario: dict = Depends(require_admin_or_higher),
     db: Session = Depends(get_db),
 ):
     existing = (
